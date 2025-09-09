@@ -1,0 +1,94 @@
+body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3;
+        }
+        h1 { text-align: center; font-size: 2em; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header p { font-size: 0.9em; color: #666; }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 40px 0;
+        }
+        details {
+            border: 1px solid #f0ad4e;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fcf8e3;
+            margin-bottom: 20px;
+        }
+        summary {
+            font-weight: bold; cursor: pointer;
+            color: #d9534f;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: "Courier New", Courier, monospace;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            position: relative; /* Added for positioning the copy button */
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 15px;
+            color: #666;
+            margin: 0;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .copy-button:hover {
+            opacity: 1;
+        }
+        .copy-button:active {
+            background-color: #0056b3;
+        }

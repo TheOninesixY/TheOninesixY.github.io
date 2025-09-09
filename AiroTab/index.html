@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiroTab</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+        <div class="title" id="page-title">AiroTab</div>
+        <form class="search-box" id="search-form">
+        <input type="text" placeholder="输入搜索内容..." id="search-input">
+        <button type="submit" id="search-btn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+</button>
+    </form>
+
+    <!-- 设置图标 -->
+    <div class="settings-icon" id="settings-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3" stroke="#666" stroke-width="2"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="#666" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="panel-container">
+            <div class="nav-sidebar">
+                <div class="nav-header">
+                    <h2 class="nav-title">设置</h2>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-target="search-settings">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">搜索设置</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-target="appearance-settings">
+                            <span class="nav-icon">🎨</span>
+                            <span class="nav-text">外观设置</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-target="about-settings">
+                            <span class="nav-icon">ℹ️</span>
+                            <span class="nav-text">关于</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <div class="panel-header">
+                    <button class="close-btn" id="close-btn">&times;</button>
+                </div>
+                <div class="settings-content">
+                    <div id="search-settings" class="settings-section active">
+                        <h1 class="section-title">搜索设置</h1>
+                        <div class="settings-card">
+                            <div class="settings-item">
+                                <div class="search-engine-option">
+                                    <input type="radio" id="google" name="search-engine" value="google" checked class="radio-input">
+                                    <label for="google" class="radio-label">Google</label>
+                                </div>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="duckduckgo" name="search-engine" value="duckduckgo" class="radio-input">
+                                    <label for="duckduckgo" class="radio-label">DuckDuckGo</label>
+                                </div>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="bing" name="search-engine" value="bing" class="radio-input">
+                                    <label for="bing" class="radio-label">必应</label>
+                                </div>
+                                <!-- 国产搜索引擎2级入口 -->
+                                <div class="search-engine-group">
+                                    <div class="group-title" id="domestic-group-title">
+                                        <span class="group-text">其他搜索引擎</span>
+                                        <span class="group-icon">▼</span>
+                                    </div>
+                                    <div class="group-options" id="domestic-group-options" style="display: none;">
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="baidu" name="search-engine" value="baidu" class="radio-input">
+                                            <label for="baidu" class="radio-label">百度</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="sogou" name="search-engine" value="sogou" class="radio-input">
+                                            <label for="sogou" class="radio-label">搜狗</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="360" name="search-engine" value="360" class="radio-input">
+                                            <label for="360" class="radio-label">360搜索</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="yandex" name="search-engine" value="yandex" class="radio-input">
+                                            <label for="yandex" class="radio-label">Yandex</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="naver" name="search-engine" value="naver" class="radio-input">
+                                            <label for="naver" class="radio-label">Naver</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <label class="form-label">搜索结果打开方式</label>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="current-tab" name="search-target" value="current" checked class="radio-input">
+                                    <label for="current-tab" class="radio-label">在当前标签页打开</label>
+                                </div>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="new-tab" name="search-target" value="new" class="radio-input">
+                                    <label for="new-tab" class="radio-label">在新标签页打开</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="appearance-settings" class="settings-section">
+                        <h1 class="section-title">外观设置</h1>
+                        <div class="settings-card">
+                            <div class="settings-item">
+                                <label class="form-label">标题样式</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="title-style" name="display-style" value="title" class="radio-input" checked>
+                                        <label for="title-style" class="radio-label">标题样式</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="time-style" name="display-style" value="time" class="radio-input">
+                                        <label for="time-style" class="radio-label">时间样式</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item" id="clock-style-settings" style="display: none;">
+                                <label class="form-label">时钟样式</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="24h-style" name="clock-style" value="24h" class="radio-input" checked>
+                                        <label for="24h-style" class="radio-label">24小时制</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="12h-style" name="clock-style" value="12h" class="radio-input">
+                                        <label for="12h-style" class="radio-label">12小时制</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="theme-color-options">
+                                    <label class="form-label">主题色</label>
+                                    <div class="color-picker">
+                                        <input type="radio" id="purple" name="theme-color" value="purple" class="radio-input">
+                                        <label for="purple" class="radio-label">紫色</label>
+                                    </div>
+                                    <div class="color-picker">
+                                        <input type="radio" id="blue" name="theme-color" value="blue" checked class="radio-input">
+                                        <label for="blue" class="radio-label">蓝色</label>
+                                    </div>
+                                    <div class="color-picker">
+                                        <input type="radio" id="green" name="theme-color" value="green" class="radio-input">
+                                        <label for="green" class="radio-label">绿色</label>
+                                    </div>
+                                    <div class="color-picker">
+                                        <input type="radio" id="red" name="theme-color" value="red" class="radio-input">
+                                        <label for="red" class="radio-label">红色</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="wallpaper-upload">
+                                    <label for="wallpaper-upload" class="form-label">更换壁纸</label>
+                                    <input type="file" id="wallpaper-upload" accept="image/*" class="file-input">
+                                    <button id="reset-wallpaper" class="btn btn-outline-secondary">重置壁纸</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="about-settings" class="settings-section">
+                        <h1 class="section-title">关于</h1>
+                        <div class="settings-card">
+                            <div class="settings-item">
+                                <h2 class="about-title">AiroTab</h2>
+                                <p class="about-version">版本 1.0.0</p>
+                                <p class="about-description">AiroTab 是一个使用AI编写的简洁、高效的新标签页应用，提供搜索、主题和壁纸自定义功能。</p>
+                                <p class="about-author">By OninesixY</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
