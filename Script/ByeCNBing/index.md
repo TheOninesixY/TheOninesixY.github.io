@@ -1,28 +1,34 @@
-# ![icon](file/icon.svg) ByeCNBing
+# ![icon](file/icon.svg) ByeCNBing 必应强制国际版
 
-## 必应强制国际版
+## 有时即使开着梯子，访问必应也会被重定向到中国版，这个脚本可以完美解决这个问题
 
-### 有时即使开着梯子，访问必应也会被重定向到中国版，这个脚本可以完美解决这个问题
-
-### 工作原理
+## 工作原理
 
 这个脚本的工作原理很简单，当你访问必应时，它会检查当前的 URL 是否是中国版的。如果是，它会将你重定向到国际版的必应。
 
-### 防卡机制
+## 防卡机制
 
 在2.0版本中添加了一项新功能：防卡机制。如果在重定向国际版后的一秒内返回到了中国版则会放弃重定向，防止陷入循环造成卡顿
 
-### 下载与安装
+## 下载与安装
 
-[安装脚本](https://theoninesixy.github.io/Script/ByeCNBing/file/ByeCNBing.user.js)
+### [✅安装脚本](https://theoninesixy.github.io/Script/ByeCNBing/file/ByeCNBing.user.js)
 
-[下载脚本猫](https://docs.scriptcat.org)
+注：需要安装浏览器脚本管理器才能使用此脚本
 
-[下载暴力猴](https://violentmonkey.github.io/)
+### 🐱[下载脚本猫](https://docs.scriptcat.org)
 
-[下载纂改猴](https://www.tampermonkey.net/)
+最推荐
 
-### 源码
+### [🐒下载暴力猴](https://violentmonkey.github.io/)
+
+兼容性最好
+
+### [🟥下载纂改猴](https://www.tampermonkey.net/)
+
+最稳定
+
+## 源码
 
 ~~~JavaScript
 // ==UserScript==

@@ -1,26 +1,47 @@
-⬆点击上方的“OninesixY”可回到当前页
-
 # TheOninesixY.github.io
 
-## [*尝试AiroTab！*](AiroTab/index.html)
+## 🌟 好东西
 
-## [*The website that others create for my teaching*](https://lhui1.github.io)
+### [📱 AiroTab](./AiroTab)
 
-### **刷机**
+用AI写的浏览器起始页，**不建议使用，bug巨多**
 
-- [Root](Flashing/Root/index.md)
-- [刷入Recovery](Flashing/FlashRecovery/index.md)
+### [🎓 我朋友的第一个网站](https://lhui1.github.io)
 
-### **难玩的用AI生成的游戏**
+我教会了我的朋友**如何使用GitHub Pages搭建网站**！请给他的网站**点个星标**！
 
-- [俄罗斯方块](Game/Tetris/index.html)
-- [2048](Game/2048/index.html)
+## 📱 刷机教程
 
-### **脚本**
+### [🔓 Root教程](Flashing/Root/index.md)
 
-- [ByeCNBing](Script/ByeCNBing/index.md)
+获得安卓设备的**最高权限**
 
-### **温馨提示**
+### [⚙️ Recovery刷入教程](Flashing/FlashRecovery/index.md)
 
-- 大部分代码都是用AI写的，质量完全无法保证，如遇到问题，我也只能让AI帮忙解决。
-- 部分网站更新了，如果你觉得新版不习惯，可在网址后缀添加/old，就像这样：[theoninesixy.github.io/old](https://theoninesixy.github.io/old)
+无需电脑就能使用**fastboot的功能**
+
+## 🎮 AI生成的难玩游戏
+
+### [🎲 俄罗斯方块](Game/Tetris/index.html)
+
+经典**益智**游戏
+
+### [🔢 2048](Game/2048/index.html)
+
+经典**数字组合**游戏
+
+## 🛠️ 浏览器脚本
+
+### [🌐 ByeCNBing](Script/ByeCNBing/index.md)
+
+必应强制变**Bing**
+
+## ℹ️ 温馨提示
+
+本站大部分代码由AI生成，如遇问题我也只能让AI解决，如果AI解决不了的话我也无能为力
+
+怀旧版本可访问：[theoninesixy.github.io/old](./old/)
+
+如果要在本站的其他页面回到此页，可点击页面顶部的“TheOninesixY”
+
+如果你愿意，请给本站点个星标⭐，谢谢！
