@@ -40,7 +40,7 @@
 
 本站大部分代码由AI生成，如遇问题我也只能让AI解决，如果AI解决不了的话我也无能为力
 
-怀旧版本可访问：[theoninesixy.github.io/old](./old/)
+怀旧版本可在网址后面输入/old进行访问，例如[theoninesixy.github.io/old](./old/)
 
 如果要在本站的其他页面回到此页，可点击页面顶部的“TheOninesixY”
 
