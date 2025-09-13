@@ -6,10 +6,6 @@
 
 用AI写的浏览器起始页，**不建议使用，bug巨多**
 
-### [🎓 我朋友的第一个网站](https://lhui1.github.io)
-
-我教会了我的朋友**如何使用GitHub Pages搭建网站**！请给他的网站**点个星标**！
-
 ## 📱 刷机教程
 
 ### [🔓 Root教程](Flashing/Root/index.md)
