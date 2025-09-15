@@ -1,6 +1,6 @@
 # TheOninesixY.github.io
 
-## 🐉 我养的龙
+## 🐉 我养的龙（实时状态）
 
 <a href="https://dragcave.net/view/BTKPO"><img src="https://dragcave.net/image/BTKPO.gif" style="border-width:0" alt="Dragon Cave: Adopt one today!"/></a>
 <a href="https://dragcave.net/view/8oAmQ"><img src="https://dragcave.net/image/8oAmQ.gif" style="border-width:0" alt="Dragon Cave: Adopt one today!"/></a>
@@ -17,7 +17,7 @@
 
 ### [⚙️ Recovery刷入教程](Flashing/FlashRecovery/index.md)
 
-无需电脑就能使用**fastboot的功能**
+无需电脑，即可使用**fastboot功能**
 
 ## 🎮 AI生成的难玩游戏
 
@@ -33,7 +33,7 @@
 
 ### [🌐 ByeCNBing](Script/ByeCNBing/index.md)
 
-这是一个浏览器脚本，当检测到当前访问的网站是cn.bing.com时，则会尝试重定向到www.bing.com,若重定向失败，则放弃此次重定向，直至下次刷新
+浏览器脚本：自动将cn.bing.com重定向至www.bing.com，失败则放弃本次重定向。
 
 ### [📱 AiroTab](./AiroTab)
 
