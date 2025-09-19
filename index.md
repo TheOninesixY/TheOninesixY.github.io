@@ -35,7 +35,7 @@
 
 ## 🛠️ 工具
 
-### [🌐 ByeCNBing](Script/ByeCNBing/index.md)
+### [🌐 ByeCNBing](./Tools/ByeCNBing/)
 
 浏览器脚本：自动将cn.bing.com重定向至www.bing.com，失败则放弃本次重定向。
 
