@@ -12,7 +12,7 @@
 
 ## 下载与安装
 
-### [✅安装脚本](https://theoninesixy.github.io/Script/ByeCNBing/file/ByeCNBing.user.js)
+### [✅安装脚本](./script.user.js)
 
 注：需要安装浏览器脚本管理器才能使用此脚本
 
