@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         ByeCNBing
-// @namespace    https://theoninesixy.github.io/Script/ByeCNBing
+// @namespace    https://theoninesixy.github.io/old/Script/ByeCNBing
 // @author       OninesixY
 // @version      2.1.1
 // @description  必应强制国际版
-// @icon         https://theoninesixy.github.io/Script/ByeCNBing/file/icon.svg
+// @icon         https://theoninesixy.github.io/old/Script/ByeCNBing/file/icon.svg
 // @match        *://cn.bing.com/*
 // @grant        none
 // @license      MIT
