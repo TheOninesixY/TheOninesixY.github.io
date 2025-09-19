@@ -3,10 +3,10 @@
 // @namespace    https://theoninesixy.github.io/Tools/ByeCNBing
 // @author       OninesixY
 // @version      2.1.2
-// @updateURL    https://theoninesixy.github.io/Tools/ByeCNBing/file/ByeCNBing.user.js
-// @downloadURL  https://theoninesixy.github.io/Tools/ByeCNBing/file/ByeCNBing.user.js
+// @updateURL    https://theoninesixy.github.io/Tools/ByeCNBing/script.user.js
+// @downloadURL  https://theoninesixy.github.io/Tools/ByeCNBing/script.user.js
 // @description  必应强制国际版
-// @icon         https://theoninesixy.github.io/Tools/ByeCNBing/file/icon.svg
+// @icon         https://theoninesixy.github.io/Tools/ByeCNBing/icon.svg
 // @match        *://cn.bing.com/*
 // @grant        none
 // @license      MIT
