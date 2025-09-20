@@ -39,7 +39,7 @@
 
 浏览器脚本：自动将cn.bing.com重定向至www.bing.com，失败则放弃本次重定向。
 
-### [📱 AiroTab](./AiroTab)
+### [📱 AiroTab](./Tools/AiroTab/)
 
 用AI写的浏览器起始页，**不建议使用，bug巨多**
 
