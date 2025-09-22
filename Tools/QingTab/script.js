@@ -16,11 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeFormatSelect = document.getElementById('time-format');
     const showAmpmSelect = document.getElementById('show-ampm');
     const timeColorSelect = document.getElementById('time-color');
+    const timeWeightSelect = document.getElementById('time-weight');
 
     const timeFormatSettings = document.getElementById('time-format-settings');
     const ampmDisplaySettings = document.getElementById('ampm-display-settings');
     const timeFormatSelectContainer = document.getElementById('time-format-select-container');
     const timeColorSettings = document.getElementById('time-color-settings');
+    const timeWeightSettings = document.getElementById('time-weight-settings');
 
 
     // Load saved preferences
@@ -140,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeFormat = localStorage.getItem('timeFormat') || '24h';
         const showAmpm = localStorage.getItem('showAmpm') || 'no';
         const timeColor = localStorage.getItem('timeColor') || 'white';
+        const timeWeight = localStorage.getItem('timeWeight') || 'normal';
 
         if (!showTime) {
             timeDisplay.style.display = 'none';
@@ -169,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         timeDisplay.textContent = timeString;
         timeDisplay.className = `time-display ${timeColor}`;
+        timeDisplay.style.fontWeight = timeWeight;
     };
 
     const loadTimeSettings = () => {
@@ -177,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timeFormatSelect.value = localStorage.getItem('timeFormat') || '24h';
         showAmpmSelect.value = localStorage.getItem('showAmpm') || 'no';
         timeColorSelect.value = localStorage.getItem('timeColor') || 'white';
+        timeWeightSelect.value = localStorage.getItem('timeWeight') || 'normal';
         
         toggleTimeSubSettings();
         updateTimeDisplay();
@@ -188,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ampmDisplaySettings.style.display = (isTimeVisible && timeFormatSelect.value === '12h') ? 'flex' : 'none';
         timeFormatSelectContainer.style.display = isTimeVisible ? 'flex' : 'none';
         timeColorSettings.style.display = isTimeVisible ? 'flex' : 'none';
+        timeWeightSettings.style.display = isTimeVisible ? 'flex' : 'none';
     };
 
     showTimeCheckbox.addEventListener('change', () => {
@@ -214,6 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     timeColorSelect.addEventListener('change', () => {
         localStorage.setItem('timeColor', timeColorSelect.value);
+        updateTimeDisplay();
+    });
+
+    timeWeightSelect.addEventListener('change', () => {
+        localStorage.setItem('timeWeight', timeWeightSelect.value);
         updateTimeDisplay();
     });
 
