@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 </head>
 <body>
+    <div id="time-display" class="time-display"></div>
     <div class="search-container">
         <div class="search-input-container">
             <input type="text" id="search-input" placeholder="搜索或输入网址">
@@ -46,6 +47,37 @@
             <p>ah=alpha</p>
             <p>be=beta</p>
             <p>re=release</p>
+            <hr>
+            <h2>时间显示</h2>
+            <div class="setting-item">
+                <label for="show-time">是否显示时间</label>
+                <input type="checkbox" id="show-time">
+            </div>
+            <div class="setting-item sub-setting" id="time-format-settings">
+                <label for="show-seconds">是否显示秒数</label>
+                <input type="checkbox" id="show-seconds">
+            </div>
+            <div class="setting-item sub-setting" id="time-format-select-container">
+                <label for="time-format">以什么格式显示时间</label>
+                <select id="time-format">
+                    <option value="12h">12小时制</option>
+                    <option value="24h">24小时制</option>
+                </select>
+            </div>
+            <div class="setting-item sub-setting" id="ampm-display-settings">
+                <label for="show-ampm">是否显示上下午</label>
+                <select id="show-ampm">
+                    <option value="no">不显示</option>
+                    <option value="yes">显示</option>
+                </select>
+            </div>
+            <div class="setting-item sub-setting" id="time-color-settings">
+                <label for="time-color">使用什么颜色来显示时间</label>
+                <select id="time-color">
+                    <option value="white">白色</option>
+                    <option value="black">黑色</option>
+                </select>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

@@ -26,6 +26,20 @@ body {
     line-height: 1.6;
 }
 
+/* Time Display */
+.time-display {
+    font-size: 4em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: white; /* Default color */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.time-display.black {
+    color: black;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+}
+
 img, picture, video, canvas, svg {
     display: block;
     max-width: 100%;
@@ -294,6 +308,48 @@ input, button, textarea, select {
     background-color: #f8f9fa;
 }
 
+/* Settings Item */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.setting-item:last-of-type {
+    border-bottom: none;
+}
+
+.setting-item label {
+    color: #333;
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+.setting-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.setting-item select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sub-setting {
+    margin-left: 20px;
+    border-bottom: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 /* Quick Links */
 .quick-links-container {
     display: flex;
@@ -322,7 +378,11 @@ input, button, textarea, select {
 }
 
 /* Responsive styles for tablets */
-@media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px) {
+    .time-display {
+        font-size: 3em;
+    }
+
     body {
         padding: 15px;
     }
@@ -382,7 +442,11 @@ input, button, textarea, select {
 }
 
 /* Responsive styles for mobile phones */
-@media screen and (max-width: 480px) {
+    @media screen and (max-width: 480px) {
+    .time-display {
+        font-size: 2.5em;
+    }
+
     body {
         padding: 10px;
     }

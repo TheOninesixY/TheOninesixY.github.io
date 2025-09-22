@@ -9,7 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgFileInput = document.getElementById('bg-file-input');
     const currentBgSpan = document.getElementById('current-bg');
 
-    // Load saved search engine preference
+    // Time display elements
+    const timeDisplay = document.getElementById('time-display');
+    const showTimeCheckbox = document.getElementById('show-time');
+    const showSecondsCheckbox = document.getElementById('show-seconds');
+    const timeFormatSelect = document.getElementById('time-format');
+    const showAmpmSelect = document.getElementById('show-ampm');
+    const timeColorSelect = document.getElementById('time-color');
+
+    const timeFormatSettings = document.getElementById('time-format-settings');
+    const ampmDisplaySettings = document.getElementById('ampm-display-settings');
+    const timeFormatSelectContainer = document.getElementById('time-format-select-container');
+    const timeColorSettings = document.getElementById('time-color-settings');
+
+
+    // Load saved preferences
     const savedSearchEngine = localStorage.getItem('searchEngine') || 'google';
     searchEngineSelect.value = savedSearchEngine;
 
@@ -113,4 +127,97 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('bgImage', bingWallpaperUrl);
         currentBgSpan.textContent = '必应壁纸';
     });
+
+    // Time display functionality
+    const updateTimeDisplay = () => {
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+
+        const showTime = localStorage.getItem('showTime') === 'true';
+        const showSeconds = localStorage.getItem('showSeconds') === 'true';
+        const timeFormat = localStorage.getItem('timeFormat') || '24h';
+        const showAmpm = localStorage.getItem('showAmpm') || 'no';
+        const timeColor = localStorage.getItem('timeColor') || 'white';
+
+        if (!showTime) {
+            timeDisplay.style.display = 'none';
+            return;
+        } else {
+            timeDisplay.style.display = 'block';
+        }
+
+        let ampm = '';
+        if (timeFormat === '12h') {
+            ampm = hours >= 12 ? ' PM' : ' AM';
+            hours = hours % 12;
+            hours = hours === 0 ? 12 : hours; // the hour '0' should be '12'
+        }
+
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        let timeString = `${hours}:${minutes}`;
+        if (showSeconds) {
+            timeString += `:${seconds}`;
+        }
+        if (timeFormat === '12h' && showAmpm === 'yes') {
+            timeString += ampm;
+        }
+
+        timeDisplay.textContent = timeString;
+        timeDisplay.className = `time-display ${timeColor}`;
+    };
+
+    const loadTimeSettings = () => {
+        showTimeCheckbox.checked = localStorage.getItem('showTime') === 'true';
+        showSecondsCheckbox.checked = localStorage.getItem('showSeconds') === 'true';
+        timeFormatSelect.value = localStorage.getItem('timeFormat') || '24h';
+        showAmpmSelect.value = localStorage.getItem('showAmpm') || 'no';
+        timeColorSelect.value = localStorage.getItem('timeColor') || 'white';
+        
+        toggleTimeSubSettings();
+        updateTimeDisplay();
+    };
+
+    const toggleTimeSubSettings = () => {
+        const isTimeVisible = showTimeCheckbox.checked;
+        timeFormatSettings.style.display = isTimeVisible ? 'flex' : 'none';
+        ampmDisplaySettings.style.display = (isTimeVisible && timeFormatSelect.value === '12h') ? 'flex' : 'none';
+        timeFormatSelectContainer.style.display = isTimeVisible ? 'flex' : 'none';
+        timeColorSettings.style.display = isTimeVisible ? 'flex' : 'none';
+    };
+
+    showTimeCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showTime', showTimeCheckbox.checked);
+        toggleTimeSubSettings();
+        updateTimeDisplay();
+    });
+
+    showSecondsCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showSeconds', showSecondsCheckbox.checked);
+        updateTimeDisplay();
+    });
+
+    timeFormatSelect.addEventListener('change', () => {
+        localStorage.setItem('timeFormat', timeFormatSelect.value);
+        toggleTimeSubSettings();
+        updateTimeDisplay();
+    });
+
+    showAmpmSelect.addEventListener('change', () => {
+        localStorage.setItem('showAmpm', showAmpmSelect.value);
+        updateTimeDisplay();
+    });
+
+    timeColorSelect.addEventListener('change', () => {
+        localStorage.setItem('timeColor', timeColorSelect.value);
+        updateTimeDisplay();
+    });
+
+    // Initial load of time settings and start updating time
+    loadTimeSettings();
+    setInterval(updateTimeDisplay, 1000);
 });
