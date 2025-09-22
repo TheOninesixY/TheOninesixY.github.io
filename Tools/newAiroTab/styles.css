@@ -328,10 +328,63 @@ input, button, textarea, select {
     flex-grow: 1;
 }
 
-.setting-item input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+/* Toggle Switch Styles */
+.toggle-container {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    position: absolute;
     cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 26px;
+}
+
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #4285f4;
+}
+
+.toggle-checkbox:focus + .toggle-label {
+    box-shadow: 0 0 1px #4285f4;
+}
+
+.toggle-checkbox:checked + .toggle-label:before {
+    transform: translateX(24px);
+}
+
+/* Animation for the toggle */
+.toggle-label:before {
+    transition: transform 0.2s ease-in-out;
+}
+
+.toggle-label {
+    transition: background-color 0.2s ease-in-out;
 }
 
 .setting-item select {

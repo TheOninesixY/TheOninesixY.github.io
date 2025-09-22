@@ -10,10 +10,10 @@
 [![Dragon Cave: Adopt one today!](https://dragcave.net/image/JjzeR.gif)](https://dragcave.net/view/JjzeR)
 [![Dragon Cave: Adopt one today!](https://dragcave.net/image/HMVxD.gif)](https://dragcave.net/view/HMVxD)
 [![Dragon Cave: Adopt one today!](https://dragcave.net/image/7yTVr.gif)](https://dragcave.net/view/7yTVr)
-<a href="https://dragcave.net/view/3N6ND"><img src="https://dragcave.net/image/3N6ND.gif" style="border-width:0" alt="Dragon Cave: Adopt one today!"/></a>
-<a href="https://dragcave.net/view/56XEJ"><img src="https://dragcave.net/image/56XEJ.gif" style="border-width:0" alt="Dragon Cave: Adopt one today!"/></a>
-<a href="https://dragcave.net/view/cRYCN"><img src="https://dragcave.net/image/cRYCN.gif" style="border-width:0" alt="Dragon Cave: Adopt one today!"/></a>
-<a href="https://dragcave.net/view/Qbt9B"><img src="https://dragcave.net/image/Qbt9B.gif" style="border-width:0" alt="Dragon Cave: Adopt one today!"/></a>
+[![Dragon Cave: Adopt one today!](https://dragcave.net/image/3N6ND.gif)](https://dragcave.net/view/3N6ND)
+[![Dragon Cave: Adopt one today!](https://dragcave.net/image/56XEJ.gif)](https://dragcave.net/view/56XEJ)
+[![Dragon Cave: Adopt one today!](https://dragcave.net/image/cRYCN.gif)](https://dragcave.net/view/cRYCN)
+[![Dragon Cave: Adopt one today!](https://dragcave.net/image/Qbt9B.gif)](https://dragcave.net/view/Qbt9B)
 
 [养龙网站](https://dragcave.net)
 
