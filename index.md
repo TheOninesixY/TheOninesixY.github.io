@@ -39,7 +39,7 @@
 
 ## 🛠️ 工具
 
-### [📱 newAiroTab](./Tools/newAiroTab/)
+### [📱 QingTab](./Tools/QingTab/)
 
 简洁美观的浏览器起始页
 
