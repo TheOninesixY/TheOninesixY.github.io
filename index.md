@@ -1,4 +1,4 @@
-# TheOninesixY.github.io
+# Home
 
 ## 🐉 我养的龙（实时状态）
 
@@ -47,7 +47,7 @@
 
 浏览器脚本：自动将cn.bing.com重定向至www.bing.com，失败则放弃本次重定向。
 
-### [🔄 autoRe](./Tools/autoRe/)
+### [🔄 autoRe](./Tools/autoRe/script.user.js)
 
 浏览器脚本：自动刷新网页
 
@@ -55,12 +55,8 @@
 
 本站大部分代码由AI生成，如遇问题我也只能让AI解决，如果AI解决不了的话我也无能为力
 
-怀旧版本可在网址后面输入/old进行访问，例如[theoninesixy.github.io/old](./old/)
+怀旧版请访问[theoninesixy.github.io/old](./old/)
 
 如果要在本站的其他页面回到此页，可点击页面顶部的“TheOninesixY”
 
 如果你愿意，请给本站点个星标⭐，谢谢！
-
-## [❓ 神秘的东西](./OMG/0.html)
-
-不要点击我
