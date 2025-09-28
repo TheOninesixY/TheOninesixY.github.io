@@ -1,6 +1,6 @@
-# TheOninesixY.github.io
+# 一个我都不知道有什么用的网站
 
-## 一个我都不知道有什么用的小站
+## theoninesixy.github.io
 
 ### 有什么
 
