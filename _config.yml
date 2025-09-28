@@ -1,6 +1,7 @@
 title: OninesixY的小站
 description: 一个我都不知道有什么用的网站
 remote_theme: daattali/beautiful-jekyll
+google_fonts: "Noto+Serif+SC"
 
 plugins:
   - jekyll-remote-theme
