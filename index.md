@@ -1,6 +1,6 @@
 # 首页
 
-## 🐉 我养的龙（实时状态）
+## 🐉 我养的龙
 
 [![Dragon Cave: Adopt one today!](https://dragcave.net/image/BTKPO.gif)](https://dragcave.net/view/BTKPO)
 [![Dragon Cave: Adopt one today!](https://dragcave.net/image/8oAmQ.gif)](https://dragcave.net/view/8oAmQ)
@@ -19,21 +19,21 @@
 
 ## 📱 刷机教程
 
-### [🔓 Root教程](Flashing/Root/index.md)
+### [🔓 Root教程](./Flashing/Root/index.md)
 
 获得安卓设备的**最高权限**
 
-### [⚙️ Recovery刷入教程](Flashing/FlashRecovery/index.md)
+### [⚙️ Recovery刷入教程](./Flashing/FlashRecovery/index.md)
 
 无需电脑，即可使用**fastboot功能**
 
 ## 🎮 AI生成的难玩游戏
 
-### [🎲 俄罗斯方块](Game/Tetris/index.html)
+### [🎲 俄罗斯方块](./Game/Tetris/index.html)
 
 经典**益智**游戏
 
-### [🔢 2048](Game/2048/index.html)
+### [🔢 2048](./Game/2048/index.html)
 
 经典**数字组合**游戏
 
