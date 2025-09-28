@@ -47,7 +47,7 @@
 
 浏览器脚本：自动将cn.bing.com重定向至www.bing.com，失败则放弃本次重定向。
 
-### [🔄 autoRe](./Tools/autoRe/script.user.js)
+### [🔄 autoRe](./Tools/autoRe/)
 
 浏览器脚本：自动刷新网页
 
