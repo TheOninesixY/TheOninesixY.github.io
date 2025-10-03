@@ -9,10 +9,10 @@ favicon: /favicon.ico
 
 # 导航菜单项
 header_pages:
-  - [首页](./)
-  - [工具](./Tools/)
-  - [游戏](./Game/)
-  - [刷机](./Flashing/)
+- [首页](./)
+- [工具](./Tools/)
+- [游戏](./Game/)
+- [刷机](./Flashing/)
 
 
 # 主题配置
