@@ -12,6 +12,23 @@ description: 一个我都不知道有什么用的网站
 ## 图标
 favicon: /favicon.ico
 
+## 导航栏
+main_nav:
+  - title: "主页"
+    url: "./"
+
+  - title: "工具"
+    url: "./Tools/"
+
+  - title: "刷机"
+    url: "./Flashing/"
+
+  - title: "游戏"
+    url: "./Game/"
+
+  - title: "旧版"
+    url: "./old/"
+
 # ----------分割线----------
 
 # 样式配置
