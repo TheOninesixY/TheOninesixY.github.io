@@ -38,3 +38,8 @@ remote_theme: "mmistakes/so-simple-theme"
 
 ## 皮肤
 skin: "/assets/css/skins/light.css"
+
+## 使用Google Fonts更改字体
+google_fonts:
+  - name: "Noto Sans Simplified Chinese"
+    weights: "400,400i,700,700i"
