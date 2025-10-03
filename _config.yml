@@ -38,7 +38,3 @@ remote_theme: "mmistakes/so-simple-theme"
 
 ## 皮肤
 skin: "/assets/css/skins/light.css"
-
-## 搜索
-search_full_content: true
-### ture:开启 false:关闭
