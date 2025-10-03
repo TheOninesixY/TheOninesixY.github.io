@@ -1,11 +1,23 @@
-# 标题
+# 信息配置
+
+## 标题
 title: OninesixY的小站
 
-# 描述
+## 标语
+tagline: 一个我都不知道有什么用的网站
+
+## 描述
 description: 一个我都不知道有什么用的网站
 
-# 图标
+## 图标
 favicon: /favicon.ico
 
-# 主题配置
+# ----------分割线----------
+
+# 样式配置
+
+## 主题
 remote_theme: "mmistakes/so-simple-theme"
+
+## 皮肤
+skin: "/assets/css/skins/light.css"
