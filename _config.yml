@@ -7,14 +7,6 @@ description: 一个我都不知道有什么用的网站
 # 图标
 favicon: /favicon.ico
 
-# 导航菜单项
-header_pages:
-- ./
-- (./Tools/)
-- (./Game/)
-- (./Flashing/)
-
-
 # 主题配置
 remote_theme: pages-themes/architect@v0.2.0
 plugins:
