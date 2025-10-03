@@ -8,4 +8,6 @@ description: 一个我都不知道有什么用的网站
 favicon: /favicon.ico
 
 # 主题配置
-theme: minimal-mistakes-jekyll
+remote_theme: mmistakes/minimal-mistakes
+plugins:
+  - jekyll-remote-theme
