@@ -1,0 +1,15 @@
+main_nav:
+  - title: "主页"
+    url: "./"
+
+  - title: "工具"
+    url: "./Tools/"
+
+  - title: "刷机"
+    url: "./Flashing/"
+
+  - title: "游戏"
+    url: "./Game/"
+
+  - title: "旧版"
+    url: "./old/"
