@@ -6,3 +6,6 @@ description: 一个我都不知道有什么用的网站
 
 # 图标
 favicon: /favicon.ico
+
+# 主题配置
+remote_theme: "mmistakes/minimal-mistakes@4.27.3"
