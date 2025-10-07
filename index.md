@@ -1,6 +1,5 @@
 ---
 title: 🏠 首页
-layout: home
 ---
 
 ## 🐉 我养的龙
