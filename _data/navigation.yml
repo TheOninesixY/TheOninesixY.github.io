@@ -1,14 +1,14 @@
-  - title: "主页"
+  - title: "🏠 主页"
     url: "./"
 
-  - title: "工具"
+  - title: "🛠️ 工具"
     url: "./Tools/"
 
-  - title: "刷机"
+  - title: "📱 刷机"
     url: "./Flashing/"
 
-  - title: "游戏"
+  - title: "🎮 游戏"
     url: "./Game/"
 
-  - title: "旧版"
+  - title: "💿 旧版"
     url: "./old/"
