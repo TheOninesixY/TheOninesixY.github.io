@@ -21,3 +21,19 @@ remote_theme: "mmistakes/so-simple-theme"
 
 ## 皮肤
 skin: "/assets/css/skins/light.css"
+
+## 头标
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      image:
+        feature: favicon.ico
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      image:
+        feature: favicon.ico
