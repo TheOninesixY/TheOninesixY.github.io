@@ -21,21 +21,21 @@ title: 🏠 首页
 
 ## 📱 刷机教程
 
-### [🔓 Root教程](./Flashing/Root/index.md)
+### [🔓 Root教程](./Flashing/Root/)
 
 获得安卓设备的**最高权限**
 
-### [⚙️ Recovery刷入教程](./Flashing/FlashRecovery/index.md)
+### [⚙️ Recovery刷入教程](./Flashing/FlashRecovery/)
 
 无需电脑，即可使用**fastboot功能**
 
 ## 🎮 AI生成的难玩游戏
 
-### [🎲 俄罗斯方块](./Game/Tetris/index.html)
+### [🎲 俄罗斯方块](./Game/Tetris/)
 
 经典**益智**游戏
 
-### [🔢 2048](./Game/2048/index.html)
+### [🔢 2048](./Game/2048/)
 
 经典**数字组合**游戏
 
@@ -61,6 +61,6 @@ title: 🏠 首页
 
 本站大部分代码由AI生成，如遇问题我也只能让AI解决，如果AI解决不了的话我也无能为力
 
-怀旧版请访问[theoninesixy.github.io/old](./old/)
+怀旧版请访问[theoninesixy.github.io/old](./old/)或[old.oninesixy.pages.dev](https://old.oninesixy.pages.dev)
 
 如果你愿意，请给本站点个星标⭐，谢谢！
