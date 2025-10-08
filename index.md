@@ -61,6 +61,6 @@ title: 🏠 首页
 
 本站大部分代码由AI生成，如遇问题我也只能让AI解决，如果AI解决不了的话我也无能为力
 
-怀旧版请访问[theoninesixy.github.io/old](./old/)或[old.oninesixy.pages.dev](https://old.oninesixy.pages.dev)
+[怀旧版入口](./old/)
 
 如果你愿意，请给本站点个星标⭐，谢谢！
