@@ -1,4 +1,6 @@
-# 如何给设备刷入Recovery
+---
+title: 如何给设备刷入Recovery
+---
 
 ## 声明
 

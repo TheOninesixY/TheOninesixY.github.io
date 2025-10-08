@@ -1,7 +1,5 @@
-# 📱 手机Root指南
-
-**作者：** OninesixY  |  **整理与优化：** GoogleGemini
-
+---
+title: 📱 手机Root指南
 ---
 
 ## 目录
