@@ -345,6 +345,12 @@ input, button, textarea, select {
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
+.quick-access-link.drag-over {
+    border-style: dashed;
+    border-color: #4285f4;
+    background-color: #e8f0fe;
+}
+
 .quick-access-link .link-icon {
     width: 36px;
     height: 36px;

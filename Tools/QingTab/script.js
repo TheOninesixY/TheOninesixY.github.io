@@ -335,6 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
         linkElement.className = 'quick-access-link';
         if (link.isSystem) {
             linkElement.classList.add('system-link');
+        } else {
+            linkElement.draggable = true; // 使非系统链接可拖动
         }
         linkElement.dataset.url = link.url;
         
@@ -398,6 +400,13 @@ document.addEventListener('DOMContentLoaded', () => {
             linkElement.addEventListener('pointerleave', () => {
                 clearTimeout(pressTimer);
             });
+
+            // 添加拖拽事件
+            linkElement.addEventListener('dragstart', handleDragStart);
+            linkElement.addEventListener('dragover', handleDragOver);
+            linkElement.addEventListener('dragleave', handleDragLeave);
+            linkElement.addEventListener('drop', handleDrop);
+            linkElement.addEventListener('dragend', handleDragEnd);
         }
         
         // 将元素添加到容器中
@@ -569,4 +578,52 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 加载快速访问链接
     loadQuickAccessLinks();
+
+    // 拖拽功能实现
+    let draggedItem = null;
+
+    function handleDragStart(e) {
+        draggedItem = this;
+        setTimeout(() => {
+            this.style.display = 'none';
+        }, 0);
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+
+        if (draggedItem !== this) {
+            const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+            const fromIndex = links.findIndex(link => link.url === draggedItem.dataset.url);
+            const toIndex = links.findIndex(link => link.url === this.dataset.url);
+
+            if (fromIndex !== -1 && toIndex !== -1) {
+                const [movedItem] = links.splice(fromIndex, 1);
+                links.splice(toIndex, 0, movedItem);
+                localStorage.setItem('quickAccessLinks', JSON.stringify(links));
+                loadQuickAccessLinks();
+            }
+        }
+    }
+
+    function handleDragEnd() {
+        if (draggedItem) {
+            draggedItem.style.display = '';
+            draggedItem = null;
+        }
+        document.querySelectorAll('.quick-access-link').forEach(link => {
+            link.classList.remove('drag-over');
+        });
+    }
 });
