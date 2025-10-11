@@ -401,12 +401,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(pressTimer);
             });
 
-            // 添加拖拽事件
+            // 添加拖拽事件 (桌面端)
             linkElement.addEventListener('dragstart', handleDragStart);
             linkElement.addEventListener('dragover', handleDragOver);
             linkElement.addEventListener('dragleave', handleDragLeave);
             linkElement.addEventListener('drop', handleDrop);
             linkElement.addEventListener('dragend', handleDragEnd);
+
+            // 添加触摸事件 (移动端)
+            linkElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+            linkElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+            linkElement.addEventListener('touchend', handleTouchEnd);
         }
         
         // 将元素添加到容器中
@@ -625,5 +630,78 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.quick-access-link').forEach(link => {
             link.classList.remove('drag-over');
         });
+    }
+
+    // 触摸拖拽功能实现
+    let touchDraggedItem = null;
+
+    function handleTouchStart(e) {
+        // 检查是否是系统链接，系统链接不可拖动
+        if (this.classList.contains('system-link')) return;
+        touchDraggedItem = this;
+        // 添加视觉反馈
+        this.style.opacity = '0.5';
+        this.style.transform = 'scale(1.1)';
+    }
+
+    function handleTouchMove(e) {
+        if (!touchDraggedItem) return;
+        // 阻止页面滚动
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        // 隐藏当前拖动的元素，以便 elementFromPoint 能找到其下方的元素
+        touchDraggedItem.style.display = 'none';
+        const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        touchDraggedItem.style.display = ''; // 恢复显示
+
+        // 移除所有 drag-over 状态
+        document.querySelectorAll('.quick-access-link').forEach(link => {
+            link.classList.remove('drag-over');
+        });
+
+        if (overElement) {
+            const targetLink = overElement.closest('.quick-access-link:not(.system-link)');
+            if (targetLink && targetLink !== touchDraggedItem) {
+                targetLink.classList.add('drag-over');
+            }
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (!touchDraggedItem) return;
+
+        // 恢复样式
+        touchDraggedItem.style.opacity = '1';
+        touchDraggedItem.style.transform = 'scale(1)';
+
+        const touch = e.changedTouches[0];
+        // 再次隐藏以准确找到目标
+        touchDraggedItem.style.display = 'none';
+        const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        touchDraggedItem.style.display = '';
+
+        if (overElement) {
+            const targetLink = overElement.closest('.quick-access-link:not(.system-link)');
+            if (targetLink && targetLink !== touchDraggedItem) {
+                const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+                const fromIndex = links.findIndex(link => link.url === touchDraggedItem.dataset.url);
+                const toIndex = links.findIndex(link => link.url === targetLink.dataset.url);
+
+                if (fromIndex !== -1 && toIndex !== -1) {
+                    const [movedItem] = links.splice(fromIndex, 1);
+                    links.splice(toIndex, 0, movedItem);
+                    localStorage.setItem('quickAccessLinks', JSON.stringify(links));
+                    // 重新加载以反映顺序变化
+                    loadQuickAccessLinks();
+                }
+            }
+        }
+
+        // 清理
+        document.querySelectorAll('.quick-access-link').forEach(link => {
+            link.classList.remove('drag-over');
+        });
+        touchDraggedItem = null;
     }
 });
