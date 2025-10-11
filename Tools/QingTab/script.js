@@ -374,17 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         titleElement.className = 'link-title';
         titleElement.textContent = link.title;
         
-        // 创建删除按钮（系统链接不显示删除按钮）
         if (!link.isSystem) {
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'delete-button';
-            deleteButton.textContent = '×';
-            deleteButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deleteQuickAccessLink(link.title, link.url);
-            });
-            linkElement.appendChild(deleteButton);
-
             // 添加右键和长按事件
             let pressTimer;
 
