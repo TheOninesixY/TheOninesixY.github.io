@@ -571,21 +571,6 @@ body.dark-mode .settings-button {
     background-color: #34a853; /* 绿色 */
 }
 
-.modal-content #clear-data-button {
-    background-color: #ea4335; /* 红色，用于危险操作 */
-}
-
-/* 数据管理部分的警告文本 */
-.warning-text {
-    font-size: 14px;
-    color: #666;
-    margin-top: 8px; /* 与按钮保持一点间距 */
-}
-
-body.dark-mode .warning-text {
-    color: #b0b0b0; /* 深色模式下的文本颜色 */
-}
-
 /* 文件输入框样式 */
 .modal-content input[type="file"] {
     margin-top: 10px;

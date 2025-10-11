@@ -57,9 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // 悬浮设置按钮
 const floatingSettingsButton = document.getElementById('floating-settings-button');
 
-   // 数据管理
-   const clearDataButton = document.getElementById('clear-data-button');
-
 // --- 初始化加载 ---
 
 
@@ -833,20 +830,4 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         });
         touchDraggedItem = null;
     }
- });
- 
-     // --- 数据管理功能 ---
- 
-     /**
-      * 清除所有本地存储的数据
-      */
-     const clearAllData = () => {
-         if (confirm('您确定要清除所有数据吗？此操作将删除所有设置和快速访问链接，且无法撤销。')) {
-             localStorage.clear();
-             alert('所有数据已清除。页面将重新加载。');
-             location.reload();
-         }
-     };
- 
-     // 为清除数据按钮添加点击事件
-     clearDataButton.addEventListener('click', clearAllData);
+});
