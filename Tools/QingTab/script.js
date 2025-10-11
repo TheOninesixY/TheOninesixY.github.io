@@ -46,12 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const quickAccessModalTitle = document.getElementById('quick-access-modal-title'); // 快速访问模态框的标题
     const quickAccessOriginalUrlInput = document.getElementById('quick-access-original-url'); // 隐藏输入框，用于存储编辑前链接的原始URL
 
+    // 快速访问设置相关元素
+    const showQuickAccessCheckbox = document.getElementById('show-quick-access'); // 是否显示快速访问的选择框
+    const quickAccessContainer = document.querySelector('.quick-access-container'); // 快速访问容器
+
     // 右键上下文菜单相关元素
     const contextMenu = document.getElementById('context-menu'); // 上下文菜单容器
     const editLinkButton = document.getElementById('edit-link'); // 编辑链接按钮
     const deleteLinkButton = document.getElementById('delete-link'); // 删除链接按钮
+// 悬浮设置按钮
+const floatingSettingsButton = document.getElementById('floating-settings-button');
 
-    // --- 初始化加载 ---
+// --- 初始化加载 ---
+
 
     // 加载已保存的搜索引擎偏好
     const savedSearchEngine = localStorage.getItem('searchEngine') || 'google'; // 从 localStorage 获取，默认为 google
@@ -381,6 +388,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     /**
+     * 加载并应用快速访问的保存设置
+     */
+    const loadQuickAccessSettings = () => {
+        const showQuickAccess = localStorage.getItem('showQuickAccess') !== 'false'; // 默认显示
+        showQuickAccessCheckbox.checked = showQuickAccess;
+        quickAccessContainer.style.display = showQuickAccess ? 'block' : 'none';
+        floatingSettingsButton.style.display = showQuickAccess ? 'none' : 'flex'; // 根据状态显示或隐藏悬浮按钮
+    };
+
+    /**
      * 创建单个快速访问链接的 DOM 元素
      * @param {object} link - 链接对象 {title, url, icon, isSystem, isAddButton}
      */
@@ -619,9 +636,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- 快速访问设置事件 ---
+    showQuickAccessCheckbox.addEventListener('change', () => {
+        const showQuickAccess = showQuickAccessCheckbox.checked;
+        localStorage.setItem('showQuickAccess', showQuickAccess);
+        quickAccessContainer.style.display = showQuickAccess ? 'block' : 'none';
+        floatingSettingsButton.style.display = showQuickAccess ? 'none' : 'flex'; // 同步更新悬浮按钮的显示状态
+    });
+
+    // --- 悬浮设置按钮事件 ---
+    floatingSettingsButton.addEventListener('click', () => {
+        settingsModal.style.display = 'block';
+    });
+
     // --- 页面初始化调用 ---
     loadTimeSettings(); // 加载时间设置
     loadDarkModeSettings(); // 加载深色模式设置
+    loadQuickAccessSettings(); // 加载快速访问设置
     setInterval(updateTimeDisplay, 1000); // 每秒更新一次时间
     
     /**

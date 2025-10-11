@@ -220,29 +220,37 @@ input, button, textarea, select {
 }
 
 /* ======================================== */
-/* Settings Button (设置按钮 - 已被快速访问中的设置链接替代) */
+/* Floating Settings Button (悬浮设置按钮) */
 /* ======================================== */
-/* 注意：此按钮在当前版本中可能未直接使用，功能已集成到快速访问中 */
-#settings-button {
+.settings-button {
+    display: none; /* 默认隐藏 */
     position: fixed;
-    right: 30px;
-    bottom: 30px;
-    width: 60px;
-    height: 60px;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
     border: none;
-    background-color: #4285f4;
-    color: white;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 100;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
-#settings-button:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+.settings-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .settings-button {
+    background-color: rgba(40, 40, 40, 0.8);
+    color: #e0e0e0;
 }
 
 /* Google Fonts 图标样式 */
