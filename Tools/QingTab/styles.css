@@ -330,7 +330,8 @@ input, button, textarea, select {
     align-items: center;
     text-align: center;
     padding: 10px;
-    background-color: #f8f9fa;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -860,4 +861,48 @@ input, button, textarea, select {
         padding: 10px 15px;
         font-size: 14px;
     }
+}
+
+/* Context Menu Styles */
+.context-menu {
+    display: none;
+    position: absolute;
+    z-index: 1001;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    min-width: 120px;
+    font-size: 14px;
+}
+
+.context-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context-menu ul li {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+.context-menu ul li:hover {
+    background-color: #f5f5f5;
+}
+
+body.dark-mode .context-menu {
+    background-color: #2d2d2d;
+    border-color: #444;
+}
+
+body.dark-mode .context-menu ul li {
+    color: #e0e0e0;
+}
+
+body.dark-mode .context-menu ul li:hover {
+    background-color: #3d3d3d;
 }

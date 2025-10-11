@@ -26,8 +26,9 @@
     <div id="quick-access-modal" class="modal">
         <div class="modal-content">
             <span class="close" id="close-quick-access-modal">&times;</span>
-            <h2>添加快速访问</h2>
+            <h2 id="quick-access-modal-title">添加快速访问</h2>
             <div class="modal-form">
+                <input type="hidden" id="quick-access-original-url">
                 <div class="form-group">
                     <label for="quick-access-title">标题</label>
                     <input type="text" id="quick-access-title" placeholder="输入网站标题">
@@ -133,7 +134,7 @@
             <h2>关于QingTab</h2>
             <p>QingTab是一款简洁、轻快、美观的浏览器起始页，由OninesixY和AI一起开发。</p>
             <a href="./README/" target="_blank">查看README</a>
-            <p>当前版本：2.0 Re</p>
+            <p>当前版本：2.1 Re</p>
             <br>
             <h3>版本后缀说明</h3>
             <p>Ah=alpha</p>
@@ -141,6 +142,15 @@
             <p>Re=release</p>
         </div>
     </div>
+
+    <!-- 快速访问链接的上下文菜单 -->
+    <div id="context-menu" class="context-menu">
+        <ul>
+            <li id="edit-link">编辑</li>
+            <li id="delete-link">删除</li>
+        </ul>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

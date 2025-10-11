@@ -37,6 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const quickAccessTitleInput = document.getElementById('quick-access-title');
     const quickAccessUrlInput = document.getElementById('quick-access-url');
     const quickAccessIconInput = document.getElementById('quick-access-icon');
+    const quickAccessModalTitle = document.getElementById('quick-access-modal-title');
+    const quickAccessOriginalUrlInput = document.getElementById('quick-access-original-url');
+
+    // 上下文菜单元素
+    const contextMenu = document.getElementById('context-menu');
+    const editLinkButton = document.getElementById('edit-link');
+    const deleteLinkButton = document.getElementById('delete-link');
 
 
     // Load saved preferences
@@ -377,6 +384,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteQuickAccessLink(link.title, link.url);
             });
             linkElement.appendChild(deleteButton);
+
+            // 添加右键和长按事件
+            let pressTimer;
+
+            linkElement.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showContextMenu(e.pageX, e.pageY, link);
+            });
+
+            linkElement.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'touch') {
+                    pressTimer = setTimeout(() => {
+                        showContextMenu(e.pageX, e.pageY, link);
+                    }, 500); // 500ms for long press
+                }
+            });
+
+            linkElement.addEventListener('pointerup', () => {
+                clearTimeout(pressTimer);
+            });
+
+            linkElement.addEventListener('pointerleave', () => {
+                clearTimeout(pressTimer);
+            });
         }
         
         // 将元素添加到容器中
@@ -390,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else if (link.isAddButton) {
             linkElement.addEventListener('click', () => {
-                quickAccessModal.style.display = 'block';
+                openQuickAccessModalForAdd();
             });
         } else {
             linkElement.addEventListener('click', () => {
@@ -401,40 +432,66 @@ document.addEventListener('DOMContentLoaded', () => {
         quickAccessLinksContainer.appendChild(linkElement);
     };
     
+    const openQuickAccessModalForAdd = () => {
+        quickAccessModalTitle.textContent = '添加快速访问';
+        quickAccessOriginalUrlInput.value = '';
+        quickAccessTitleInput.value = '';
+        quickAccessUrlInput.value = '';
+        quickAccessIconInput.value = '';
+        quickAccessModal.style.display = 'block';
+    };
+
+    const openQuickAccessModalForEdit = (link) => {
+        quickAccessModalTitle.textContent = '编辑快速访问';
+        quickAccessOriginalUrlInput.value = link.url;
+        quickAccessTitleInput.value = link.title;
+        quickAccessUrlInput.value = link.url;
+        quickAccessIconInput.value = link.icon || '';
+        quickAccessModal.style.display = 'block';
+    };
+
     const saveQuickAccessLink = () => {
         const title = quickAccessTitleInput.value.trim();
         let url = quickAccessUrlInput.value.trim();
         const icon = quickAccessIconInput.value.trim();
-        
+        const originalUrl = quickAccessOriginalUrlInput.value;
+
         if (!title || !url) {
             alert('请输入标题和网址');
             return;
         }
-        
+
         // 确保URL有协议
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
             url = 'https://' + url;
         }
-        
+
         const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
-        
-        // 检查是否已存在相同的链接
-        const existingIndex = links.findIndex(link => link.url === url || link.title === title);
-        if (existingIndex !== -1) {
-            // 更新现有链接
-            links[existingIndex] = { title, url, icon };
+
+        if (originalUrl) {
+            // 编辑模式
+            const existingIndex = links.findIndex(link => link.url === originalUrl);
+            if (existingIndex !== -1) {
+                links[existingIndex] = { title, url, icon };
+            }
         } else {
-            // 添加新链接
+            // 添加模式
+            const existingLink = links.find(link => link.url === url || link.title === title);
+            if (existingLink) {
+                alert('已存在具有相同标题或网址的链接。');
+                return;
+            }
             links.push({ title, url, icon });
         }
-        
+
         localStorage.setItem('quickAccessLinks', JSON.stringify(links));
         loadQuickAccessLinks();
-        
+
         // 清空输入框并关闭模态框
         quickAccessTitleInput.value = '';
         quickAccessUrlInput.value = '';
         quickAccessIconInput.value = '';
+        quickAccessOriginalUrlInput.value = '';
         quickAccessModal.style.display = 'none';
     };
     
@@ -492,6 +549,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
+
+    // 上下文菜单功能
+    const showContextMenu = (x, y, link) => {
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = `${x}px`;
+        contextMenu.style.top = `${y}px`;
+
+        // 传递链接数据到菜单按钮
+        editLinkButton.onclick = () => {
+            openQuickAccessModalForEdit(link);
+            hideContextMenu();
+        };
+        deleteLinkButton.onclick = () => {
+            deleteQuickAccessLink(link.title, link.url);
+            hideContextMenu();
+        };
+    };
+
+    const hideContextMenu = () => {
+        contextMenu.style.display = 'none';
+    };
+
+    window.addEventListener('click', () => {
+        hideContextMenu();
+    });
     // 清理默认链接
     cleanupDefaultLinks();
     
