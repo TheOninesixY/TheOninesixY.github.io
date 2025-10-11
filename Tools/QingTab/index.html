@@ -8,39 +8,53 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=settings" />
 </head>
 <body>
+    <!-- 时间显示区域 -->
     <div id="time-display" class="time-display"></div>
+
+    <!-- 搜索功能容器 -->
     <div class="search-container">
         <div class="search-input-container">
+            <!-- 搜索输入框 -->
             <input type="text" id="search-input" placeholder="搜索或输入网址">
+            <!-- 搜索按钮 -->
             <button id="search-button">搜索</button>
         </div>
     </div>
 
-    <!-- 快速访问部分 -->
+    <!-- 快速访问链接容器 -->
     <div class="quick-access-container">
         <div id="quick-access-links" class="quick-access-links">
             <!-- 快速访问链接将通过JavaScript动态生成 -->
         </div>
     </div>
-    <!-- 添加快速访问链接模态框 -->
+
+    <!-- 添加/编辑快速访问链接的模态框 -->
     <div id="quick-access-modal" class="modal">
         <div class="modal-content">
+            <!-- 关闭模态框按钮 -->
             <span class="close" id="close-quick-access-modal">&times;</span>
+            <!-- 模态框标题 -->
             <h2 id="quick-access-modal-title">添加快速访问</h2>
+            <!-- 表单区域 -->
             <div class="modal-form">
+                <!-- 隐藏字段，用于存储正在编辑的链接的原始URL -->
                 <input type="hidden" id="quick-access-original-url">
+                <!-- 标题输入 -->
                 <div class="form-group">
                     <label for="quick-access-title">标题</label>
                     <input type="text" id="quick-access-title" placeholder="输入网站标题">
                 </div>
+                <!-- 网址输入 -->
                 <div class="form-group">
                     <label for="quick-access-url">网址</label>
                     <input type="text" id="quick-access-url" placeholder="输入网站地址">
                 </div>
+                <!-- 图标URL输入（可选） -->
                 <div class="form-group">
                     <label for="quick-access-icon">图标 (可选)</label>
                     <input type="text" id="quick-access-icon" placeholder="输入图标URL或使用默认">
                 </div>
+                <!-- 模态框操作按钮 -->
                 <div class="modal-buttons">
                     <button id="save-quick-access">保存</button>
                     <button id="cancel-quick-access">取消</button>
@@ -49,10 +63,14 @@
         </div>
     </div>
 
+    <!-- 设置模态框 -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
+            <!-- 关闭按钮 -->
             <span class="close">&times;</span>
             <h1>设置</h1>
+            
+            <!-- 搜索引擎设置 -->
             <h2>搜索引擎</h2>
             <select id="search-engine">
                 <option value="google">Google</option>
@@ -61,14 +79,21 @@
                 <option value="baidu">百度</option>
             </select>
             <hr>
+
+            <!-- 个性化设置 -->
             <h2>个性化</h2>
+            <!-- 背景图片设置 -->
             <h3>背景图片</h3>
             <p>当前背景图片：<span id="current-bg">默认</span></p>
             <button id="change-bg">更改背景图片</button>
+            <!-- 隐藏的文件输入框，用于选择本地图片 -->
             <input type="file" id="bg-file-input" accept="image/*" style="display: none;">
             <button id="todaybingwallpaper">今日必应壁纸</button>
             <button id="reset-bg">重置背景图片</button>
+            
+            <!-- 时间显示设置 -->
             <h3>时间显示</h3>
+            <!-- 是否显示时间 -->
             <div class="setting-item">
                 <label for="show-time">是否显示时间</label>
                 <div class="toggle-container">
@@ -76,6 +101,7 @@
                     <label for="show-time" class="toggle-label"></label>
                 </div>
             </div>
+            <!-- 是否显示秒数 -->
             <div class="setting-item sub-setting" id="time-format-settings">
                 <label for="show-seconds">是否显示秒数</label>
                 <div class="toggle-container">
@@ -83,6 +109,7 @@
                     <label for="show-seconds" class="toggle-label"></label>
                 </div>
             </div>
+            <!-- 时间格式选择 -->
             <div class="setting-item sub-setting" id="time-format-select-container">
                 <label for="time-format">以什么格式显示时间</label>
                 <select id="time-format">
@@ -90,6 +117,7 @@
                     <option value="24h">24小时制</option>
                 </select>
             </div>
+            <!-- 是否显示上下午（仅12小时制） -->
             <div class="setting-item sub-setting" id="ampm-display-settings">
                 <label for="show-ampm">是否显示上下午</label>
                 <select id="show-ampm">
@@ -97,6 +125,7 @@
                     <option value="yes">显示</option>
                 </select>
             </div>
+            <!-- 时间颜色选择 -->
             <div class="setting-item sub-setting" id="time-color-settings">
                 <label for="time-color">使用什么颜色来显示时间</label>
                 <select id="time-color">
@@ -104,6 +133,7 @@
                     <option value="black">黑色</option>
                 </select>
             </div>
+            <!-- 时间字体粗细选择 -->
             <div class="setting-item sub-setting" id="time-weight-settings">
                 <label for="time-weight">时间字体粗度</label>
                 <select id="time-weight">
@@ -114,7 +144,9 @@
                 </select>
             </div>
             
+            <!-- 深色模式设置 -->
             <h3>深色模式</h3>
+            <!-- 启用/禁用深色模式 -->
             <div class="setting-item">
                 <label for="dark-mode-toggle">启用深色模式</label>
                 <div class="toggle-container">
@@ -122,6 +154,7 @@
                     <label for="dark-mode-toggle" class="toggle-label"></label>
                 </div>
             </div>
+            <!-- 深色模式类型选择 -->
             <div class="setting-item sub-setting" id="dark-mode-type-settings">
                 <label for="dark-mode-type">深色模式类型</label>
                 <select id="dark-mode-type">
@@ -131,10 +164,11 @@
             </div>
             
             <hr>
+            <!-- 关于部分 -->
             <h2>关于QingTab</h2>
             <p>QingTab是一款简洁、轻快、美观的浏览器起始页，由OninesixY和AI一起开发。</p>
             <a href="./README/" target="_blank">查看README</a>
-            <p>当前版本：2.5 Re</p>
+            <p>当前版本：2.5.1 Re</p>
             <br>
             <h3>版本后缀说明</h3>
             <p>Ah=alpha</p>
@@ -143,7 +177,7 @@
         </div>
     </div>
 
-    <!-- 快速访问链接的上下文菜单 -->
+    <!-- 快速访问链接的右键上下文菜单 -->
     <div id="context-menu" class="context-menu">
         <ul>
             <li id="edit-link">编辑</li>
