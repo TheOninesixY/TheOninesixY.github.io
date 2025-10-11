@@ -361,14 +361,38 @@ document.addEventListener('DOMContentLoaded', () => {
             iconElement.style.fontSize = '18px';
             iconElement.style.lineHeight = '36px';
         } else {
-            // 使用默认图标（标题的第一个字符）
-            const firstChar = link.title.charAt(0).toUpperCase();
-            iconElement.textContent = firstChar;
-            
-            // 为不同的链接生成不同的背景色
-            const colors = ['#4285f4', '#ea4335', '#fbbc05', '#34a853', '#1a73e8', '#d93025', '#f28b82', '#fdd663', '#81c995', '#8ab4f8'];
-            const colorIndex = Math.abs(link.title.charCodeAt(0)) % colors.length;
-            iconElement.style.backgroundColor = colors[colorIndex];
+            // 尝试使用网站的favicon
+            try {
+                const url = new URL(link.url);
+                const faviconUrl = `${url.protocol}//${url.hostname}/favicon.ico`;
+                iconElement.style.backgroundImage = `url(${faviconUrl})`;
+                iconElement.style.backgroundSize = 'cover';
+                iconElement.style.backgroundPosition = 'center';
+                iconElement.textContent = '';
+
+                // Fallback if favicon fails to load
+                const img = new Image();
+                img.src = faviconUrl;
+                img.onerror = () => {
+                    // 使用默认图标（标题的第一个字符）
+                    const firstChar = link.title.charAt(0).toUpperCase();
+                    iconElement.textContent = firstChar;
+                    iconElement.style.backgroundImage = '';
+                    // 为不同的链接生成不同的背景色
+                    const colors = ['#4285f4', '#ea4335', '#fbbc05', '#34a853', '#1a73e8', '#d93025', '#f28b82', '#fdd663', '#81c995', '#8ab4f8'];
+                    const colorIndex = Math.abs(link.title.charCodeAt(0)) % colors.length;
+                    iconElement.style.backgroundColor = colors[colorIndex];
+                };
+            } catch (e) {
+                 // 使用默认图标（标题的第一个字符）
+                const firstChar = link.title.charAt(0).toUpperCase();
+                iconElement.textContent = firstChar;
+                
+                // 为不同的链接生成不同的背景色
+                const colors = ['#4285f4', '#ea4335', '#fbbc05', '#34a853', '#1a73e8', '#d93025', '#f28b82', '#fdd663', '#81c995', '#8ab4f8'];
+                const colorIndex = Math.abs(link.title.charCodeAt(0)) % colors.length;
+                iconElement.style.backgroundColor = colors[colorIndex];
+            }
         }
         
         // 创建标题元素
