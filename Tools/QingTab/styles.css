@@ -314,14 +314,14 @@ body.dark-mode .settings-button {
 .quick-access-container {
     width: 100%;
     max-width: 800px;
-    margin: 20px 0;
+    margin: 20px auto; /* 改为 auto 以实现水平居中 */
     padding: 20px;
 }
 
 .quick-access-links {
-    display: grid;
-    /* 自动填充列，每列最小80px，最大1fr，实现响应式布局 */
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    display: flex; /* 改为 flex 布局 */
+    justify-content: center; /* 水平居中 */
+    flex-wrap: wrap; /* 允许换行 */
     gap: 12px;
 }
 
