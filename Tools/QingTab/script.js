@@ -187,7 +187,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
 
     // 当用户选择自定义背景文件后
     bgFileInput.addEventListener('change', (event) => {
-        const file = event.target.files;
+        const file = event.target.files[0]; // <--- [修复] 从文件列表中获取第一个文件
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -198,7 +198,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
                 localStorage.setItem('bgImageType', 'custom');
                 bgImageSelect.value = 'custom';
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // <--- [修复] 现在读取的是正确的文件对象
         } else {
             // 如果用户取消了文件选择，将下拉框恢复到之前保存的状态
             const previousType = localStorage.getItem('bgImageType') || 'default';
@@ -894,7 +894,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         if (!touchDraggedItem) return;
         e.preventDefault(); // 阻止页面滚动
 
-        const touch = e.touches;
+        const touch = e.touches[0];
         // 暂时隐藏拖动元素，以获取其下方的元素
         touchDraggedItem.style.display = 'none';
         const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -920,7 +920,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         touchDraggedItem.style.opacity = '1';
         touchDraggedItem.style.transform = 'scale(1)';
 
-        const touch = e.changedTouches;
+        const touch = e.changedTouches[0];
         // 再次隐藏以准确找到最终的目标元素
         touchDraggedItem.style.display = 'none';
         const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
