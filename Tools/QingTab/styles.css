@@ -376,6 +376,36 @@ body.dark-mode .settings-button {
     max-width: 100%;
 }
 
+/* 快速访问标题样式 */
+.quick-access-links.hide-title .link-title {
+    display: none;
+}
+
+.quick-access-links.hide-title .link-icon {
+    margin-bottom: 0;
+}
+
+.quick-access-links.title-white .link-title {
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.quick-access-links.title-black .link-title {
+    color: #333;
+    text-shadow: none;
+}
+
+body.dark-mode .quick-access-links.title-white .link-title {
+    color: #e0e0e0;
+    text-shadow: none;
+}
+
+body.dark-mode .quick-access-links.title-black .link-title {
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+
 /* 系统链接（如设置、添加）的特殊样式 */
 .system-link {
     border: none;
@@ -526,22 +556,7 @@ body.dark-mode .settings-button {
 }
 
 /* 搜索引擎选择器 */
-#search-engine {
-    width: 100%;
-    padding: 12px 15px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background-color: #fff;
-    font-size: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-}
-
-#search-engine:focus {
-    border-color: #4285f4;
-    box-shadow: 0 2px 10px rgba(66, 133, 244, 0.2);
-}
+/* (样式已合并到下方的 .setting-item select 中以保持一致性) */
 
 /* 设置模态框内的通用按钮样式 */
 .modal-content button {

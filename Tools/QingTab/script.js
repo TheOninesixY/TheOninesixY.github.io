@@ -7,12 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsModal = document.getElementById('settings-modal'); // 设置模态框
     const closeModal = document.querySelector('#settings-modal .close'); // 设置模态框关闭按钮
     const searchEngineSelect = document.getElementById('search-engine'); // 搜索引擎选择器
+   const searchOpenTypeSelect = document.getElementById('search-open-type'); // 搜索打开方式选择器
     // 背景图片相关
-    const changeBgButton = document.getElementById('change-bg'); // 更改背景按钮
     const bgFileInput = document.getElementById('bg-file-input'); // 背景文件输入框
-    const currentBgSpan = document.getElementById('current-bg'); // 当前背景信息显示
-    const resetBgButton = document.getElementById('reset-bg'); // 重置背景按钮
-    const todayBingWallpaperButton = document.getElementById('todaybingwallpaper'); // 今日必应壁纸按钮
+    const bgImageSelect = document.getElementById('bg-image-select'); // 背景图片选择器
 
     // 时间显示相关元素
     const timeDisplay = document.getElementById('time-display'); // 时间显示区域
@@ -49,9 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // 快速访问设置相关元素
     const showQuickAccessCheckbox = document.getElementById('show-quick-access'); // 是否显示快速访问的选择框
     const quickAccessContainer = document.querySelector('.quick-access-container'); // 快速访问容器
+    const quickAccessOpenTypeSelect = document.getElementById('quick-access-open-type'); // 快速访问打开方式选择器
+    const quickAccessOpenTypeSettings = document.getElementById('quick-access-open-type-settings'); // 快速访问打开方式设置容器
+    const showQuickAccessTitleCheckbox = document.getElementById('show-quick-access-title'); // 是否显示快速访问标题的选择框
+    const quickAccessTitleColorSelect = document.getElementById('quick-access-title-color'); // 快速访问标题颜色选择器
+    const quickAccessTitleDisplaySettings = document.getElementById('quick-access-title-display-settings'); // 标题显示设置容器
+    const quickAccessTitleColorSettings = document.getElementById('quick-access-title-color-settings'); // 标题颜色设置容器
 
-    // 右键上下文菜单相关元素
-    const contextMenu = document.getElementById('context-menu'); // 上下文菜单容器
+     // 右键上下文菜单相关元素
+     const contextMenu = document.getElementById('context-menu'); // 上下文菜单容器
     const editLinkButton = document.getElementById('edit-link'); // 编辑链接按钮
     const deleteLinkButton = document.getElementById('delete-link'); // 删除链接按钮
 // 悬浮设置按钮
@@ -64,12 +68,32 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
     const savedSearchEngine = localStorage.getItem('searchEngine') || 'google'; // 从 localStorage 获取，默认为 google
     searchEngineSelect.value = savedSearchEngine; // 设置选择器的值为保存的值
 
-    // 加载已保存的背景图片
-    const savedBgImage = localStorage.getItem('bgImage'); // 从 localStorage 获取背景图片
-    if (savedBgImage) {
-        document.body.style.backgroundImage = `url(${savedBgImage})`; // 如果存在，则设置为页面背景
-        currentBgSpan.textContent = '自定义'; // 更新当前背景信息
-    }
+   // 加载已保存的搜索打开方式
+   const savedSearchOpenType = localStorage.getItem('searchOpenType') || '_self';
+   searchOpenTypeSelect.value = savedSearchOpenType;
+
+    /**
+     * 加载并应用背景相关的保存设置
+     */
+    const loadBackgroundSettings = () => {
+        const savedBgImageType = localStorage.getItem('bgImageType') || 'default';
+        bgImageSelect.value = savedBgImageType;
+
+        if (savedBgImageType === 'custom') {
+            const savedBgImage = localStorage.getItem('bgImage');
+            if (savedBgImage) {
+                document.body.style.backgroundImage = `url(${savedBgImage})`;
+            }
+        } else if (savedBgImageType === 'bing') {
+            // 对于bing壁纸，每次加载都重新获取，以确保是“今日”壁纸
+            const bingWallpaperUrl = 'https://bing.img.run/uhd.php';
+            document.body.style.backgroundImage = `url(${bingWallpaperUrl})`;
+            localStorage.setItem('bgImage', bingWallpaperUrl); // 同时更新保存的URL
+        } else { // default
+            document.body.style.backgroundImage = '';
+            localStorage.removeItem('bgImage');
+        }
+    };
 
     // --- 搜索功能 ---
 
@@ -79,11 +103,12 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
     const performSearch = () => {
         const query = searchInput.value.trim(); // 获取并清理输入框中的查询内容
         if (query) {
+           const openType = localStorage.getItem('searchOpenType') || '_self';
             // 检查输入是否为完整的 URL
             if (query.startsWith('http://') || query.startsWith('https://')) {
-                window.location.href = query; // 直接跳转
+               window.open(query, openType);
             } else if (query.includes('.')) { // 简单检查是否为域名
-                window.location.href = `https://${query}`; // 添加 https:// 并跳转
+               window.open(`https://${query}`, openType);
             } else {
                 // 使用选择的搜索引擎进行搜索
                 const searchEngine = searchEngineSelect.value;
@@ -101,7 +126,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
                     default: // 默认为 google
                         searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
                 }
-                window.location.href = searchUrl; // 跳转到搜索结果页面
+               window.open(searchUrl, openType);
             }
         }
     };
@@ -135,41 +160,50 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         localStorage.setItem('searchEngine', searchEngineSelect.value);
     });
 
+   // 保存搜索打开方式偏好
+   searchOpenTypeSelect.addEventListener('change', () => {
+       localStorage.setItem('searchOpenType', searchOpenTypeSelect.value);
+   });
+
     // --- 背景图片功能 ---
 
-    // 点击“更改背景图片”按钮时，触发隐藏的文件输入框
-    changeBgButton.addEventListener('click', () => {
-        bgFileInput.click();
-    });
+    // 当背景图片来源选择变化时
+    bgImageSelect.addEventListener('change', () => {
+        const selectedValue = bgImageSelect.value;
+        localStorage.setItem('bgImageType', selectedValue);
 
-    // 当用户选择文件后
-    bgFileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const imageUrl = e.target.result; // 获取图片的 base64 编码
-                document.body.style.backgroundImage = `url(${imageUrl})`; // 设置背景
-                localStorage.setItem('bgImage', imageUrl); // 保存到 localStorage
-                currentBgSpan.textContent = '自定义'; // 更新状态显示
-            };
-            reader.readAsDataURL(file); // 读取文件
+        if (selectedValue === 'default') {
+            document.body.style.backgroundImage = '';
+            localStorage.removeItem('bgImage');
+            localStorage.removeItem('bgImageType');
+        } else if (selectedValue === 'bing') {
+            const bingWallpaperUrl = 'https://bing.img.run/uhd.php';
+            document.body.style.backgroundImage = `url(${bingWallpaperUrl})`;
+            localStorage.setItem('bgImage', bingWallpaperUrl);
+        } else if (selectedValue === 'custom') {
+            bgFileInput.click();
         }
     });
 
-    // 重置背景图片
-    resetBgButton.addEventListener('click', () => {
-        document.body.style.backgroundImage = ''; // 移除背景图片样式
-        localStorage.removeItem('bgImage'); // 从 localStorage 移除
-        currentBgSpan.textContent = '默认'; // 更新状态显示
-    });
-
-    // 设置今日必应壁纸
-    todayBingWallpaperButton.addEventListener('click', () => {
-        const bingWallpaperUrl = 'https://bing.img.run/uhd.php'; // 必应壁纸 API
-        document.body.style.backgroundImage = `url(${bingWallpaperUrl})`;
-        localStorage.setItem('bgImage', bingWallpaperUrl);
-        currentBgSpan.textContent = '必应壁纸';
+    // 当用户选择自定义背景文件后
+    bgFileInput.addEventListener('change', (event) => {
+        const file = event.target.files;
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageUrl = e.target.result;
+                document.body.style.backgroundImage = `url(${imageUrl})`;
+                localStorage.setItem('bgImage', imageUrl);
+                // 确保下拉框也更新为 'custom'
+                localStorage.setItem('bgImageType', 'custom');
+                bgImageSelect.value = 'custom';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // 如果用户取消了文件选择，将下拉框恢复到之前保存的状态
+            const previousType = localStorage.getItem('bgImageType') || 'default';
+            bgImageSelect.value = previousType;
+        }
     });
 
     // --- 深色模式功能 ---
@@ -194,22 +228,26 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
      * 根据用户设置更新深色模式状态
      */
     const updateDarkMode = () => {
-        const darkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
-        const darkModeType = localStorage.getItem('darkModeType') || 'dark';
+        const darkModeEnabled = localStorage.getItem('darkModeEnabled') !== 'false';
+        const darkModeType = localStorage.getItem('darkModeType') || 'system';
         
         if (darkModeType === 'system') {
             applyDarkMode(checkSystemDarkMode()); // 跟随系统设置
         } else {
             applyDarkMode(darkModeEnabled); // 根据手动开关设置
         }
+        
+        // 当深色模式切换时，重新应用颜色设置以响应“自动”选项
+        updateTimeDisplay();
+        applyQuickAccessTitleSettings();
     };
 
     /**
      * 加载并应用深色模式的保存设置
      */
     const loadDarkModeSettings = () => {
-        darkModeToggle.checked = localStorage.getItem('darkModeEnabled') === 'true';
-        darkModeTypeSelect.value = localStorage.getItem('darkModeType') || 'dark';
+        darkModeToggle.checked = localStorage.getItem('darkModeEnabled') !== 'false';
+        darkModeTypeSelect.value = localStorage.getItem('darkModeType') || 'system';
         
         // 根据是否启用深色模式来显示或隐藏类型选择器
         darkModeTypeSettings.style.display = darkModeToggle.checked ? 'flex' : 'none';
@@ -249,11 +287,17 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         let seconds = now.getSeconds();
 
         // 从 localStorage 加载时间显示相关设置
-        const showTime = localStorage.getItem('showTime') === 'true';
+        const showTime = localStorage.getItem('showTime') === 'true' || false;
         const showSeconds = localStorage.getItem('showSeconds') === 'true';
         const timeFormat = localStorage.getItem('timeFormat') || '24h';
         const showAmpm = localStorage.getItem('showAmpm') || 'no';
-        const timeColor = localStorage.getItem('timeColor') || 'white';
+        let timeColor = localStorage.getItem('timeColor') || 'white';
+
+        // 处理自动颜色
+        if (timeColor === 'auto') {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            timeColor = isDarkMode ? 'white' : 'black';
+        }
         const timeWeight = localStorage.getItem('timeWeight') || 'normal';
 
         // 根据设置决定是否显示时间
@@ -296,7 +340,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
      * 加载并应用时间相关的保存设置
      */
     const loadTimeSettings = () => {
-        showTimeCheckbox.checked = localStorage.getItem('showTime') === 'true';
+        showTimeCheckbox.checked = localStorage.getItem('showTime') === 'true' || false;
         showSecondsCheckbox.checked = localStorage.getItem('showSeconds') === 'true';
         timeFormatSelect.value = localStorage.getItem('timeFormat') || '24h';
         showAmpmSelect.value = localStorage.getItem('showAmpm') || 'no';
@@ -393,8 +437,51 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
     const loadQuickAccessSettings = () => {
         const showQuickAccess = localStorage.getItem('showQuickAccess') !== 'false'; // 默认显示
         showQuickAccessCheckbox.checked = showQuickAccess;
-        quickAccessContainer.style.display = showQuickAccess ? 'block' : 'none';
-        floatingSettingsButton.style.display = showQuickAccess ? 'none' : 'flex'; // 根据状态显示或隐藏悬浮按钮
+        quickAccessOpenTypeSelect.value = localStorage.getItem('quickAccessOpenType') || '_blank';
+        
+        // 加载标题显示设置
+        const showTitle = localStorage.getItem('showQuickAccessTitle') !== 'false';
+        showQuickAccessTitleCheckbox.checked = showTitle;
+        quickAccessTitleColorSelect.value = localStorage.getItem('quickAccessTitleColor') || 'black';
+
+        toggleQuickAccessSubSettings(); // 根据主开关状态更新子选项可见性
+        applyQuickAccessTitleSettings(); // 应用标题样式
+    };
+
+    /**
+     * 根据“是否显示快速访问”的开关，切换相关子设置的可见性
+     */
+    const toggleQuickAccessSubSettings = () => {
+        const isVisible = showQuickAccessCheckbox.checked;
+        quickAccessContainer.style.display = isVisible ? 'block' : 'none';
+        floatingSettingsButton.style.display = isVisible ? 'none' : 'flex';
+        quickAccessOpenTypeSettings.style.display = isVisible ? 'flex' : 'none';
+        quickAccessTitleDisplaySettings.style.display = isVisible ? 'flex' : 'none';
+        
+        // 标题颜色设置仅在“显示标题”开启时可见
+        const isTitleVisible = showQuickAccessTitleCheckbox.checked;
+        quickAccessTitleColorSettings.style.display = (isVisible && isTitleVisible) ? 'flex' : 'none';
+    };
+
+    /**
+     * 应用快速访问标题的显示和颜色设置
+     */
+    const applyQuickAccessTitleSettings = () => {
+        const showTitle = showQuickAccessTitleCheckbox.checked;
+        let titleColor = quickAccessTitleColorSelect.value;
+
+        // 处理自动颜色
+        if (titleColor === 'auto') {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            titleColor = isDarkMode ? 'white' : 'black';
+        }
+
+        quickAccessLinksContainer.classList.toggle('hide-title', !showTitle);
+        
+        quickAccessLinksContainer.classList.remove('title-white', 'title-black');
+        if (showTitle) {
+            quickAccessLinksContainer.classList.add(`title-${titleColor}`);
+        }
     };
 
     /**
@@ -517,7 +604,8 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
             });
         } else {
             linkElement.addEventListener('click', () => {
-                window.open(link.url, '_blank'); // 在新标签页打开链接
+                const openType = localStorage.getItem('quickAccessOpenType') || '_blank';
+                window.open(link.url, openType);
             });
         }
         
@@ -638,10 +726,23 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
 
     // --- 快速访问设置事件 ---
     showQuickAccessCheckbox.addEventListener('change', () => {
-        const showQuickAccess = showQuickAccessCheckbox.checked;
-        localStorage.setItem('showQuickAccess', showQuickAccess);
-        quickAccessContainer.style.display = showQuickAccess ? 'block' : 'none';
-        floatingSettingsButton.style.display = showQuickAccess ? 'none' : 'flex'; // 同步更新悬浮按钮的显示状态
+        localStorage.setItem('showQuickAccess', showQuickAccessCheckbox.checked);
+        toggleQuickAccessSubSettings();
+    });
+
+    quickAccessOpenTypeSelect.addEventListener('change', () => {
+        localStorage.setItem('quickAccessOpenType', quickAccessOpenTypeSelect.value);
+    });
+
+    showQuickAccessTitleCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showQuickAccessTitle', showQuickAccessTitleCheckbox.checked);
+        toggleQuickAccessSubSettings(); // 需要切换颜色选择器的可见性
+        applyQuickAccessTitleSettings();
+    });
+
+    quickAccessTitleColorSelect.addEventListener('change', () => {
+        localStorage.setItem('quickAccessTitleColor', quickAccessTitleColorSelect.value);
+        applyQuickAccessTitleSettings();
     });
 
     // --- 悬浮设置按钮事件 ---
@@ -650,6 +751,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
     });
 
     // --- 页面初始化调用 ---
+    loadBackgroundSettings(); // 加载背景设置
     loadTimeSettings(); // 加载时间设置
     loadDarkModeSettings(); // 加载深色模式设置
     loadQuickAccessSettings(); // 加载快速访问设置
@@ -775,7 +877,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         if (!touchDraggedItem) return;
         e.preventDefault(); // 阻止页面滚动
 
-        const touch = e.touches[0];
+        const touch = e.touches;
         // 暂时隐藏拖动元素，以获取其下方的元素
         touchDraggedItem.style.display = 'none';
         const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -801,7 +903,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         touchDraggedItem.style.opacity = '1';
         touchDraggedItem.style.transform = 'scale(1)';
 
-        const touch = e.changedTouches[0];
+        const touch = e.changedTouches;
         // 再次隐藏以准确找到最终的目标元素
         touchDraggedItem.style.display = 'none';
         const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
