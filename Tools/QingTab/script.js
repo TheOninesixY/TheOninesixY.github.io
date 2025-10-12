@@ -1,94 +1,118 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 应用程序主对象 ---
-    const App = {
-        // --- DOM 元素引用 ---
-        DOM: {
-            // 搜索
-            searchInput: document.getElementById('search-input'),
-            searchButton: document.getElementById('search-button'),
-            // 设置模态框
-            settingsModal: document.getElementById('settings-modal'),
-            closeSettingsModal: document.querySelector('#settings-modal .close'),
-            searchEngineSelect: document.getElementById('search-engine'),
-            searchOpenTypeSelect: document.getElementById('search-open-type'),
-            // 背景
-            bgFileInput: document.getElementById('bg-file-input'),
-            bgImageSelect: document.getElementById('bg-image-select'),
-            // 时间
-            timeDisplay: document.getElementById('time-display'),
-            showTimeCheckbox: document.getElementById('show-time'),
-            showSecondsCheckbox: document.getElementById('show-seconds'),
-            timeFormatSelect: document.getElementById('time-format'),
-            showAmpmSelect: document.getElementById('show-ampm'),
-            timeColorSelect: document.getElementById('time-color'),
-            timeWeightSelect: document.getElementById('time-weight'),
-            timeFormatSettings: document.getElementById('time-format-settings'),
-            ampmDisplaySettings: document.getElementById('ampm-display-settings'),
-            timeFormatSelectContainer: document.getElementById('time-format-select-container'),
-            timeColorSettings: document.getElementById('time-color-settings'),
-            timeWeightSettings: document.getElementById('time-weight-settings'),
-            // 深色模式
-            darkModeToggle: document.getElementById('dark-mode-toggle'),
-            darkModeTypeSelect: document.getElementById('dark-mode-type'),
-            darkModeTypeSettings: document.getElementById('dark-mode-type-settings'),
-            // 快速访问
-            quickAccessContainer: document.querySelector('.quick-access-container'),
-            quickAccessLinksContainer: document.getElementById('quick-access-links'),
-            // 快速访问模态框
-            quickAccessModal: document.getElementById('quick-access-modal'),
-            closeQuickAccessModal: document.getElementById('close-quick-access-modal'),
-            saveQuickAccessButton: document.getElementById('save-quick-access'),
-            cancelQuickAccessButton: document.getElementById('cancel-quick-access'),
-            quickAccessTitleInput: document.getElementById('quick-access-title'),
-            quickAccessUrlInput: document.getElementById('quick-access-url'),
-            quickAccessIconInput: document.getElementById('quick-access-icon'),
-            quickAccessModalTitle: document.getElementById('quick-access-modal-title'),
-            quickAccessOriginalUrlInput: document.getElementById('quick-access-original-url'),
-            // 快速访问设置
-            showQuickAccessCheckbox: document.getElementById('show-quick-access'),
-            quickAccessOpenTypeSelect: document.getElementById('quick-access-open-type'),
-            quickAccessOpenTypeSettings: document.getElementById('quick-access-open-type-settings'),
-            showQuickAccessTitleCheckbox: document.getElementById('show-quick-access-title'),
-            quickAccessTitleColorSelect: document.getElementById('quick-access-title-color'),
-            quickAccessTitleDisplaySettings: document.getElementById('quick-access-title-display-settings'),
-            quickAccessTitleColorSettings: document.getElementById('quick-access-title-color-settings'),
-            // 上下文菜单
-            contextMenu: document.getElementById('context-menu'),
-            editLinkButton: document.getElementById('edit-link'),
-            deleteLinkButton: document.getElementById('delete-link'),
-            // 悬浮按钮
-            floatingSettingsButton: document.getElementById('floating-settings-button'),
-        },
+    // DOM 元素获取
+    // 搜索相关
+    const searchInput = document.getElementById('search-input'); // 搜索输入框
+    const searchButton = document.getElementById('search-button'); // 搜索按钮
+    // 设置模态框相关
+    const settingsModal = document.getElementById('settings-modal'); // 设置模态框
+    const closeModal = document.querySelector('#settings-modal .close'); // 设置模态框关闭按钮
+    const searchEngineSelect = document.getElementById('search-engine'); // 搜索引擎选择器
+   const searchOpenTypeSelect = document.getElementById('search-open-type'); // 搜索打开方式选择器
+    // 背景图片相关
+    const bgFileInput = document.getElementById('bg-file-input'); // 背景文件输入框
+    const bgImageSelect = document.getElementById('bg-image-select'); // 背景图片选择器
 
-        // --- 状态管理 ---
-        State: {
-            draggedItem: null,
-            touchDraggedItem: null,
-        },
+    // 时间显示相关元素
+    const timeDisplay = document.getElementById('time-display'); // 时间显示区域
+    const showTimeCheckbox = document.getElementById('show-time'); // 是否显示时间的选择框
+    const showSecondsCheckbox = document.getElementById('show-seconds'); // 是否显示秒数的选择框
+    const timeFormatSelect = document.getElementById('time-format'); // 时间格式选择器 (12h/24h)
+    const showAmpmSelect = document.getElementById('show-ampm'); // 是否显示 AM/PM 的选择器
+    const timeColorSelect = document.getElementById('time-color'); // 时间颜色选择器
+    const timeWeightSelect = document.getElementById('time-weight'); // 时间字体粗细选择器
+    // 时间设置的子选项容器
+    const timeFormatSettings = document.getElementById('time-format-settings'); // 秒数显示设置容器
+    const ampmDisplaySettings = document.getElementById('ampm-display-settings'); // AM/PM 显示设置容器
+    const timeFormatSelectContainer = document.getElementById('time-format-select-container'); // 时间格式设置容器
+    const timeColorSettings = document.getElementById('time-color-settings'); // 时间颜色设置容器
+    const timeWeightSettings = document.getElementById('time-weight-settings'); // 时间字体粗细设置容器
 
-        // --- 核心逻辑 ---
+    // 深色模式相关元素
+    const darkModeToggle = document.getElementById('dark-mode-toggle'); // 深色模式开关
+    const darkModeTypeSelect = document.getElementById('dark-mode-type'); // 深色模式类型选择器 (深色/跟随系统)
+    const darkModeTypeSettings = document.getElementById('dark-mode-type-settings'); // 深色模式类型设置容器
 
-        /**
-         * 执行搜索
-         */
-        performSearch() {
-            const query = App.DOM.searchInput.value.trim();
-            if (!query) return;
+    // 快速访问相关元素
+    const quickAccessLinksContainer = document.getElementById('quick-access-links'); // 快速访问链接的容器
+    const quickAccessModal = document.getElementById('quick-access-modal'); // 添加/编辑快速访问的模态框
+    const closeQuickAccessModal = document.getElementById('close-quick-access-modal'); // 关闭快速访问模态框的按钮
+    const saveQuickAccessButton = document.getElementById('save-quick-access'); // 保存快速访问链接的按钮
+    const cancelQuickAccessButton = document.getElementById('cancel-quick-access'); // 取消快速访问操作的按钮
+    const quickAccessTitleInput = document.getElementById('quick-access-title'); // 快速访问标题输入框
+    const quickAccessUrlInput = document.getElementById('quick-access-url'); // 快速访问URL输入框
+    const quickAccessIconInput = document.getElementById('quick-access-icon'); // 快速访问图标URL输入框
+    const quickAccessModalTitle = document.getElementById('quick-access-modal-title'); // 快速访问模态框的标题
+    const quickAccessOriginalUrlInput = document.getElementById('quick-access-original-url'); // 隐藏输入框，用于存储编辑前链接的原始URL
 
-            const searchEngine = App.DOM.searchEngineSelect.value;
-            const openType = App.DOM.searchOpenTypeSelect.value;
-            let searchUrl;
+    // 快速访问设置相关元素
+    const showQuickAccessCheckbox = document.getElementById('show-quick-access'); // 是否显示快速访问的选择框
+    const quickAccessContainer = document.querySelector('.quick-access-container'); // 快速访问容器
+    const quickAccessOpenTypeSelect = document.getElementById('quick-access-open-type'); // 快速访问打开方式选择器
+    const quickAccessOpenTypeSettings = document.getElementById('quick-access-open-type-settings'); // 快速访问打开方式设置容器
+    const showQuickAccessTitleCheckbox = document.getElementById('show-quick-access-title'); // 是否显示快速访问标题的选择框
+    const quickAccessTitleColorSelect = document.getElementById('quick-access-title-color'); // 快速访问标题颜色选择器
+    const quickAccessTitleDisplaySettings = document.getElementById('quick-access-title-display-settings'); // 标题显示设置容器
+    const quickAccessTitleColorSettings = document.getElementById('quick-access-title-color-settings'); // 标题颜色设置容器
 
-            try {
-                // 检查是否为有效URL
-                new URL(query.startsWith('http') ? query : `https://${query}`);
-                let urlToOpen = query;
-                if (!query.startsWith('http://') && !query.startsWith('https://')) {
-                    urlToOpen = 'https://' + query;
-                }
-                window.open(urlToOpen, openType);
-            } catch (_) {
-                // 如果不是URL，则执行搜索
+     // 右键上下文菜单相关元素
+     const contextMenu = document.getElementById('context-menu'); // 上下文菜单容器
+    const editLinkButton = document.getElementById('edit-link'); // 编辑链接按钮
+    const deleteLinkButton = document.getElementById('delete-link'); // 删除链接按钮
+// 悬浮设置按钮
+const floatingSettingsButton = document.getElementById('floating-settings-button');
+
+// --- 初始化加载 ---
+
+
+    // 加载已保存的搜索引擎偏好
+    const savedSearchEngine = localStorage.getItem('searchEngine') || 'google'; // 从 localStorage 获取，默认为 google
+    searchEngineSelect.value = savedSearchEngine; // 设置选择器的值为保存的值
+
+   // 加载已保存的搜索打开方式
+   const savedSearchOpenType = localStorage.getItem('searchOpenType') || '_self';
+   searchOpenTypeSelect.value = savedSearchOpenType;
+
+    /**
+     * 加载并应用背景相关的保存设置
+     */
+    const loadBackgroundSettings = () => {
+        const savedBgImageType = localStorage.getItem('bgImageType') || 'default';
+        bgImageSelect.value = savedBgImageType;
+
+        if (savedBgImageType === 'custom') {
+            const savedBgImage = localStorage.getItem('bgImage');
+            if (savedBgImage) {
+                document.body.style.backgroundImage = `url(${savedBgImage})`;
+            }
+        } else if (savedBgImageType === 'bing') {
+            // 对于bing壁纸，每次加载都重新获取，以确保是“今日”壁纸
+            const bingWallpaperUrl = 'https://bing.img.run/uhd.php';
+            document.body.style.backgroundImage = `url(${bingWallpaperUrl})`;
+            localStorage.setItem('bgImage', bingWallpaperUrl); // 同时更新保存的URL
+        } else { // default
+            document.body.style.backgroundImage = '';
+            localStorage.removeItem('bgImage');
+        }
+    };
+
+    // --- 搜索功能 ---
+
+    /**
+     * 执行搜索操作
+     */
+    const performSearch = () => {
+        const query = searchInput.value.trim(); // 获取并清理输入框中的查询内容
+        if (query) {
+           const openType = localStorage.getItem('searchOpenType') || '_self';
+            // 检查输入是否为完整的 URL
+            if (query.startsWith('http://') || query.startsWith('https://')) {
+               window.open(query, openType);
+            } else if (query.includes('.')) { // 简单检查是否为域名
+               window.open(`https://${query}`, openType);
+            } else {
+                // 使用选择的搜索引擎进行搜索
+                const searchEngine = searchEngineSelect.value;
+                let searchUrl;
                 switch (searchEngine) {
                     case 'bing':
                         searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
@@ -99,604 +123,830 @@ document.addEventListener('DOMContentLoaded', () => {
                     case 'baidu':
                         searchUrl = `https://www.baidu.com/s?wd=${encodeURIComponent(query)}`;
                         break;
-                    case 'google':
-                    default:
+                    default: // 默认为 google
                         searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                        break;
                 }
-                window.open(searchUrl, openType);
+               window.open(searchUrl, openType);
             }
-        },
-
-        // --- UI 更新模块 ---
-        UI: {
-            /**
-             * 更新时间显示
-             */
-            updateTimeDisplay() {
-                if (!App.DOM.showTimeCheckbox.checked) {
-                    App.DOM.timeDisplay.textContent = '';
-                    return;
-                }
-
-                const now = new Date();
-                const showSeconds = App.DOM.showSecondsCheckbox.checked;
-                const format = App.DOM.timeFormatSelect.value;
-                const showAmpm = App.DOM.showAmpmSelect.value === 'yes';
-                let timeColor = App.DOM.timeColorSelect.value;
-                const timeWeight = App.DOM.timeWeightSelect.value;
-
-                let hours = now.getHours();
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const seconds = now.getSeconds().toString().padStart(2, '0');
-                let ampm = '';
-
-                if (format === '12h') {
-                    ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12 || 12;
-                }
-
-                let timeString = `${hours.toString().padStart(2, '0')}:${minutes}`;
-                if (showSeconds) timeString += `:${seconds}`;
-                if (format === '12h' && showAmpm) timeString += ` ${ampm}`;
-
-                App.DOM.timeDisplay.textContent = timeString;
-
-                if (timeColor === 'auto') {
-                    timeColor = document.body.classList.contains('dark-mode') ? 'white' : 'black';
-                }
-
-                App.DOM.timeDisplay.style.fontWeight = timeWeight;
-                App.DOM.timeDisplay.classList.remove('white', 'black');
-                App.DOM.timeDisplay.classList.add(timeColor);
-            },
-
-            /**
-             * 应用深色模式
-             */
-            applyDarkMode() {
-                const { darkModeToggle, darkModeTypeSelect } = App.DOM;
-                const isEnabled = darkModeToggle.checked;
-                const type = darkModeTypeSelect.value;
-
-                document.body.classList.remove('dark-mode');
-
-                if (isEnabled) {
-                    if (type === 'dark' || (type === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                        document.body.classList.add('dark-mode');
-                    }
-                }
-                
-                App.UI.updateTimeDisplay();
-                App.QuickAccess.applyTitleSettings();
-            },
-
-            /**
-             * 切换子设置的可见性
-             */
-            toggleSubSettings(checkbox, ...elements) {
-                const isVisible = checkbox.checked;
-                elements.forEach(el => {
-                    if (el) el.style.display = isVisible ? 'flex' : 'none';
-                });
-            },
-            
-            toggleTimeSubSettings() {
-                const { showTimeCheckbox, timeDisplay, timeFormatSettings, timeFormatSelectContainer, timeColorSettings, timeWeightSettings, timeFormatSelect, ampmDisplaySettings } = App.DOM;
-                const isVisible = showTimeCheckbox.checked;
-                timeDisplay.style.display = isVisible ? 'block' : 'none';
-                this.toggleSubSettings(showTimeCheckbox, timeFormatSettings, timeFormatSelectContainer, timeColorSettings, timeWeightSettings);
-                const is12h = timeFormatSelect.value === '12h';
-                ampmDisplaySettings.style.display = (isVisible && is12h) ? 'flex' : 'none';
-            },
-
-            toggleDarkModeSubSettings() {
-                this.toggleSubSettings(App.DOM.darkModeToggle, App.DOM.darkModeTypeSettings);
-            },
-
-            /**
-             * 显示上下文菜单
-             */
-            showContextMenu(x, y, link) {
-                const { contextMenu, editLinkButton, deleteLinkButton } = App.DOM;
-                contextMenu.style.display = 'block';
-                contextMenu.style.left = `${x}px`;
-                contextMenu.style.top = `${y}px`;
-
-                editLinkButton.onclick = () => {
-                    App.QuickAccess.openModalForEdit(link);
-                    this.hideContextMenu();
-                };
-                deleteLinkButton.onclick = () => {
-                    App.QuickAccess.deleteLink(link.title, link.url);
-                    this.hideContextMenu();
-                };
-            },
-
-            /**
-             * 隐藏上下文菜单
-             */
-            hideContextMenu() {
-                App.DOM.contextMenu.style.display = 'none';
-            }
-        },
-
-        // --- 设置管理模块 ---
-        Settings: {
-            load() {
-                this.loadSearch();
-                this.loadBackground();
-                this.loadTime();
-                this.loadDarkMode();
-                this.loadQuickAccess();
-            },
-
-            loadSearch() {
-                App.DOM.searchEngineSelect.value = localStorage.getItem('searchEngine') || 'google';
-                App.DOM.searchOpenTypeSelect.value = localStorage.getItem('searchOpenType') || '_self';
-            },
-
-            loadBackground() {
-                const type = localStorage.getItem('bgImageType') || 'default';
-                App.DOM.bgImageSelect.value = type;
-
-                if (type === 'custom') {
-                    const savedImage = localStorage.getItem('bgImage');
-                    if (savedImage) document.body.style.backgroundImage = `url(${savedImage})`;
-                } else if (type === 'bing') {
-                    document.body.style.backgroundImage = `url(https://bing.img.run/uhd.php)`;
-                } else {
-                    document.body.style.backgroundImage = 'none';
-                }
-            },
-
-            loadTime() {
-                const { showTimeCheckbox, showSecondsCheckbox, timeFormatSelect, showAmpmSelect, timeColorSelect, timeWeightSelect } = App.DOM;
-                showTimeCheckbox.checked = localStorage.getItem('showTime') !== 'false';
-                showSecondsCheckbox.checked = localStorage.getItem('showSeconds') === 'true';
-                timeFormatSelect.value = localStorage.getItem('timeFormat') || '24h';
-                showAmpmSelect.value = localStorage.getItem('showAmpm') || 'no';
-                timeColorSelect.value = localStorage.getItem('timeColor') || 'auto';
-                timeWeightSelect.value = localStorage.getItem('timeWeight') || 'normal';
-                App.UI.toggleTimeSubSettings();
-                App.UI.updateTimeDisplay();
-            },
-
-            loadDarkMode() {
-                const { darkModeToggle, darkModeTypeSelect } = App.DOM;
-                darkModeToggle.checked = localStorage.getItem('darkMode') === 'true';
-                darkModeTypeSelect.value = localStorage.getItem('darkModeType') || 'system';
-                App.UI.toggleDarkModeSubSettings();
-                App.UI.applyDarkMode();
-            },
-
-            loadQuickAccess() {
-                const { showQuickAccessCheckbox, quickAccessOpenTypeSelect, showQuickAccessTitleCheckbox, quickAccessTitleColorSelect } = App.DOM;
-                showQuickAccessCheckbox.checked = localStorage.getItem('showQuickAccess') !== 'false';
-                quickAccessOpenTypeSelect.value = localStorage.getItem('quickAccessOpenType') || '_blank';
-                showQuickAccessTitleCheckbox.checked = localStorage.getItem('showQuickAccessTitle') !== 'false';
-                quickAccessTitleColorSelect.value = localStorage.getItem('quickAccessTitleColor') || 'black';
-                App.QuickAccess.toggleSubSettings();
-                App.QuickAccess.applyTitleSettings();
-            }
-        },
-
-        // --- 快速访问模块 ---
-        QuickAccess: {
-            init() {
-                this.cleanupDefaultLinks();
-                this.initializePresetLinks();
-                this.loadLinks();
-            },
-
-            getLinks: () => JSON.parse(localStorage.getItem('quickAccessLinks') || '[]'),
-            saveLinks: (links) => localStorage.setItem('quickAccessLinks', JSON.stringify(links)),
-
-            loadLinks() {
-                const { quickAccessLinksContainer } = App.DOM;
-                quickAccessLinksContainer.innerHTML = '';
-                
-                const systemLinks = [
-                    { title: '设置', url: 'settings://open', icon: '', isSystem: true },
-                    { title: '添加', url: '', icon: '', isSystem: true, isAddButton: true }
-                ];
-
-                systemLinks.forEach(link => this.createLinkElement(link));
-                this.getLinks().forEach(link => this.createLinkElement(link));
-            },
-
-            createLinkElement(link) {
-                const linkElement = document.createElement('div');
-                linkElement.className = 'quick-access-link';
-                linkElement.dataset.url = link.url;
-
-                if (link.isSystem) {
-                    linkElement.classList.add('system-link');
-                } else {
-                    linkElement.draggable = true;
-                    this.addDragHandlers(linkElement);
-                    this.addContextMenuHandlers(linkElement, link);
-                }
-
-                const iconElement = this.createIconElement(link);
-                const titleElement = this.createTitleElement(link);
-
-                linkElement.append(iconElement, titleElement);
-                this.addClickHandler(linkElement, link);
-                App.DOM.quickAccessLinksContainer.appendChild(linkElement);
-            },
-
-            createIconElement(link) {
-                const iconElement = document.createElement('div');
-                iconElement.className = 'link-icon';
-
-                if (link.icon) {
-                    iconElement.style.backgroundImage = `url(${link.icon})`;
-                    iconElement.style.backgroundSize = 'cover';
-                    iconElement.style.backgroundPosition = 'center';
-                } else if (link.isSystem && link.title === '设置') {
-                    iconElement.innerHTML = '<span class="material-symbols-outlined">settings</span>';
-                    iconElement.style.backgroundColor = '#666';
-                } else if (link.isAddButton) {
-                    iconElement.textContent = '+';
-                    iconElement.style.cssText = 'background-color: #4CAF50; font-size: 18px; line-height: 36px;';
-                } else {
-                    try {
-                        const url = new URL(link.url);
-                        const faviconUrl = `${url.protocol}//${url.hostname}/favicon.ico`;
-                        iconElement.style.backgroundImage = `url(${faviconUrl})`;
-                        iconElement.style.backgroundSize = 'cover';
-                        iconElement.style.backgroundPosition = 'center';
-                        
-                        const img = new Image();
-                        img.src = faviconUrl;
-                        img.onerror = () => this.createDefaultIcon(iconElement, link.title);
-                    } catch (e) {
-                        this.createDefaultIcon(iconElement, link.title);
-                    }
-                }
-                return iconElement;
-            },
-
-            createDefaultIcon(element, title) {
-                const firstChar = title.charAt(0).toUpperCase();
-                element.textContent = firstChar;
-                element.style.backgroundImage = '';
-                const colors = ['#4285f4', '#ea4335', '#fbbc05', '#34a853', '#1a73e8', '#d93025', '#f28b82', '#fdd663', '#81c995', '#8ab4f8'];
-                element.style.backgroundColor = colors[Math.abs(title.charCodeAt(0)) % colors.length];
-            },
-
-            createTitleElement(link) {
-                const titleElement = document.createElement('div');
-                titleElement.className = 'link-title';
-                titleElement.textContent = link.title;
-                return titleElement;
-            },
-
-            addClickHandler(element, link) {
-                element.addEventListener('click', () => {
-                    if (link.isSystem && link.title === '设置') {
-                        App.DOM.settingsModal.style.display = 'block';
-                    } else if (link.isAddButton) {
-                        this.openModalForAdd();
-                    } else {
-                        const openType = localStorage.getItem('quickAccessOpenType') || '_blank';
-                        window.open(link.url, openType);
-                    }
-                });
-            },
-
-            addContextMenuHandlers(element, link) {
-                let pressTimer;
-                element.addEventListener('contextmenu', e => {
-                    e.preventDefault();
-                    App.UI.showContextMenu(e.pageX, e.pageY, link);
-                });
-                element.addEventListener('pointerdown', e => {
-                    if (e.pointerType === 'touch') {
-                        pressTimer = setTimeout(() => App.UI.showContextMenu(e.pageX, e.pageY, link), 500);
-                    }
-                });
-                element.addEventListener('pointerup', () => clearTimeout(pressTimer));
-                element.addEventListener('pointerleave', () => clearTimeout(pressTimer));
-            },
-
-            openModalForAdd() {
-                this.openModal('添加快速访问', { title: '', url: '', icon: '' });
-            },
-
-            openModalForEdit(link) {
-                this.openModal('编辑快速访问', link, link.url);
-            },
-
-            openModal(title, linkData, originalUrl = '') {
-                const { quickAccessModal, quickAccessModalTitle, quickAccessOriginalUrlInput, quickAccessTitleInput, quickAccessUrlInput, quickAccessIconInput } = App.DOM;
-                quickAccessModalTitle.textContent = title;
-                quickAccessOriginalUrlInput.value = originalUrl;
-                quickAccessTitleInput.value = linkData.title;
-                quickAccessUrlInput.value = linkData.url;
-                quickAccessIconInput.value = linkData.icon || '';
-                quickAccessModal.style.display = 'block';
-            },
-
-            saveLink() {
-                const { quickAccessTitleInput, quickAccessUrlInput, quickAccessIconInput, quickAccessOriginalUrlInput, quickAccessModal } = App.DOM;
-                const title = quickAccessTitleInput.value.trim();
-                let url = quickAccessUrlInput.value.trim();
-                const icon = quickAccessIconInput.value.trim();
-                const originalUrl = quickAccessOriginalUrlInput.value;
-
-                if (!title || !url) return alert('请输入标题和网址');
-
-                if (!/^(https?|file):\/\//i.test(url)) {
-                    url = 'https://' + url;
-                }
-
-                const links = this.getLinks();
-                const newLink = { title, url, icon };
-
-                if (originalUrl) { // Edit mode
-                    const index = links.findIndex(l => l.url === originalUrl);
-                    if (index !== -1) links[index] = newLink;
-                } else { // Add mode
-                    if (links.some(l => l.url === url || l.title === title)) {
-                        return alert('已存在具有相同标题或网址的链接。');
-                    }
-                    links.push(newLink);
-                }
-
-                this.saveLinks(links);
-                this.loadLinks();
-                quickAccessModal.style.display = 'none';
-            },
-
-            deleteLink(title, url) {
-                if (confirm(`确定要删除 "${title}" 吗？`)) {
-                    const links = this.getLinks().filter(l => !(l.title === title && l.url === url));
-                    this.saveLinks(links);
-                    this.loadLinks();
-                }
-            },
-
-            toggleSubSettings() {
-                const { showQuickAccessCheckbox, quickAccessContainer, floatingSettingsButton, quickAccessOpenTypeSettings, quickAccessTitleDisplaySettings, showQuickAccessTitleCheckbox, quickAccessTitleColorSettings } = App.DOM;
-                const isVisible = showQuickAccessCheckbox.checked;
-                quickAccessContainer.style.display = isVisible ? 'block' : 'none';
-                floatingSettingsButton.style.display = isVisible ? 'none' : 'flex';
-                App.UI.toggleSubSettings(showQuickAccessCheckbox, quickAccessOpenTypeSettings, quickAccessTitleDisplaySettings);
-                const isTitleVisible = showQuickAccessTitleCheckbox.checked;
-                quickAccessTitleColorSettings.style.display = (isVisible && isTitleVisible) ? 'flex' : 'none';
-            },
-
-            applyTitleSettings() {
-                const { showQuickAccessTitleCheckbox, quickAccessTitleColorSelect, quickAccessLinksContainer } = App.DOM;
-                const showTitle = showQuickAccessTitleCheckbox.checked;
-                let titleColor = quickAccessTitleColorSelect.value;
-
-                if (titleColor === 'auto') {
-                    titleColor = document.body.classList.contains('dark-mode') ? 'white' : 'black';
-                }
-
-                quickAccessLinksContainer.classList.toggle('hide-title', !showTitle);
-                quickAccessLinksContainer.classList.remove('title-white', 'title-black');
-                if (showTitle) {
-                    quickAccessLinksContainer.classList.add(`title-${titleColor}`);
-                }
-            },
-
-            initializePresetLinks() {
-                if (localStorage.getItem('quickAccessLinks') === null) {
-                    this.saveLinks([{ title: 'GitHub', url: 'https://github.com', icon: './files/show-quick/github.ico' }]);
-                }
-            },
-
-            cleanupDefaultLinks() {
-                const defaultUrls = ['https://www.google.com', 'https://www.youtube.com', 'https://www.github.com'];
-                const links = this.getLinks();
-                if (links.some(l => defaultUrls.includes(l.url))) {
-                    this.saveLinks(links.filter(l => !defaultUrls.includes(l.url)));
-                }
-            },
-
-            // --- 拖拽处理 ---
-            addDragHandlers(element) {
-                element.addEventListener('dragstart', this.handleDragStart);
-                element.addEventListener('dragover', this.handleDragOver);
-                element.addEventListener('dragleave', this.handleDragLeave);
-                element.addEventListener('drop', this.handleDrop);
-                element.addEventListener('dragend', this.handleDragEnd);
-                element.addEventListener('touchstart', this.handleTouchStart, { passive: true });
-                element.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-                element.addEventListener('touchend', this.handleTouchEnd);
-            },
-
-            handleDragStart(e) {
-                App.State.draggedItem = this;
-                setTimeout(() => this.style.display = 'none', 0);
-                e.dataTransfer.effectAllowed = 'move';
-            },
-            handleDragOver(e) {
-                e.preventDefault();
-                this.classList.add('drag-over');
-            },
-            handleDragLeave() {
-                this.classList.remove('drag-over');
-            },
-            handleDrop(e) {
-                e.preventDefault();
-                this.classList.remove('drag-over');
-                if (App.State.draggedItem !== this) {
-                    App.QuickAccess.reorderLinks(App.State.draggedItem.dataset.url, this.dataset.url);
-                }
-            },
-            handleDragEnd() {
-                if (App.State.draggedItem) {
-                    App.State.draggedItem.style.display = '';
-                }
-                App.State.draggedItem = null;
-                document.querySelectorAll('.quick-access-link.drag-over').forEach(el => el.classList.remove('drag-over'));
-            },
-            handleTouchStart(e) {
-                if (this.classList.contains('system-link')) return;
-                App.State.touchDraggedItem = this;
-                this.style.opacity = '0.5';
-                this.style.transform = 'scale(1.1)';
-            },
-            handleTouchMove(e) {
-                if (!App.State.touchDraggedItem) return;
-                e.preventDefault();
-                const touch = e.touches;
-                App.State.touchDraggedItem.style.display = 'none';
-                const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
-                App.State.touchDraggedItem.style.display = '';
-                document.querySelectorAll('.quick-access-link.drag-over').forEach(el => el.classList.remove('drag-over'));
-                const targetLink = overElement ? overElement.closest('.quick-access-link:not(.system-link)') : null;
-                if (targetLink && targetLink !== App.State.touchDraggedItem) {
-                    targetLink.classList.add('drag-over');
-                }
-            },
-            handleTouchEnd(e) {
-                const item = App.State.touchDraggedItem;
-                if (!item) return;
-                item.style.opacity = '1';
-                item.style.transform = 'scale(1)';
-                const touch = e.changedTouches;
-                item.style.display = 'none';
-                const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
-                item.style.display = '';
-                const targetLink = overElement ? overElement.closest('.quick-access-link:not(.system-link)') : null;
-                if (targetLink && targetLink !== item) {
-                    this.reorderLinks(item.dataset.url, targetLink.dataset.url);
-                }
-                document.querySelectorAll('.quick-access-link.drag-over').forEach(el => el.classList.remove('drag-over'));
-                App.State.touchDraggedItem = null;
-            },
-            reorderLinks(fromUrl, toUrl) {
-                const links = this.getLinks();
-                const fromIndex = links.findIndex(l => l.url === fromUrl);
-                const toIndex = links.findIndex(l => l.url === toUrl);
-                if (fromIndex !== -1 && toIndex !== -1) {
-                    const [movedItem] = links.splice(fromIndex, 1);
-                    links.splice(toIndex, 0, movedItem);
-                    this.saveLinks(links);
-                    this.loadLinks();
-                }
-            }
-        },
-
-        /**
-         * 初始化所有事件监听器
-         */
-        initEventListeners() {
-            const { DOM } = this;
-            // 搜索
-            DOM.searchButton.addEventListener('click', () => this.performSearch());
-            DOM.searchInput.addEventListener('keypress', e => e.key === 'Enter' && this.performSearch());
-
-            // 模态框
-            DOM.closeSettingsModal.addEventListener('click', () => DOM.settingsModal.style.display = 'none');
-            DOM.closeQuickAccessModal.addEventListener('click', () => DOM.quickAccessModal.style.display = 'none');
-            DOM.cancelQuickAccessButton.addEventListener('click', () => DOM.quickAccessModal.style.display = 'none');
-            window.addEventListener('click', e => {
-                if (e.target === DOM.settingsModal) DOM.settingsModal.style.display = 'none';
-                if (e.target === DOM.quickAccessModal) DOM.quickAccessModal.style.display = 'none';
-                this.UI.hideContextMenu();
-            });
-
-            // 设置
-            DOM.searchEngineSelect.addEventListener('change', e => localStorage.setItem('searchEngine', e.target.value));
-            DOM.searchOpenTypeSelect.addEventListener('change', e => localStorage.setItem('searchOpenType', e.target.value));
-            DOM.bgImageSelect.addEventListener('change', () => {
-                localStorage.setItem('bgImageType', DOM.bgImageSelect.value);
-                if (DOM.bgImageSelect.value === 'custom') {
-                    DOM.bgFileInput.click();
-                } else {
-                    this.Settings.loadBackground();
-                }
-            });
-            DOM.bgFileInput.addEventListener('change', e => {
-                const file = e.target.files;
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        localStorage.setItem('bgImage', e.target.result);
-                        this.Settings.loadBackground();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // 时间设置
-            DOM.showTimeCheckbox.addEventListener('change', () => {
-                localStorage.setItem('showTime', DOM.showTimeCheckbox.checked);
-                this.UI.toggleTimeSubSettings();
-                this.UI.updateTimeDisplay();
-            });
-            DOM.showSecondsCheckbox.addEventListener('change', () => {
-                localStorage.setItem('showSeconds', DOM.showSecondsCheckbox.checked);
-                this.UI.updateTimeDisplay();
-            });
-            DOM.timeFormatSelect.addEventListener('change', () => {
-                localStorage.setItem('timeFormat', DOM.timeFormatSelect.value);
-                this.UI.toggleTimeSubSettings();
-                this.UI.updateTimeDisplay();
-            });
-            DOM.showAmpmSelect.addEventListener('change', () => {
-                localStorage.setItem('showAmpm', DOM.showAmpmSelect.value);
-                this.UI.updateTimeDisplay();
-            });
-            DOM.timeColorSelect.addEventListener('change', () => {
-                localStorage.setItem('timeColor', DOM.timeColorSelect.value);
-                this.UI.updateTimeDisplay();
-            });
-            DOM.timeWeightSelect.addEventListener('change', () => {
-                localStorage.setItem('timeWeight', DOM.timeWeightSelect.value);
-                this.UI.updateTimeDisplay();
-            });
-
-            // 深色模式
-            DOM.darkModeToggle.addEventListener('change', () => {
-                localStorage.setItem('darkMode', DOM.darkModeToggle.checked);
-                this.UI.toggleDarkModeSubSettings();
-                this.UI.applyDarkMode();
-            });
-            DOM.darkModeTypeSelect.addEventListener('change', () => {
-                localStorage.setItem('darkModeType', DOM.darkModeTypeSelect.value);
-                this.UI.applyDarkMode();
-            });
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.UI.applyDarkMode());
-
-            // 快速访问
-            DOM.saveQuickAccessButton.addEventListener('click', () => this.QuickAccess.saveLink());
-            DOM.quickAccessUrlInput.addEventListener('keypress', e => e.key === 'Enter' && this.QuickAccess.saveLink());
-            DOM.showQuickAccessCheckbox.addEventListener('change', () => {
-                localStorage.setItem('showQuickAccess', DOM.showQuickAccessCheckbox.checked);
-                this.QuickAccess.toggleSubSettings();
-            });
-            DOM.quickAccessOpenTypeSelect.addEventListener('change', e => localStorage.setItem('quickAccessOpenType', e.target.value));
-            DOM.showQuickAccessTitleCheckbox.addEventListener('change', () => {
-                localStorage.setItem('showQuickAccessTitle', DOM.showQuickAccessTitleCheckbox.checked);
-                this.QuickAccess.toggleSubSettings();
-                this.QuickAccess.applyTitleSettings();
-            });
-            DOM.quickAccessTitleColorSelect.addEventListener('change', () => {
-                localStorage.setItem('quickAccessTitleColor', DOM.quickAccessTitleColorSelect.value);
-                this.QuickAccess.applyTitleSettings();
-            });
-            DOM.floatingSettingsButton.addEventListener('click', () => DOM.settingsModal.style.display = 'block');
-        },
-
-        /**
-         * 应用程序初始化
-         */
-        init() {
-            this.Settings.load();
-            this.QuickAccess.init();
-            this.initEventListeners();
-            setInterval(this.UI.updateTimeDisplay, 1000);
         }
     };
 
-    // --- 启动应用程序 ---
-    App.init();
+    // 为搜索按钮添加点击事件监听
+    searchButton.addEventListener('click', performSearch);
+
+    // 为搜索输入框添加回车键监听
+    searchInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    // --- 设置模态框功能 ---
+
+    // 关闭设置模态框
+    closeModal.addEventListener('click', () => {
+        settingsModal.style.display = 'none';
+    });
+
+    // 点击模态框外部区域关闭
+    window.addEventListener('click', (event) => {
+        if (event.target === settingsModal) {
+            settingsModal.style.display = 'none';
+        }
+    });
+
+    // 保存搜索引擎偏好
+    searchEngineSelect.addEventListener('change', () => {
+        localStorage.setItem('searchEngine', searchEngineSelect.value);
+    });
+
+   // 保存搜索打开方式偏好
+   searchOpenTypeSelect.addEventListener('change', () => {
+       localStorage.setItem('searchOpenType', searchOpenTypeSelect.value);
+   });
+
+    // --- 背景图片功能 ---
+
+    // 当背景图片来源选择变化时
+    bgImageSelect.addEventListener('change', () => {
+        const selectedValue = bgImageSelect.value;
+        localStorage.setItem('bgImageType', selectedValue);
+
+        if (selectedValue === 'default') {
+            document.body.style.backgroundImage = '';
+            localStorage.removeItem('bgImage');
+            localStorage.removeItem('bgImageType');
+        } else if (selectedValue === 'bing') {
+            const bingWallpaperUrl = 'https://bing.img.run/uhd.php';
+            document.body.style.backgroundImage = `url(${bingWallpaperUrl})`;
+            localStorage.setItem('bgImage', bingWallpaperUrl);
+        } else if (selectedValue === 'custom') {
+            bgFileInput.click();
+        }
+    });
+
+    // 当用户选择自定义背景文件后
+    bgFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // <--- [修复] 从文件列表中获取第一个文件
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageUrl = e.target.result;
+                document.body.style.backgroundImage = `url(${imageUrl})`;
+                localStorage.setItem('bgImage', imageUrl);
+                // 确保下拉框也更新为 'custom'
+                localStorage.setItem('bgImageType', 'custom');
+                bgImageSelect.value = 'custom';
+            };
+            reader.readAsDataURL(file); // <--- [修复] 现在读取的是正确的文件对象
+        } else {
+            // 如果用户取消了文件选择，将下拉框恢复到之前保存的状态
+            const previousType = localStorage.getItem('bgImageType') || 'default';
+            bgImageSelect.value = previousType;
+        }
+    });
+
+    // --- 深色模式功能 ---
+
+    /**
+     * 应用或移除深色模式样式
+     * @param {boolean} isDarkMode - 是否启用深色模式
+     */
+    const applyDarkMode = (isDarkMode) => {
+        document.body.classList.toggle('dark-mode', isDarkMode);
+    };
+
+    /**
+     * 检查系统是否处于深色模式
+     * @returns {boolean} - 如果系统是深色模式则返回 true
+     */
+    const checkSystemDarkMode = () => {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    };
+
+    /**
+     * 根据用户设置更新深色模式状态
+     */
+    const updateDarkMode = () => {
+        const darkModeEnabled = localStorage.getItem('darkModeEnabled') !== 'false';
+        const darkModeType = localStorage.getItem('darkModeType') || 'system';
+        
+        if (darkModeType === 'system') {
+            applyDarkMode(checkSystemDarkMode()); // 跟随系统设置
+        } else {
+            applyDarkMode(darkModeEnabled); // 根据手动开关设置
+        }
+        
+        // 当深色模式切换时，重新应用颜色设置以响应“自动”选项
+        updateTimeDisplay();
+        applyQuickAccessTitleSettings();
+    };
+
+    /**
+     * 加载并应用深色模式的保存设置
+     */
+    const loadDarkModeSettings = () => {
+        darkModeToggle.checked = localStorage.getItem('darkModeEnabled') !== 'false';
+        darkModeTypeSelect.value = localStorage.getItem('darkModeType') || 'system';
+        
+        // 根据是否启用深色模式来显示或隐藏类型选择器
+        darkModeTypeSettings.style.display = darkModeToggle.checked ? 'flex' : 'none';
+        
+        updateDarkMode();
+    };
+
+    // 深色模式开关事件监听
+    darkModeToggle.addEventListener('change', () => {
+        localStorage.setItem('darkModeEnabled', darkModeToggle.checked);
+        darkModeTypeSettings.style.display = darkModeToggle.checked ? 'flex' : 'none';
+        updateDarkMode();
+    });
+
+    // 深色模式类型选择器事件监听
+    darkModeTypeSelect.addEventListener('change', () => {
+        localStorage.setItem('darkModeType', darkModeTypeSelect.value);
+        updateDarkMode();
+    });
+
+    // 监听系统颜色方案变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (localStorage.getItem('darkModeType') === 'system') {
+            updateDarkMode();
+        }
+    });
+
+    // --- 时间显示功能 ---
+
+    /**
+     * 更新时间显示
+     */
+    const updateTimeDisplay = () => {
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+
+        // 从 localStorage 加载时间显示相关设置
+        const showTime = localStorage.getItem('showTime') === 'true' || false;
+        const showSeconds = localStorage.getItem('showSeconds') === 'true';
+        const timeFormat = localStorage.getItem('timeFormat') || '24h';
+        const showAmpm = localStorage.getItem('showAmpm') || 'no';
+        let timeColor = localStorage.getItem('timeColor') || 'white';
+
+        // 处理自动颜色
+        if (timeColor === 'auto') {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            timeColor = isDarkMode ? 'white' : 'black';
+        }
+        const timeWeight = localStorage.getItem('timeWeight') || 'normal';
+
+        // 根据设置决定是否显示时间
+        if (!showTime) {
+            timeDisplay.style.display = 'none';
+            return;
+        } else {
+            timeDisplay.style.display = 'block';
+        }
+
+        // 处理12小时制
+        let ampm = '';
+        if (timeFormat === '12h') {
+            ampm = hours >= 12 ? ' PM' : ' AM';
+            hours = hours % 12;
+            hours = hours === 0 ? 12 : hours; // 0点应显示为12点
+        }
+
+        // 格式化时间，单位数前补零
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        // 构建时间字符串
+        let timeString = `${hours}:${minutes}`;
+        if (showSeconds) {
+            timeString += `:${seconds}`;
+        }
+        if (timeFormat === '12h' && showAmpm === 'yes') {
+            timeString += ampm;
+        }
+
+        // 更新页面显示
+        timeDisplay.textContent = timeString;
+        timeDisplay.className = `time-display ${timeColor}`; // 应用颜色类
+        timeDisplay.style.fontWeight = timeWeight; // 应用字体粗细
+    };
+
+    /**
+     * 加载并应用时间相关的保存设置
+     */
+    const loadTimeSettings = () => {
+        showTimeCheckbox.checked = localStorage.getItem('showTime') === 'true' || false;
+        showSecondsCheckbox.checked = localStorage.getItem('showSeconds') === 'true';
+        timeFormatSelect.value = localStorage.getItem('timeFormat') || '24h';
+        showAmpmSelect.value = localStorage.getItem('showAmpm') || 'no';
+        timeColorSelect.value = localStorage.getItem('timeColor') || 'white';
+        timeWeightSelect.value = localStorage.getItem('timeWeight') || 'normal';
+        
+        toggleTimeSubSettings(); // 根据主开关状态更新子选项可见性
+        updateTimeDisplay();
+    };
+
+    /**
+     * 根据“是否显示时间”的开关，切换时间相关子设置的可见性
+     */
+    const toggleTimeSubSettings = () => {
+        const isTimeVisible = showTimeCheckbox.checked;
+        timeFormatSettings.style.display = isTimeVisible ? 'flex' : 'none';
+        // AM/PM 选项仅在12小时制下可见
+        ampmDisplaySettings.style.display = (isTimeVisible && timeFormatSelect.value === '12h') ? 'flex' : 'none';
+        timeFormatSelectContainer.style.display = isTimeVisible ? 'flex' : 'none';
+        timeColorSettings.style.display = isTimeVisible ? 'flex' : 'none';
+        timeWeightSettings.style.display = isTimeVisible ? 'flex' : 'none';
+    };
+
+    // 为所有时间设置项添加事件监听，并在更改时更新显示
+    showTimeCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showTime', showTimeCheckbox.checked);
+        toggleTimeSubSettings();
+        updateTimeDisplay();
+    });
+
+    showSecondsCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showSeconds', showSecondsCheckbox.checked);
+        updateTimeDisplay();
+    });
+
+    timeFormatSelect.addEventListener('change', () => {
+        localStorage.setItem('timeFormat', timeFormatSelect.value);
+        toggleTimeSubSettings(); // 切换12/24小时制时需要检查 AM/PM 的可见性
+        updateTimeDisplay();
+    });
+
+    showAmpmSelect.addEventListener('change', () => {
+        localStorage.setItem('showAmpm', showAmpmSelect.value);
+        updateTimeDisplay();
+    });
+
+    timeColorSelect.addEventListener('change', () => {
+        localStorage.setItem('timeColor', timeColorSelect.value);
+        updateTimeDisplay();
+    });
+
+    timeWeightSelect.addEventListener('change', () => {
+        localStorage.setItem('timeWeight', timeWeightSelect.value);
+        updateTimeDisplay();
+    });
+
+    // --- 快速访问功能 ---
+
+    /**
+     * 初始化预设的快速访问链接（如果用户是第一次使用）
+     */
+    const initializePresetLinks = () => {
+        if (localStorage.getItem('quickAccessLinks') === null) {
+            const presetLinks = [
+                {
+                    title: 'GitHub',
+                    url: 'https://github.com',
+                    icon: './files/show-quick/github.ico'
+                }
+            ];
+            localStorage.setItem('quickAccessLinks', JSON.stringify(presetLinks));
+        }
+    };
+
+    /**
+     * 从 localStorage 加载快速访问链接并渲染到页面
+     */
+    const loadQuickAccessLinks = () => {
+        const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+        quickAccessLinksContainer.innerHTML = ''; // 清空现有链接
+        
+        // 创建并添加“设置”这个特殊的系统链接
+        const settingsLink = {
+            title: '设置',
+            url: 'settings://open', // 特殊 URL 用于内部处理
+            icon: '',
+            isSystem: true // 标记为系统链接
+        };
+        createQuickAccessLinkElement(settingsLink);
+        
+        // 创建并添加“添加”按钮
+        const addLink = {
+            title: '添加',
+            url: '',
+            icon: '',
+            isSystem: true,
+            isAddButton: true // 标记为添加按钮
+        };
+        createQuickAccessLinkElement(addLink);
+        
+        // 渲染所有用户保存的链接
+        links.forEach(link => {
+            createQuickAccessLinkElement(link);
+        });
+    };
+    
+    /**
+     * 加载并应用快速访问的保存设置
+     */
+    const loadQuickAccessSettings = () => {
+        const showQuickAccess = localStorage.getItem('showQuickAccess') !== 'false'; // 默认显示
+        showQuickAccessCheckbox.checked = showQuickAccess;
+        quickAccessOpenTypeSelect.value = localStorage.getItem('quickAccessOpenType') || '_blank';
+        
+        // 加载标题显示设置
+        const showTitle = localStorage.getItem('showQuickAccessTitle') !== 'false';
+        showQuickAccessTitleCheckbox.checked = showTitle;
+        quickAccessTitleColorSelect.value = localStorage.getItem('quickAccessTitleColor') || 'black';
+
+        toggleQuickAccessSubSettings(); // 根据主开关状态更新子选项可见性
+        applyQuickAccessTitleSettings(); // 应用标题样式
+    };
+
+    /**
+     * 根据“是否显示快速访问”的开关，切换相关子设置的可见性
+     */
+    const toggleQuickAccessSubSettings = () => {
+        const isVisible = showQuickAccessCheckbox.checked;
+        quickAccessContainer.style.display = isVisible ? 'block' : 'none';
+        floatingSettingsButton.style.display = isVisible ? 'none' : 'flex';
+        quickAccessOpenTypeSettings.style.display = isVisible ? 'flex' : 'none';
+        quickAccessTitleDisplaySettings.style.display = isVisible ? 'flex' : 'none';
+        
+        // 标题颜色设置仅在“显示标题”开启时可见
+        const isTitleVisible = showQuickAccessTitleCheckbox.checked;
+        quickAccessTitleColorSettings.style.display = (isVisible && isTitleVisible) ? 'flex' : 'none';
+    };
+
+    /**
+     * 应用快速访问标题的显示和颜色设置
+     */
+    const applyQuickAccessTitleSettings = () => {
+        const showTitle = showQuickAccessTitleCheckbox.checked;
+        let titleColor = quickAccessTitleColorSelect.value;
+
+        // 处理自动颜色
+        if (titleColor === 'auto') {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            titleColor = isDarkMode ? 'white' : 'black';
+        }
+
+        quickAccessLinksContainer.classList.toggle('hide-title', !showTitle);
+        
+        quickAccessLinksContainer.classList.remove('title-white', 'title-black');
+        if (showTitle) {
+            quickAccessLinksContainer.classList.add(`title-${titleColor}`);
+        }
+    };
+
+    /**
+     * 创建单个快速访问链接的 DOM 元素
+     * @param {object} link - 链接对象 {title, url, icon, isSystem, isAddButton}
+     */
+    const createQuickAccessLinkElement = (link) => {
+        const linkElement = document.createElement('div');
+        linkElement.className = 'quick-access-link';
+        if (link.isSystem) {
+            linkElement.classList.add('system-link');
+        } else {
+            linkElement.draggable = true; // 只有非系统链接可以拖动
+        }
+        linkElement.dataset.url = link.url; // 将 URL 存储在 data 属性中
+        
+        // 创建图标元素
+        const iconElement = document.createElement('div');
+        iconElement.className = 'link-icon';
+        
+        if (link.icon) {
+            // 如果提供了自定义图标 URL
+            iconElement.style.backgroundImage = `url(${link.icon})`;
+            iconElement.style.backgroundSize = 'cover';
+            iconElement.style.backgroundPosition = 'center';
+            iconElement.textContent = '';
+        } else if (link.isSystem && link.title === '设置') {
+            // “设置”链接的特殊图标
+            iconElement.innerHTML = '<span class="material-symbols-outlined">settings</span>';
+            iconElement.style.backgroundColor = '#666';
+        } else if (link.isAddButton) {
+            // “添加”按钮的特殊样式
+            iconElement.textContent = '+';
+            iconElement.style.backgroundColor = '#4CAF50';
+            iconElement.style.fontSize = '18px';
+            iconElement.style.lineHeight = '36px';
+        } else {
+            // 尝试获取网站的 favicon
+            try {
+                const url = new URL(link.url);
+                const faviconUrl = `${url.protocol}//${url.hostname}/favicon.ico`;
+                iconElement.style.backgroundImage = `url(${faviconUrl})`;
+                iconElement.style.backgroundSize = 'cover';
+                iconElement.style.backgroundPosition = 'center';
+                iconElement.textContent = '';
+
+                // 如果 favicon 加载失败，则回退到默认图标
+                const img = new Image();
+                img.src = faviconUrl;
+                img.onerror = () => {
+                    const firstChar = link.title.charAt(0).toUpperCase();
+                    iconElement.textContent = firstChar;
+                    iconElement.style.backgroundImage = '';
+                    // 根据标题生成一个伪随机的背景色
+                    const colors = ['#4285f4', '#ea4335', '#fbbc05', '#34a853', '#1a73e8', '#d93025', '#f28b82', '#fdd663', '#81c995', '#8ab4f8'];
+                    const colorIndex = Math.abs(link.title.charCodeAt(0)) % colors.length;
+                    iconElement.style.backgroundColor = colors[colorIndex];
+                };
+            } catch (e) {
+                 // 如果 URL 无效，直接使用默认图标
+                const firstChar = link.title.charAt(0).toUpperCase();
+                iconElement.textContent = firstChar;
+                const colors = ['#4285f4', '#ea4335', '#fbbc05', '#34a853', '#1a73e8', '#d93025', '#f28b82', '#fdd663', '#81c995', '#8ab4f8'];
+                const colorIndex = Math.abs(link.title.charCodeAt(0)) % colors.length;
+                iconElement.style.backgroundColor = colors[colorIndex];
+            }
+        }
+        
+        // 创建标题元素
+        const titleElement = document.createElement('div');
+        titleElement.className = 'link-title';
+        titleElement.textContent = link.title;
+        
+        // 为非系统链接添加右键、长按和拖拽事件
+        if (!link.isSystem) {
+            let pressTimer; // 用于检测长按
+
+            // 右键菜单
+            linkElement.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showContextMenu(e.pageX, e.pageY, link);
+            });
+
+            // 移动端长按事件模拟
+            linkElement.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'touch') {
+                    pressTimer = setTimeout(() => {
+                        showContextMenu(e.pageX, e.pageY, link);
+                    }, 500); // 500毫秒算作长按
+                }
+            });
+            linkElement.addEventListener('pointerup', () => clearTimeout(pressTimer));
+            linkElement.addEventListener('pointerleave', () => clearTimeout(pressTimer));
+
+            // 桌面端拖拽事件
+            linkElement.addEventListener('dragstart', handleDragStart);
+            linkElement.addEventListener('dragover', handleDragOver);
+            linkElement.addEventListener('dragleave', handleDragLeave);
+            linkElement.addEventListener('drop', handleDrop);
+            linkElement.addEventListener('dragend', handleDragEnd);
+
+            // 移动端触摸拖拽事件
+            linkElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+            linkElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+            linkElement.addEventListener('touchend', handleTouchEnd);
+        }
+        
+        // 组装元素
+        linkElement.appendChild(iconElement);
+        linkElement.appendChild(titleElement);
+        
+        // 添加点击事件
+        if (link.isSystem && link.title === '设置') {
+            linkElement.addEventListener('click', () => {
+                settingsModal.style.display = 'block'; // 打开设置
+            });
+        } else if (link.isAddButton) {
+            linkElement.addEventListener('click', () => {
+                openQuickAccessModalForAdd(); // 打开添加链接模态框
+            });
+        } else {
+            linkElement.addEventListener('click', () => {
+                const openType = localStorage.getItem('quickAccessOpenType') || '_blank';
+                window.open(link.url, openType);
+            });
+        }
+        
+        quickAccessLinksContainer.appendChild(linkElement);
+    };
+    
+    /**
+     * 打开用于“添加”新链接的模态框
+     */
+    const openQuickAccessModalForAdd = () => {
+        quickAccessModalTitle.textContent = '添加快速访问';
+        quickAccessOriginalUrlInput.value = ''; // 清空原始URL，表示是添加模式
+        quickAccessTitleInput.value = '';
+        quickAccessUrlInput.value = '';
+        quickAccessIconInput.value = '';
+        quickAccessModal.style.display = 'block';
+    };
+
+    /**
+     * 打开用于“编辑”现有链接的模态框
+     * @param {object} link - 要编辑的链接对象
+     */
+    const openQuickAccessModalForEdit = (link) => {
+        quickAccessModalTitle.textContent = '编辑快速访问';
+        quickAccessOriginalUrlInput.value = link.url; // 存储原始URL，用于查找和替换
+        quickAccessTitleInput.value = link.title;
+        quickAccessUrlInput.value = link.url;
+        quickAccessIconInput.value = link.icon || '';
+        quickAccessModal.style.display = 'block';
+    };
+
+    /**
+     * 保存快速访问链接（添加或编辑）
+     */
+    const saveQuickAccessLink = () => {
+        const title = quickAccessTitleInput.value.trim();
+        let url = quickAccessUrlInput.value.trim();
+        const icon = quickAccessIconInput.value.trim();
+        const originalUrl = quickAccessOriginalUrlInput.value;
+
+        if (!title || !url) {
+            alert('请输入标题和网址');
+            return;
+        }
+
+        // 自动为 URL 添加协议头
+        if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://')) {
+            url = 'https://' + url;
+        }
+
+        const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+
+        if (originalUrl) {
+            // 编辑模式
+            const existingIndex = links.findIndex(link => link.url === originalUrl);
+            if (existingIndex !== -1) {
+                links[existingIndex] = { title, url, icon };
+            }
+        } else {
+            // 添加模式
+            const existingLink = links.find(link => link.url === url || link.title === title);
+            if (existingLink) {
+                alert('已存在具有相同标题或网址的链接。');
+                return;
+            }
+            links.push({ title, url, icon });
+        }
+
+        localStorage.setItem('quickAccessLinks', JSON.stringify(links));
+        loadQuickAccessLinks(); // 重新加载链接以显示更改
+
+        // 清空输入框并关闭模态框
+        quickAccessTitleInput.value = '';
+        quickAccessUrlInput.value = '';
+        quickAccessIconInput.value = '';
+        quickAccessOriginalUrlInput.value = '';
+        quickAccessModal.style.display = 'none';
+    };
+    
+    /**
+     * 删除指定的快速访问链接
+     * @param {string} title - 要删除链接的标题
+     * @param {string} url - 要删除链接的URL
+     */
+    const deleteQuickAccessLink = (title, url) => {
+        if (confirm(`确定要删除 "${title}" 吗？`)) {
+            const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+            const filteredLinks = links.filter(link => !(link.title === title && link.url === url));
+            localStorage.setItem('quickAccessLinks', JSON.stringify(filteredLinks));
+            loadQuickAccessLinks(); // 重新加载
+        }
+    };
+    
+    // --- 快速访问模态框的控制事件 ---
+    closeQuickAccessModal.addEventListener('click', () => {
+        quickAccessModal.style.display = 'none';
+    });
+    
+    cancelQuickAccessButton.addEventListener('click', () => {
+        quickAccessModal.style.display = 'none';
+    });
+    
+    saveQuickAccessButton.addEventListener('click', saveQuickAccessLink);
+    
+    // 点击模态框外部关闭
+    window.addEventListener('click', (event) => {
+        if (event.target === quickAccessModal) {
+            quickAccessModal.style.display = 'none';
+        }
+    });
+    
+    // 在URL输入框按回车键保存
+    quickAccessUrlInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            saveQuickAccessLink();
+        }
+    });
+
+    // --- 快速访问设置事件 ---
+    showQuickAccessCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showQuickAccess', showQuickAccessCheckbox.checked);
+        toggleQuickAccessSubSettings();
+    });
+
+    quickAccessOpenTypeSelect.addEventListener('change', () => {
+        localStorage.setItem('quickAccessOpenType', quickAccessOpenTypeSelect.value);
+    });
+
+    showQuickAccessTitleCheckbox.addEventListener('change', () => {
+        localStorage.setItem('showQuickAccessTitle', showQuickAccessTitleCheckbox.checked);
+        toggleQuickAccessSubSettings(); // 需要切换颜色选择器的可见性
+        applyQuickAccessTitleSettings();
+    });
+
+    quickAccessTitleColorSelect.addEventListener('change', () => {
+        localStorage.setItem('quickAccessTitleColor', quickAccessTitleColorSelect.value);
+        applyQuickAccessTitleSettings();
+    });
+
+    // --- 悬浮设置按钮事件 ---
+    floatingSettingsButton.addEventListener('click', () => {
+        settingsModal.style.display = 'block';
+    });
+
+    // --- 页面初始化调用 ---
+    loadBackgroundSettings(); // 加载背景设置
+    loadTimeSettings(); // 加载时间设置
+    loadDarkModeSettings(); // 加载深色模式设置
+    loadQuickAccessSettings(); // 加载快速访问设置
+    setInterval(updateTimeDisplay, 1000); // 每秒更新一次时间
+    
+    /**
+     * 清理旧版本可能残留的默认链接
+     */
+    const cleanupDefaultLinks = () => {
+        const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+        const defaultLinkUrls = ['https://www.google.com', 'https://www.youtube.com', 'https://www.github.com'];
+        
+        const hasDefaultLinks = links.some(link => defaultLinkUrls.includes(link.url));
+        
+        if (hasDefaultLinks) {
+            const filteredLinks = links.filter(link => !defaultLinkUrls.includes(link.url));
+            localStorage.setItem('quickAccessLinks', JSON.stringify(filteredLinks));
+        }
+    };
+    
+    // --- 上下文菜单（右键菜单）功能 ---
+
+    /**
+     * 在指定位置显示上下文菜单
+     * @param {number} x - 屏幕 x 坐标
+     * @param {number} y - 屏幕 y 坐标
+     * @param {object} link - 关联的链接对象
+     */
+    const showContextMenu = (x, y, link) => {
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = `${x}px`;
+        contextMenu.style.top = `${y}px`;
+
+        // 为菜单项动态绑定事件
+        editLinkButton.onclick = () => {
+            openQuickAccessModalForEdit(link);
+            hideContextMenu();
+        };
+        deleteLinkButton.onclick = () => {
+            deleteQuickAccessLink(link.title, link.url);
+            hideContextMenu();
+        };
+    };
+
+    /**
+     * 隐藏上下文菜单
+     */
+    const hideContextMenu = () => {
+        contextMenu.style.display = 'none';
+    };
+
+    // 点击页面任何其他地方都会关闭上下文菜单
+    window.addEventListener('click', () => {
+        hideContextMenu();
+    });
+
+    // --- 更多初始化调用 ---
+    cleanupDefaultLinks(); // 清理旧的默认链接
+    initializePresetLinks(); // 初始化预设链接
+    loadQuickAccessLinks(); // 加载快速访问链接
+
+    // --- 拖拽排序功能 (桌面端) ---
+    let draggedItem = null; // 用于存储当前正在拖动的元素
+
+    function handleDragStart(e) {
+        draggedItem = this;
+        setTimeout(() => {
+            this.style.display = 'none'; // 拖动时暂时隐藏原元素
+        }, 0);
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault(); // 必须阻止默认行为才能触发 drop
+        this.classList.add('drag-over'); // 添加视觉反馈
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over'); // 移除视觉反馈
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+
+        if (draggedItem !== this) {
+            // 更新 localStorage 中的链接顺序
+            const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+            const fromIndex = links.findIndex(link => link.url === draggedItem.dataset.url);
+            const toIndex = links.findIndex(link => link.url === this.dataset.url);
+
+            if (fromIndex !== -1 && toIndex !== -1) {
+                const [movedItem] = links.splice(fromIndex, 1); // 移除拖动的项
+                links.splice(toIndex, 0, movedItem); // 在目标位置插入
+                localStorage.setItem('quickAccessLinks', JSON.stringify(links));
+                loadQuickAccessLinks(); // 重新渲染
+            }
+        }
+    }
+
+    function handleDragEnd() {
+        // 拖动结束后清理
+        if (draggedItem) {
+            draggedItem.style.display = ''; // 恢复显示
+            draggedItem = null;
+        }
+        document.querySelectorAll('.quick-access-link').forEach(link => {
+            link.classList.remove('drag-over');
+        });
+    }
+
+    // --- 触摸拖拽排序功能 (移动端) ---
+    let touchDraggedItem = null;
+
+    function handleTouchStart(e) {
+        if (this.classList.contains('system-link')) return; // 系统链接不可拖动
+        touchDraggedItem = this;
+        // 添加视觉反馈
+        this.style.opacity = '0.5';
+        this.style.transform = 'scale(1.1)';
+    }
+
+    function handleTouchMove(e) {
+        if (!touchDraggedItem) return;
+        e.preventDefault(); // 阻止页面滚动
+
+        const touch = e.touches[0];
+        // 暂时隐藏拖动元素，以获取其下方的元素
+        touchDraggedItem.style.display = 'none';
+        const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        touchDraggedItem.style.display = ''; // 恢复显示
+
+        // 移除所有旧的视觉反馈
+        document.querySelectorAll('.quick-access-link').forEach(link => {
+            link.classList.remove('drag-over');
+        });
+
+        if (overElement) {
+            const targetLink = overElement.closest('.quick-access-link:not(.system-link)');
+            if (targetLink && targetLink !== touchDraggedItem) {
+                targetLink.classList.add('drag-over'); // 添加新的视觉反馈
+            }
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (!touchDraggedItem) return;
+
+        // 恢复样式
+        touchDraggedItem.style.opacity = '1';
+        touchDraggedItem.style.transform = 'scale(1)';
+
+        const touch = e.changedTouches[0];
+        // 再次隐藏以准确找到最终的目标元素
+        touchDraggedItem.style.display = 'none';
+        const overElement = document.elementFromPoint(touch.clientX, touch.clientY);
+        touchDraggedItem.style.display = '';
+
+        if (overElement) {
+            const targetLink = overElement.closest('.quick-access-link:not(.system-link)');
+            if (targetLink && targetLink !== touchDraggedItem) {
+                // 与桌面端 drop 逻辑相同，更新数据并重新渲染
+                const links = JSON.parse(localStorage.getItem('quickAccessLinks') || '[]');
+                const fromIndex = links.findIndex(link => link.url === touchDraggedItem.dataset.url);
+                const toIndex = links.findIndex(link => link.url === targetLink.dataset.url);
+
+                if (fromIndex !== -1 && toIndex !== -1) {
+                    const [movedItem] = links.splice(fromIndex, 1);
+                    links.splice(toIndex, 0, movedItem);
+                    localStorage.setItem('quickAccessLinks', JSON.stringify(links));
+                    loadQuickAccessLinks();
+                }
+            }
+        }
+
+        // 清理
+        document.querySelectorAll('.quick-access-link').forEach(link => {
+            link.classList.remove('drag-over');
+        });
+        touchDraggedItem = null;
+    }
 });
