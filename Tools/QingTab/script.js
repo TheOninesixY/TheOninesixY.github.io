@@ -400,6 +400,22 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
     // --- 快速访问功能 ---
 
     /**
+     * 初始化预设的快速访问链接（如果用户是第一次使用）
+     */
+    const initializePresetLinks = () => {
+        if (localStorage.getItem('quickAccessLinks') === null) {
+            const presetLinks = [
+                {
+                    title: 'GitHub',
+                    url: 'https://github.com',
+                    icon: './files/show-quick/github.ico'
+                }
+            ];
+            localStorage.setItem('quickAccessLinks', JSON.stringify(presetLinks));
+        }
+    };
+
+    /**
      * 从 localStorage 加载快速访问链接并渲染到页面
      */
     const loadQuickAccessLinks = () => {
@@ -810,6 +826,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
 
     // --- 更多初始化调用 ---
     cleanupDefaultLinks(); // 清理旧的默认链接
+    initializePresetLinks(); // 初始化预设链接
     loadQuickAccessLinks(); // 加载快速访问链接
 
     // --- 拖拽排序功能 (桌面端) ---
