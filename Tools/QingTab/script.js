@@ -668,7 +668,7 @@ const floatingSettingsButton = document.getElementById('floating-settings-button
         }
 
         // 自动为 URL 添加协议头
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://')) {
             url = 'https://' + url;
         }
 
