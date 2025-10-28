@@ -54,10 +54,3 @@ title: 🏠 首页
 [怀旧版入口](./old/)
 
 如果你愿意，请给本站点个星标⭐，谢谢！
-
-<!--HTML-->
-<script>
-    if (window.location.hostname !== 'oninesixy.pages.dev') {
-  window.location.replace('https://oninesixy.pages.dev');
-}
-</script>
