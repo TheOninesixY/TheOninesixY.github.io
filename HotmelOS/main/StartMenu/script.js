@@ -55,6 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const contextMenuDelete = document.getElementById('context-menu-delete');
     const shutdownButton = document.getElementById('shutdown-button');
     const shutdownScreen = document.getElementById('shutdown-screen');
+    // 左侧栏元素
+    const sidebarSettings = document.getElementById('sidebar-settings');
+    const sidebarShutdown = document.getElementById('sidebar-shutdown');
 
     // --- 函数 ---
 
@@ -177,9 +180,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 关机功能 ---
-    shutdownButton.addEventListener('click', () => {
-        // 向父窗口发送关机消息（使用对象格式）
+    // --- 左侧栏功能 ---
+    // 设置按钮点击事件
+    sidebarSettings.addEventListener('click', () => {
+        // 向父窗口发送消息，请求创建设置窗口
+        window.parent.postMessage({
+            type: 'createWindow',
+            title: '设置',
+            url: './Apps/Setting/index.html'
+        }, '*');
+        // 向父窗口发送消息，关闭开始菜单
+        window.parent.postMessage({ type: 'closeStartMenu' }, '*');
+    });
+
+    // 关机按钮点击事件
+    sidebarShutdown.addEventListener('click', () => {
+        // 向父窗口发送关机消息
         window.parent.postMessage({ type: 'shutdown' }, '*');
     });
 

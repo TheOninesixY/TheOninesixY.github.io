@@ -16,15 +16,84 @@ body, html {
     background-color: transparent;
     display: none; /* Hidden by default */
     color: black;
-    flex-direction: column;
+    flex-direction: row;
     border: 1px solid #e0e0e0;
+}
+
+/* 左侧栏样式 */
+#start-menu-sidebar {
+    width: 60px;
+    background-color: #0078D7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+.sidebar-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: auto;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar .material-icons {
+    font-size: 24px;
+    color: #0078D7;
+}
+
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: auto;
+}
+
+.sidebar-item {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sidebar-item .material-icons {
+    font-size: 24px;
+    color: white;
+}
+
+.sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 右侧主内容区域 */
+.start-menu-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(245, 245, 245, 0.9);
 }
 
 .start-menu-content {
     flex-grow: 1;
     padding: 10px;
     overflow-y: auto;
-    background-color: rgba(245, 245, 245, 0.9);
+    background-color: transparent;
 }
 
 #shutdown-container {
@@ -35,6 +104,7 @@ body, html {
     justify-content: flex-end;
     padding-right: 10px;
     box-sizing: border-box;
+    display: none;
 }
 
 #shutdown-button {
