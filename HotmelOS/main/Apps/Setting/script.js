@@ -111,6 +111,23 @@ async function init() {
         selectedWallpaper = savedWallpaper;
         updatePreview(savedWallpaper);
     }
+    
+    // 加载上次保存的任务栏居中设置
+    const savedCenter = localStorage.getItem('hotmelos_taskbar_center');
+    const centerTaskbarCheckbox = document.getElementById('centerTaskbar');
+    if (centerTaskbarCheckbox) {
+        centerTaskbarCheckbox.checked = savedCenter === 'true';
+        
+        // 添加事件监听器
+        centerTaskbarCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            // 向父窗口发送消息，设置任务栏居中
+            window.parent.postMessage({
+                type: 'setTaskbarCenter',
+                center: isChecked
+            }, '*');
+        });
+    }
 }
 
 // 页面加载完成后初始化

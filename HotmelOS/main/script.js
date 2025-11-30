@@ -52,6 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 切换任务栏居中状态
+    function toggleTaskbarCenter(center) {
+        const taskbar = document.getElementById('taskbar');
+        if (center) {
+            taskbar.classList.add('center');
+        } else {
+            taskbar.classList.remove('center');
+        }
+        // 保存到localStorage
+        localStorage.setItem('hotmelos_taskbar_center', center ? 'true' : 'false');
+    }
+
     // 监听来自iframe的消息
     window.addEventListener('message', (event) => {
         if (event.data.type === 'createWindow') {
@@ -65,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.backgroundImage = `url('${event.data.url}')`;
             // 保存到localStorage
             localStorage.setItem('hotmelos_wallpaper', event.data.url);
+        } else if (event.data.type === 'setTaskbarCenter') {
+            // 设置任务栏居中
+            toggleTaskbarCenter(event.data.center);
         }
     });
     
@@ -265,10 +280,18 @@ document.addEventListener('DOMContentLoaded', () => {
         windowInfo.taskbarIcon = icon;
     }
 
+    // 初始化任务栏居中设置
+    function initTaskbarCenter() {
+        const savedCenter = localStorage.getItem('hotmelos_taskbar_center');
+        const center = savedCenter === 'true';
+        toggleTaskbarCenter(center);
+    }
+
     // --- 初始化 ---
     setInterval(updateTime, 1000);
     updateTime();
     initWallpaper();
+    initTaskbarCenter();
 
     // 确保iframe内容完全加载
     startMenuIframe.onload = function() {

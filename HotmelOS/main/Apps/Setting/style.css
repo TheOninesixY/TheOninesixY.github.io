@@ -162,3 +162,35 @@ button:disabled {
     padding-top: 20px;
     border-top: 1px solid #e9ecef;
 }
+
+/* 设置项样式 */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.setting-item:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.setting-item label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    cursor: pointer;
+}
+
+.setting-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #0078d7;
+}

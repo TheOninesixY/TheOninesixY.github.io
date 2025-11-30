@@ -20,7 +20,34 @@ body, html {
     background-color: rgba(255, 255, 255, 0.80);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     color: black;
+}
+
+/* 任务栏容器样式 */
+.taskbar-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+/* 居中模式下的任务栏容器 */
+#taskbar.center .taskbar-container {
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* 居中任务栏图标样式 */
+#taskbar.center #taskbar-icons {
+    justify-content: center;
+    flex-grow: 0;
+}
+
+/* 居中开始菜单样式 */
+#taskbar.center + #start-menu-iframe {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
 }
 
 #start-button {
