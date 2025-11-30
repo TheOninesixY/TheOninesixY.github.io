@@ -19,7 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
             startMenuIframe.style.display = 'block';
             // 向iframe发送消息，显示开始菜单
             if (startMenuIframe.contentWindow) {
-                startMenuIframe.contentWindow.postMessage({ type: 'toggleStartMenu' }, '*');
+                const taskbar = document.getElementById('taskbar');
+                const isCenterMode = taskbar.classList.contains('center');
+                startMenuIframe.contentWindow.postMessage({ 
+                    type: 'toggleStartMenu',
+                    isCenterMode: isCenterMode
+                }, '*');
             }
         }
     }
@@ -267,7 +272,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskbarIcons = document.getElementById('taskbar-icons');
         const icon = document.createElement('div');
         icon.className = 'taskbar-icon';
-        icon.textContent = windowInfo.title;
+        
+        // 根据应用名称生成图标
+        const iconDiv = document.createElement('div');
+        iconDiv.style.width = '24px';
+        iconDiv.style.height = '24px';
+        iconDiv.style.borderRadius = '3px';
+        iconDiv.style.display = 'flex';
+        iconDiv.style.alignItems = 'center';
+        iconDiv.style.justifyContent = 'center';
+        iconDiv.style.color = 'white';
+        iconDiv.style.fontSize = '14px';
+        iconDiv.style.fontWeight = 'bold';
+        
+        // 使用与StartMenu相同的颜色生成逻辑
+        const colors = ['#0078D7', '#4CAF50', '#FF9800', '#9C27B0', '#E91E63', '#2196F3', '#3F51B5', '#00BCD4'];
+        const colorIndex = windowInfo.title ? windowInfo.title.charCodeAt(0) % colors.length : 0;
+        iconDiv.style.backgroundColor = colors[colorIndex];
+        
+        // 添加首字母作为图标内容
+        const iconText = document.createElement('span');
+        iconText.textContent = windowInfo.title.charAt(0);
+        iconDiv.appendChild(iconText);
+        
+        icon.appendChild(iconDiv);
         icon.dataset.windowId = windowInfo.id;
         icon.onclick = () => {
             if (windowInfo.isMinimized) {

@@ -22,6 +22,47 @@ body, html {
     overflow: hidden;
 }
 
+/* 居中模式下的开始菜单布局 */
+body[data-center-mode="true"] #start-menu {
+    flex-direction: column;
+}
+
+/* 居中模式下的左侧栏变为底部栏 */
+body[data-center-mode="true"] #start-menu-sidebar {
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    padding: 0 20px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    justify-content: space-between;
+    align-items: center;
+    order: 2;
+}
+
+/* 居中模式下的用户头像区域 */
+body[data-center-mode="true"] .sidebar-user {
+    margin-bottom: 0;
+    margin-right: auto;
+}
+
+/* 居中模式下的底部按钮区域 */
+body[data-center-mode="true"] .sidebar-bottom {
+    flex-direction: row;
+    gap: 20px;
+    margin-top: 0;
+    margin-left: auto;
+}
+
+/* 居中模式下的主内容区域 */
+body[data-center-mode="true"] .start-menu-main {
+    order: 1;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-right-radius: 0;
+}
+
 /* 左侧栏样式 */
 #start-menu-sidebar {
     width: 60px;
@@ -94,6 +135,29 @@ body, html {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     overflow: hidden;
+}
+
+/* 搜索框样式 */
+.start-menu-search {
+    padding: 10px;
+    background-color: rgba(230, 230, 230, 0.9);
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#start-menu-search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#start-menu-search-input:focus {
+    border-color: #0078D7;
+    box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.2);
 }
 
 .start-menu-content {

@@ -55,19 +55,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const contextMenuDelete = document.getElementById('context-menu-delete');
     const shutdownButton = document.getElementById('shutdown-button');
     const shutdownScreen = document.getElementById('shutdown-screen');
+    // 搜索框元素
+    const searchInput = document.getElementById('start-menu-search-input');
     // 左侧栏元素
     const sidebarSettings = document.getElementById('sidebar-settings');
     const sidebarShutdown = document.getElementById('sidebar-shutdown');
 
     // --- 函数 ---
 
-    // 渲染整个开始菜单
-    function renderStartMenu() {
+    // 渲染整个开始菜单，支持搜索过滤
+    function renderStartMenu(searchTerm = '') {
         startMenuAppsContainer.innerHTML = '';
+        const searchLower = searchTerm.toLowerCase();
 
         // 从左侧列表中提取应用项并创建"最近添加"部分
         const recentApps = appData.startMenuItems.filter(item => item.type === 'item' && !item.deleted);
-        if (recentApps.length > 0) {
+        const filteredRecentApps = recentApps.filter(app => 
+            app.name.toLowerCase().includes(searchLower)
+        );
+        if (filteredRecentApps.length > 0) {
             const recentSectionDiv = document.createElement('div');
             recentSectionDiv.className = 'apps-section';
             const recentTitleDiv = document.createElement('div');
@@ -77,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const recentGridDiv = document.createElement('div');
             recentGridDiv.className = 'apps-grid';
             
-            recentApps.forEach(itemData => {
+            filteredRecentApps.forEach(itemData => {
                 createAppItem(recentGridDiv, itemData);
             });
             
@@ -87,22 +93,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 渲染原有磁贴区域的应用图标
         appData.tileSections.forEach(sectionData => {
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = 'apps-section';
-            const titleDiv = document.createElement('div');
-            titleDiv.className = 'section-title';
-            titleDiv.textContent = sectionData.title;
-            sectionDiv.appendChild(titleDiv);
-            const gridDiv = document.createElement('div');
-            gridDiv.className = 'apps-grid';
+            const filteredTiles = sectionData.tiles.filter(tileData => 
+                !tileData.deleted && tileData.name.toLowerCase().includes(searchLower)
+            );
             
-            sectionData.tiles.forEach(tileData => {
-                if (tileData.deleted) return;
-                createAppItem(gridDiv, tileData);
-            });
-            
-            sectionDiv.appendChild(gridDiv);
-            startMenuAppsContainer.appendChild(sectionDiv);
+            if (filteredTiles.length > 0) {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'apps-section';
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'section-title';
+                titleDiv.textContent = sectionData.title;
+                sectionDiv.appendChild(titleDiv);
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'apps-grid';
+                
+                filteredTiles.forEach(tileData => {
+                    createAppItem(gridDiv, tileData);
+                });
+                
+                sectionDiv.appendChild(gridDiv);
+                startMenuAppsContainer.appendChild(sectionDiv);
+            }
         });
     }
     
@@ -202,18 +213,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 初始化 ---
     renderStartMenu();
 
+    // 搜索框事件监听
+    searchInput.addEventListener('input', (e) => {
+        renderStartMenu(e.target.value);
+    });
+
     // 监听 localStorage 变化，实现页面间通信
     window.addEventListener('storage', () => {
         appData = JSON.parse(localStorage.getItem('hotmelOS_appData')) || defaultAppData;
-        renderStartMenu();
+        renderStartMenu(searchInput.value);
     });
 
     // 监听来自父窗口的消息
     window.addEventListener('message', (event) => {
         if (event.data.type === 'toggleStartMenu') {
             startMenu.style.display = startMenu.style.display === 'flex' ? 'none' : 'flex';
+            // 设置居中模式状态
+            document.body.setAttribute('data-center-mode', event.data.isCenterMode ? 'true' : 'false');
+            // 重新渲染开始菜单，保持当前搜索状态
+            renderStartMenu(searchInput.value);
         } else if (event.data.type === 'closeStartMenu') {
             startMenu.style.display = 'none';
+        } else if (event.data.type === 'init') {
+            // 初始化时也需要设置居中模式状态
+            const parentTaskbar = window.parent.document.getElementById('taskbar');
+            const isCenterMode = parentTaskbar && parentTaskbar.classList.contains('center');
+            document.body.setAttribute('data-center-mode', isCenterMode ? 'true' : 'false');
+            // 重新渲染开始菜单，保持当前搜索状态
+            renderStartMenu(searchInput.value);
         }
     });
 });
