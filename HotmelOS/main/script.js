@@ -69,6 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('hotmelos_taskbar_center', center ? 'true' : 'false');
     }
 
+    // 切换全屏状态
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`无法进入全屏模式: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
     // 监听来自iframe的消息
     window.addEventListener('message', (event) => {
         if (event.data.type === 'createWindow') {
@@ -85,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (event.data.type === 'setTaskbarCenter') {
             // 设置任务栏居中
             toggleTaskbarCenter(event.data.center);
+        } else if (event.data.type === 'toggleFullscreen') {
+            // 切换全屏状态
+            toggleFullscreen();
         }
     });
     

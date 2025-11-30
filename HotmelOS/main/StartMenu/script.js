@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 搜索框元素
     const searchInput = document.getElementById('start-menu-search-input');
     // 左侧栏元素
+    const sidebarFullscreen = document.getElementById('sidebar-fullscreen');
     const sidebarSettings = document.getElementById('sidebar-settings');
     const sidebarShutdown = document.getElementById('sidebar-shutdown');
 
@@ -192,6 +193,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 左侧栏功能 ---
+    // 全屏按钮点击事件
+    sidebarFullscreen.addEventListener('click', () => {
+        // 向父窗口发送消息，请求切换全屏状态
+        window.parent.postMessage({ type: 'toggleFullscreen' }, '*');
+        // 向父窗口发送消息，关闭开始菜单
+        window.parent.postMessage({ type: 'closeStartMenu' }, '*');
+    });
+
     // 设置按钮点击事件
     sidebarSettings.addEventListener('click', () => {
         // 向父窗口发送消息，请求创建设置窗口
