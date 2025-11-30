@@ -11,10 +11,10 @@ body, html {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 600px; /* Increased width */
-    height: 500px;
+    width: 100%; /* Full width of iframe */
+    height: 100%; /* Full height of iframe */
     background-color: transparent;
-    display: none; /* Hidden by default */
+    display: flex; /* Always flex, visibility controlled by iframe */
     color: black;
     flex-direction: row;
     border: 1px solid #e0e0e0;
@@ -31,6 +31,8 @@ body, html {
     align-items: center;
     padding: 20px 0;
     box-sizing: border-box;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
 .sidebar-user {
@@ -89,6 +91,9 @@ body, html {
     display: flex;
     flex-direction: column;
     background-color: rgba(245, 245, 245, 0.9);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: hidden;
 }
 
 .start-menu-content {
