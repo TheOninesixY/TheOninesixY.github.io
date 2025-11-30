@@ -1,0 +1,133 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: transparent;
+}
+
+#start-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 600px; /* Increased width */
+    height: 500px;
+    background-color: transparent;
+    display: none; /* Hidden by default */
+    color: black;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+}
+
+.start-menu-content {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: rgba(245, 245, 245, 0.9);
+}
+
+#shutdown-container {
+    height: 50px;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+#shutdown-button {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#shutdown-button:hover {
+    background-color: #e74c3c;
+}
+
+.apps-section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+}
+
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.app-item:hover {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+.app-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #0078D7;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.app-name {
+    text-align: center;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* Context Menu Styles */
+.context-menu {
+    position: absolute;
+    z-index: 1000;
+    width: 150px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: none; /* Initially hidden */
+}
+
+.context-menu-item {
+    padding: 8px 12px;
+    color: black;
+    cursor: pointer;
+}
+
+.context-menu-item:hover {
+    background-color: #0078D7;
+}
+
+#shutdown-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    z-index: 9999;
+    display: none; /* Initially hidden */
+}
