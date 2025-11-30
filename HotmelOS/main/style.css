@@ -109,13 +109,27 @@ body, html {
     font-weight: bold;
 }
 
+.window-controls {
+    display: flex;
+    gap: 0;
+}
+
 .window-controls button {
     background: none;
     border: none;
     color: #555;
-    font-size: 16px;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.window-controls button .material-icons {
+    font-size: 16px;
+    line-height: 1;
 }
 
 .window-body {

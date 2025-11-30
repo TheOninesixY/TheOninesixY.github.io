@@ -116,12 +116,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 最小化按钮
         const minimizeButton = document.createElement('button');
-        minimizeButton.textContent = '🗕';
+        const minimizeIcon = document.createElement('span');
+        minimizeIcon.className = 'material-icons';
+        minimizeIcon.textContent = 'minimize';
+        minimizeButton.appendChild(minimizeIcon);
         minimizeButton.onclick = () => minimizeWindow(windowId);
         
         // 最大化按钮
         const maximizeButton = document.createElement('button');
-        maximizeButton.textContent = '🗖';
+        const maximizeIcon = document.createElement('span');
+        maximizeIcon.className = 'material-icons';
+        maximizeIcon.textContent = 'fullscreen';
+        maximizeButton.appendChild(maximizeIcon);
         let isMaximized = false;
         let originalState = {};
         maximizeButton.onclick = () => {
@@ -131,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 windowDiv.style.width = originalState.width;
                 windowDiv.style.height = originalState.height;
                 isMaximized = false;
+                maximizeIcon.textContent = 'fullscreen';
             } else {
                 originalState = { top: windowDiv.style.top, left: windowDiv.style.left, width: windowDiv.style.width, height: windowDiv.style.height };
                 windowDiv.style.top = '0';
@@ -138,12 +145,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 windowDiv.style.width = '100%';
                 windowDiv.style.height = 'calc(100% - 40px)';
                 isMaximized = true;
+                maximizeIcon.textContent = 'fullscreen_exit';
             }
         };
         
         // 关闭按钮
         const closeButton = document.createElement('button');
-        closeButton.textContent = '✖';
+        const closeIcon = document.createElement('span');
+        closeIcon.className = 'material-icons';
+        closeIcon.textContent = 'close';
+        closeButton.appendChild(closeIcon);
         closeButton.onclick = () => closeWindow(windowId);
         
         controls.appendChild(minimizeButton);
