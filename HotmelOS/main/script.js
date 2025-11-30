@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 切换开始菜单
     function toggleStartMenu() {
-        const isVisible = startMenuIframe.style.display !== 'none';
+        // 检查是否已经显示（通过transform判断）
+        const isVisible = startMenuIframe.style.transform === 'translateY(0%)' || startMenuIframe.style.transform === '';
         if (isVisible) {
-            // 向iframe发送消息，关闭开始菜单
-            startMenuIframe.contentWindow.postMessage({ type: 'closeStartMenu' }, '*');
-            startMenuIframe.style.display = 'none';
+            closeStartMenu();
         } else {
-            // 确保iframe已加载
-            startMenuIframe.style.display = 'block';
+            // 显示动画
+            startMenuIframe.style.transform = 'translateY(0%)';
+            startMenuIframe.style.opacity = '1';
             // 向iframe发送消息，显示开始菜单
             if (startMenuIframe.contentWindow) {
                 const taskbar = document.getElementById('taskbar');
@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 关闭开始菜单
     function closeStartMenu() {
-        startMenuIframe.style.display = 'none';
+        // 关闭动画
+        startMenuIframe.style.transform = 'translateY(100%)';
+        startMenuIframe.style.opacity = '0';
+        // 向iframe发送消息，关闭开始菜单
         if (startMenuIframe.contentWindow) {
             startMenuIframe.contentWindow.postMessage({ type: 'closeStartMenu' }, '*');
         }
@@ -45,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 点击其他地方隐藏菜单
     document.addEventListener('click', (e) => {
-        if (!startButton.contains(e.target) && startMenuIframe.style.display !== 'none') {
+        // 检查是否已经显示（通过transform判断）
+        const isVisible = startMenuIframe.style.transform === 'translateY(0%)' || startMenuIframe.style.transform === '';
+        if (!startButton.contains(e.target) && isVisible) {
             closeStartMenu();
         }
     });
