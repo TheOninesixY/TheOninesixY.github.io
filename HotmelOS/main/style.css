@@ -39,6 +39,33 @@ body, html {
 
 #taskbar-icons {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.taskbar-icon {
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    transition: background-color 0.2s;
+}
+
+.taskbar-icon:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.taskbar-icon:active {
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 #system-tray {

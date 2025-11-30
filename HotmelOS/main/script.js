@@ -94,11 +94,18 @@ document.addEventListener('DOMContentLoaded', () => {
         timeElement.textContent = `${hours}:${minutes}`;
     }
 
-    // 创建窗口 (与之前相同)
+    // 窗口数据管理
+    let windows = [];
+    let windowIdCounter = 0;
+
+    // 创建窗口
     function createWindow(title, url) {
         const desktop = document.getElementById('desktop');
         const windowDiv = document.createElement('div');
         windowDiv.className = 'window';
+        const windowId = windowIdCounter++;
+        windowDiv.dataset.windowId = windowId;
+        
         const header = document.createElement('div');
         header.className = 'window-header';
         const titleSpan = document.createElement('span');
@@ -106,6 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
         titleSpan.textContent = title;
         const controls = document.createElement('div');
         controls.className = 'window-controls';
+        
+        // 最小化按钮
+        const minimizeButton = document.createElement('button');
+        minimizeButton.textContent = '🗕';
+        minimizeButton.onclick = () => minimizeWindow(windowId);
+        
+        // 最大化按钮
         const maximizeButton = document.createElement('button');
         maximizeButton.textContent = '🗖';
         let isMaximized = false;
@@ -126,13 +140,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 isMaximized = true;
             }
         };
+        
+        // 关闭按钮
         const closeButton = document.createElement('button');
         closeButton.textContent = '✖';
-        closeButton.onclick = () => windowDiv.remove();
+        closeButton.onclick = () => closeWindow(windowId);
+        
+        controls.appendChild(minimizeButton);
         controls.appendChild(maximizeButton);
         controls.appendChild(closeButton);
         header.appendChild(titleSpan);
         header.appendChild(controls);
+        
         const body = document.createElement('div');
         body.className = 'window-body';
         const iframe = document.createElement('iframe');
@@ -140,9 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '');
         body.appendChild(iframe);
+        
         windowDiv.appendChild(header);
         windowDiv.appendChild(body);
         desktop.appendChild(windowDiv);
+        
+        // 窗口拖动逻辑
         let isDragging = false;
         let offsetX, offsetY;
         header.addEventListener('mousedown', (e) => {
@@ -161,6 +183,75 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = false;
             windowDiv.style.zIndex = 100;
         });
+        
+        // 保存窗口信息
+        const windowInfo = {
+            id: windowId,
+            title: title,
+            element: windowDiv,
+            isMinimized: false,
+            taskbarIcon: null
+        };
+        windows.push(windowInfo);
+        
+        // 创建任务栏图标
+        createTaskbarIcon(windowInfo);
+    }
+    
+    // 最小化窗口
+    function minimizeWindow(windowId) {
+        const windowInfo = windows.find(w => w.id === windowId);
+        if (windowInfo) {
+            windowInfo.element.style.display = 'none';
+            windowInfo.isMinimized = true;
+        }
+    }
+    
+    // 恢复窗口
+    function restoreWindow(windowId) {
+        const windowInfo = windows.find(w => w.id === windowId);
+        if (windowInfo) {
+            windowInfo.element.style.display = 'flex';
+            windowInfo.element.style.zIndex = 101;
+            windowInfo.isMinimized = false;
+            setTimeout(() => {
+                windowInfo.element.style.zIndex = 100;
+            }, 100);
+        }
+    }
+    
+    // 关闭窗口
+    function closeWindow(windowId) {
+        const windowIndex = windows.findIndex(w => w.id === windowId);
+        if (windowIndex !== -1) {
+            const windowInfo = windows[windowIndex];
+            // 移除窗口元素
+            windowInfo.element.remove();
+            // 移除任务栏图标
+            if (windowInfo.taskbarIcon) {
+                windowInfo.taskbarIcon.remove();
+            }
+            // 从数组中移除
+            windows.splice(windowIndex, 1);
+        }
+    }
+    
+    // 创建任务栏图标
+    function createTaskbarIcon(windowInfo) {
+        const taskbarIcons = document.getElementById('taskbar-icons');
+        const icon = document.createElement('div');
+        icon.className = 'taskbar-icon';
+        icon.textContent = windowInfo.title;
+        icon.dataset.windowId = windowInfo.id;
+        icon.onclick = () => {
+            if (windowInfo.isMinimized) {
+                restoreWindow(windowInfo.id);
+            } else {
+                minimizeWindow(windowInfo.id);
+            }
+        };
+        taskbarIcons.appendChild(icon);
+        windowInfo.taskbarIcon = icon;
     }
 
     // --- 初始化 ---
