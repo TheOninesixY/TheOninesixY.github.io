@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
                     { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'},
                     { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: './Apps/App Store/index.html', deleted: false },
+                    { id: 'browser', name: '浏览器', size: 'normal', action: 'createWindow', url: './Apps/Browser/index.html', deleted: false },
                     { id: 'settings', name: '设置', size: 'normal', action: 'createWindow', url: './Apps/Setting/index.html', deleted: false },
                 ]
             },
