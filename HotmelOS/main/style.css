@@ -92,6 +92,7 @@ body, html {
     flex-direction: column;
     resize: both;
     overflow: hidden;
+    border-radius: 8px;
 }
 
 .window-header {

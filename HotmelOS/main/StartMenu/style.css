@@ -18,6 +18,8 @@ body, html {
     color: black;
     flex-direction: row;
     border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 /* 左侧栏样式 */
@@ -94,6 +96,12 @@ body, html {
     padding: 10px;
     overflow-y: auto;
     background-color: transparent;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.start-menu-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 #shutdown-container {
