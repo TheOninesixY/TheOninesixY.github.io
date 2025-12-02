@@ -2,7 +2,7 @@
 title: 🏠 首页
 ---
 
-## [New：HotmelOS ⚙️](./HotmelOS/)
+## [New：HotmelOS ⚙️](https://hotmelos.pages.dev)
 
 一个用HTML、CSS、JavaScript编写的伪操作系统，但很多功能让它像真的操作系统，例如能玩Minecraft、有浏览器等。
 
