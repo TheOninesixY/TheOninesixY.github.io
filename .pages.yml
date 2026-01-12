@@ -1,1 +1,18 @@
-.
+content:
+  - label: "我的文章"
+    type: collection
+    path: "_posts"
+    fields:
+      - label: "标题"
+        name: "title"
+        type: "string"
+      - label: "布局"
+        name: "layout"
+        type: "hidden"
+        default: "post"
+      - label: "发布日期"
+        name: "date"
+        type: "datetime"
+      - label: "正文内容"
+        name: "body"
+        type: "rich-text"
