@@ -1,7 +1,9 @@
 content:
-  - label: "我的文章"
+  - name: "posts"
+    label: "我的文章"
     type: collection
     path: "_posts"
+    format: "markdown"
     fields:
       - label: "标题"
         name: "title"
