@@ -51,16 +51,6 @@ title: 🏠 首页
 
 自动将 Cloudflare 主页重定向到仪表盘页面
 
-## 📝 最新文章
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a> 
-      <span>({{ post.date | date: "%Y-%m-%d" }})</span>
-    </li>
-  {% endfor %}
-</ul>
-
 ## ℹ️ 温馨提示
 
 本站只是我空余时间建着玩的，所以质量很差。
