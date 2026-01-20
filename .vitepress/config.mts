@@ -20,7 +20,7 @@ export default defineConfig({
           { text: 'autoRe', link: '/docs/tools/autoRe' },
           { text: 'ByeCNBing', link: '/docs/tools/ByeCNBing' },
           { text: 'CFAD', link: '/docs/tools/CFAD' },
-          { text: 'QingTab', link: 'https://theoninesixy.github.io/Tools/QingTab'}
+          { text: 'QingTab', link: 'https://theoninesixy.github.io/Tools/QingTab/'}
         ]
       },
       {
