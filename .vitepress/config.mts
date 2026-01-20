@@ -7,22 +7,33 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: '首页', link: '/' },
+      { text: '文档', link: '/docs'},
+      { text: '关于', link: '/about' },
+      { text: '旧版站', link: 'https://theoninesixy.github.io'},
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: '工具',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'autoRe', link: '/docs/tools/autoRe' },
+          { text: 'ByeCNBing', link: '/docs/tools/ByeCNBing' },
+          { text: 'CFAD', link: '/docs/tools/CFAD' },
+          { text: 'QingTab', link: 'https://theoninesixy.github.io/Tools/QingTab'}
+        ]
+      },
+      {
+        text: '帮助',
+        items: [
+          { text: '更换安卓设备的Recovery', link: 'docs/help/FlashRecovery'},
+          { text: '获取安卓设备的Root权限', link: 'docs/help/Root'},
         ]
       }
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/oninesixy/website' }
+      { icon: 'github', link: 'https://github.com/TheOninesixY/WebSite' }
     ]
   }
 })

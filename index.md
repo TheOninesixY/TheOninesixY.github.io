@@ -5,21 +5,20 @@ layout: home
 hero:
   name: "OninesixY的小站"
   text: ""
-  tagline: 一个非常网站的网站
+  tagline: OninesixY.pages.dev
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: 去看看有什么
+      link: /docs
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: 关于
+      link: /about
+    - theme: alt
+      text: 旧版站
+      link: https://theoninesixy.github.io
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 温馨提示
+    details: 本站只是我空余时间建着玩的，所以质量比较差。
 ---
 
