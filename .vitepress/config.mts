@@ -21,7 +21,7 @@ export default defineConfig({
           { text: 'autoRe', link: '/docs/tools/autoRe' },
           { text: 'ByeCNBing', link: '/docs/tools/ByeCNBing' },
           { text: 'CFAD', link: '/docs/tools/CFAD' },
-          { text: 'QingTab', link: '/docs/public/QingTab'}
+          { text: 'QingTab', link: 'https://html.oninesixy.pages.dev/QingTab'}
         ]
       },
       {
