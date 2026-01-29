@@ -60,7 +60,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/TheOninesixY/WebSite' }
+      { icon: 'github', link: 'https://github.com/TheOninesixY/TheOninesixY.github.io' }
     ]
   }
 })
