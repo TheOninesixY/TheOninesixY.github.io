@@ -16,7 +16,7 @@ export default defineConfig({
       options: {
         translations: {
           button: {
-            buttonText: '搜索文档',
+            buttonText: '搜索',
             buttonAriaLabel: '搜索文档'
           },
           modal: {
@@ -41,6 +41,14 @@ export default defineConfig({
     ],
 
     sidebar: [
+      {
+        text: '导航',
+        items: [
+          { text: '首页', link :'/' },
+          { text: 'GitHub', link :'https://github.com/TheOninesixY/TheOninesixY.github.io' },
+
+        ],
+      },
       {
         text: '工具',
         items: [
