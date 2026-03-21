@@ -3,6 +3,7 @@
     "vitepress": "^1.0.0"  
   },  
   "scripts": {  
+    "start": "node index.js"
     "dev": "vitepress dev",
     "docs:dev": "vitepress dev",  
     "docs:build": "vitepress build",  
