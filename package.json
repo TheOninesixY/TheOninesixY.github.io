@@ -3,10 +3,8 @@
     "vitepress": "^1.0.0"  
   },  
   "scripts": {  
-  "start": "npx serve .vitepress/dist -p $PORT",
-  "dev": "vitepress dev",
-  "docs:dev": "vitepress dev",  
-  "docs:build": "vitepress build",  
-  "docs:preview": "vitepress preview"  
-  }
+  "start": "npx serve .vitepress/dist -p $PORT --clean-urls --single",
+  "docs:build": "vitepress build",
+  "dev": "vitepress dev"
+   }
 }  
