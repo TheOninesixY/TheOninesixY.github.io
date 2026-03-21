@@ -1,10 +1,13 @@
-{  
-  "devDependencies": {  
-    "vitepress": "^1.0.0"  
-  },  
-  "scripts": {  
-  "start": "npx serve .vitepress/dist -p $PORT --clean-urls --single",
-  "docs:build": "vitepress build",
-  "dev": "vitepress dev"
-   }
-}  
+{
+  "devDependencies": {
+    "vitepress": "^1.0.0",
+    "serve": "^14.2.4"
+  },
+  "scripts": {
+    "start": "npx serve .vitepress/dist -l $PORT --clean-urls --single",
+    "dev": "vitepress dev",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  }
+}
