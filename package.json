@@ -2,12 +2,10 @@
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview",
-    "start": "serve .vitepress/dist"
+    "docs:preview": "vitepress preview"
   },
-  "dependencies": {
+  "devDependencies": {
     "vitepress": "^1.6.4",
-    "vue": "^3.5.30",
-    "serve": "^14.2.4"
+    "vue": "^3.5.30"
   }
 }
