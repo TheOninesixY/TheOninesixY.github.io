@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree } from './utils/markdown';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, ChevronLeft, ChevronRight, Settings, Trash2, Folder, FileText, Menu, X } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Settings, Trash2, Folder, FileText, Menu, X, MousePointer2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils/cn';
+import CustomCursor from './components/CustomCursor';
 
 export default function BlogApp() {
   const [posts, setPosts] = useState<PostMetadata[]>([]);
@@ -15,6 +16,10 @@ export default function BlogApp() {
   const [view, setView] = useState<'list' | 'post' | 'settings'>('list');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [showCustomCursor, setShowCustomCursor] = useState(() => {
+    const saved = localStorage.getItem('blog-custom-cursor');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
 
@@ -28,8 +33,19 @@ export default function BlogApp() {
     loadPosts();
   }, []);
 
+  // Sync custom cursor with HTML classes and localStorage
+  useEffect(() => {
+    localStorage.setItem('blog-custom-cursor', JSON.stringify(showCustomCursor));
+    if (showCustomCursor) {
+      document.documentElement.classList.add('custom-cursor-active');
+    } else {
+      document.documentElement.classList.remove('custom-cursor-active');
+    }
+  }, [showCustomCursor]);
+
   const handleClearData = () => {
     localStorage.clear();
+    setShowCustomCursor(true);
     alert('所有本地数据已清除');
   };
 
@@ -178,8 +194,16 @@ export default function BlogApp() {
     );
   }
 
+  // Check if device is mobile
+  const isMobile = typeof window !== 'undefined' && (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+    window.innerWidth < 768
+  );
+
   return (
     <div className="h-screen bg-[#F5F5F5] text-stone-900 font-sans selection:bg-blue-100 transition-colors duration-300 flex flex-col overflow-hidden">
+      {showCustomCursor && !isMobile && <CustomCursor />}
+      
       {/* Header */}
       <header className="bg-white border-b border-stone-100 sticky top-0 z-20 h-16 flex items-center px-6 shrink-0">
         <div className="flex items-center w-full">
@@ -193,7 +217,7 @@ export default function BlogApp() {
             onClick={() => window.location.reload()}
             className={cn(
               "text-xl font-medium tracking-tight hover:text-blue-600 transition-colors shrink-0 w-[232px] text-left",
-              (view === 'post' || view === 'settings') && "hidden"
+              isMobile && (view === 'post' || view === 'settings') && "hidden"
             )}
           >
             OninesixY的小站
@@ -205,7 +229,10 @@ export default function BlogApp() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-4 ml-4"
+                className={cn(
+                  "flex items-center gap-4",
+                  isMobile ? "ml-4" : "ml-8"
+                )}
               >
                 <button 
                   onClick={handleBack}
@@ -213,7 +240,10 @@ export default function BlogApp() {
                 >
                   <ArrowLeft className="w-6 h-6" />
                 </button>
-                <h2 className="text-xl font-medium truncate max-w-[40vw]">
+                <h2 className={cn(
+                  "text-xl font-medium truncate",
+                  isMobile ? "max-w-[40vw]" : "max-w-[50vw]"
+                )}>
                   {view === 'settings' ? '设置' : currentPost?.title}
                 </h2>
               </motion.div>
@@ -425,17 +455,45 @@ export default function BlogApp() {
                 >
                   <h2 className="text-3xl font-bold mb-8">设置</h2>
                   
-                  <div className="pt-8 border-t border-stone-100">
-                    <button 
-                      onClick={handleClearData}
-                      className="w-full flex items-center justify-center gap-2 p-4 text-red-500 hover:bg-red-50 rounded-2xl transition-colors font-medium border border-transparent hover:border-red-100"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      清除所有本地数据
-                    </button>
-                    <p className="text-center text-[10px] text-stone-400 mt-2">
-                      这将重置您的偏好设置并清除本地存储
-                    </p>
+                  <div className="space-y-6">
+                    {!isMobile && (
+                      <div className="flex items-center justify-between p-4 bg-stone-50 border border-stone-200 rounded-2xl shadow-sm">
+                        <div className="flex items-center gap-4">
+                          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                            <MousePointer2 className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="font-medium">圆点指针</p>
+                            <p className="text-xs text-stone-400">开启自定义反色鼠标效果</p>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => setShowCustomCursor(!showCustomCursor)}
+                          className={cn(
+                            "w-12 h-6 rounded-full transition-colors relative",
+                            showCustomCursor ? "bg-blue-600" : "bg-stone-200"
+                          )}
+                        >
+                          <motion.div 
+                            animate={{ x: showCustomCursor ? 24 : 4 }}
+                            className="absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm"
+                          />
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="pt-8 border-t border-stone-100">
+                      <button 
+                        onClick={handleClearData}
+                        className="w-full flex items-center justify-center gap-2 p-4 text-red-500 hover:bg-red-50 rounded-2xl transition-colors font-medium border border-transparent hover:border-red-100"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        清除所有本地数据
+                      </button>
+                      <p className="text-center text-[10px] text-stone-400 mt-2">
+                        这将重置您的偏好设置并清除本地存储
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               )}
