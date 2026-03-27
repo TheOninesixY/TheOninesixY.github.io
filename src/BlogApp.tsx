@@ -221,7 +221,10 @@ export default function BlogApp() {
         <div className="flex items-center w-full">
           <button 
             onClick={() => setIsMobileSidebarOpen(true)}
-            className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors shrink-0"
+            className={cn(
+              "md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors shrink-0",
+              isMobile && (view === 'post' || view === 'settings') && "order-last ml-auto"
+            )}
           >
             <Menu className="w-6 h-6" />
           </button>
