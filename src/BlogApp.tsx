@@ -228,10 +228,11 @@ export default function BlogApp() {
           <button 
             onClick={() => window.location.reload()}
             className={cn(
-              "text-xl font-medium tracking-tight hover:text-blue-600 transition-colors shrink-0 w-[232px] text-left",
+              "flex items-center gap-2 text-xl font-medium tracking-tight hover:text-blue-600 transition-colors shrink-0 w-[232px] text-left",
               isMobile && (view === 'post' || view === 'settings') && "hidden"
             )}
           >
+            <img src="/favicon.png" alt="" className="w-6 h-6" />
             OninesixY的小站
           </button>
           
