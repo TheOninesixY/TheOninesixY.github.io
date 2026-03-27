@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html.custom-cursor-active, 
+  html.custom-cursor-active body,
+  html.custom-cursor-active * {
+    cursor: none !important;
+  }
+
+  .markdown-body {
+    @apply text-stone-800 leading-relaxed;
+  }
+  .markdown-body h1 {
+    @apply text-3xl font-bold mt-12 mb-6;
+  }
+  .markdown-body h2 {
+    @apply text-2xl font-bold mt-10 mb-4 border-b border-stone-100 pb-2;
+  }
+  .markdown-body h3 {
+    @apply text-xl font-bold mt-8 mb-3;
+  }
+  .markdown-body p {
+    @apply mb-6;
+  }
+  .markdown-body ul {
+    @apply list-disc list-inside mb-6 space-y-2;
+  }
+  .markdown-body ol {
+    @apply list-decimal list-inside mb-6 space-y-2;
+  }
+  .markdown-body blockquote {
+    @apply border-l-4 border-blue-200 pl-6 italic text-stone-600 my-8;
+  }
+  .markdown-body code {
+    @apply bg-stone-100 px-1.5 py-0.5 rounded text-sm font-mono text-blue-700;
+  }
+  .markdown-body pre {
+    @apply bg-stone-900 text-stone-100 p-6 rounded-lg overflow-x-auto my-8 font-mono text-sm;
+  }
+  .markdown-body a {
+    @apply text-blue-600 underline underline-offset-4 hover:text-blue-700 transition-colors;
+  }
+  .markdown-body img {
+    @apply rounded-xl shadow-lg my-12 mx-auto max-w-full;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
