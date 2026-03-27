@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { getAllPosts, getPostBySlug, Post, PostMetadata } from './utils/markdown';
+import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree } from './utils/markdown';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { BookOpen, Calendar, User, ArrowLeft, ChevronLeft, ChevronRight, Settings, MousePointer2, Trash2 } from 'lucide-react';
+import { BookOpen, Calendar, ArrowLeft, ChevronLeft, ChevronRight, Settings, MousePointer2, Trash2, ChevronDown, ChevronUp, Folder, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils/cn';
 import CustomCursor from './components/CustomCursor';
 
 export default function BlogApp() {
   const [posts, setPosts] = useState<PostMetadata[]>([]);
+  const [folderTree, setFolderTree] = useState<FolderItem[]>([]);
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'list' | 'post' | 'settings'>('list');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [showCustomCursor, setShowCustomCursor] = useState(() => {
     const saved = localStorage.getItem('blog-custom-cursor');
     return saved !== null ? JSON.parse(saved) : true;
@@ -24,6 +26,7 @@ export default function BlogApp() {
     async function loadPosts() {
       const allPosts = await getAllPosts();
       setPosts(allPosts);
+      setFolderTree(await buildFolderTree(allPosts));
       setLoading(false);
     }
     loadPosts();
@@ -62,6 +65,77 @@ export default function BlogApp() {
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
     }
+  };
+
+  const toggleFolder = (path: string) => {
+    setExpandedFolders(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(path)) {
+        newSet.delete(path);
+      } else {
+        newSet.add(path);
+      }
+      return newSet;
+    });
+  };
+
+  const renderFolderTree = (items: FolderItem[], level: number = 0) => {
+    return items.map((item) => {
+      if (item.type === 'folder') {
+        const isExpanded = expandedFolders.has(item.path);
+        const displayName = item.title || item.name;
+        return (
+          <div key={item.path} className="mt-1">
+            <button
+              onClick={() => toggleFolder(item.path)}
+              className={cn(
+                "w-full text-left px-4 py-2 text-lg transition-all duration-200 rounded-lg flex items-center gap-2",
+                "text-stone-800 hover:bg-white/30"
+              )}
+              style={{ paddingLeft: `${16 + level * 16}px` }}
+            >
+              {isExpanded ? (
+                <ChevronDown className="w-4 h-4 shrink-0" />
+              ) : (
+                <ChevronUp className="w-4 h-4 shrink-0" />
+              )}
+              <Folder className="w-4 h-4 shrink-0" />
+              <span className="truncate">{displayName}</span>
+            </button>
+            <AnimatePresence>
+              {isExpanded && item.children && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  {renderFolderTree(item.children, level + 1)}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        );
+      } else {
+        const displayName = item.title || item.post?.title || item.name;
+        return (
+          <button
+            key={item.path}
+            onClick={() => handlePostClick(item.post!.slug)}
+            className={cn(
+              "w-full text-left px-4 py-2 text-lg transition-all duration-200 rounded-lg flex items-center gap-2",
+              currentPost?.slug === item.post!.slug 
+                ? "text-blue-600 font-medium bg-white/50" 
+                : "text-stone-800 hover:bg-white/30"
+            )}
+            style={{ paddingLeft: `${32 + level * 16}px` }}
+          >
+            <FileText className="w-4 h-4 shrink-0" />
+            <span className="truncate">{displayName}</span>
+          </button>
+        );
+      }
+    });
   };
 
   if (loading && posts.length === 0) {
@@ -117,21 +191,8 @@ export default function BlogApp() {
         >
           <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
             {!isSidebarCollapsed && (
-              <nav className="space-y-2">
-                {posts.map((post) => (
-                  <button
-                    key={post.slug}
-                    onClick={() => handlePostClick(post.slug)}
-                    className={cn(
-                      "w-full text-left px-4 py-2 text-lg transition-all duration-200 rounded-lg",
-                      currentPost?.slug === post.slug 
-                        ? "text-blue-600 font-medium bg-white/50" 
-                        : "text-stone-800 hover:bg-white/30"
-                    )}
-                  >
-                    {post.title}
-                  </button>
-                ))}
+              <nav className="space-y-1">
+                {renderFolderTree(folderTree)}
               </nav>
             )}
           </div>
