@@ -149,19 +149,22 @@ export default function BlogApp() {
       if (item.type === 'folder') {
         const displayName = item.title || item.name;
         return (
-          <div key={item.path} className="mt-1">
+          <div key={item.path} className="mt-0.5">
             <button
               onClick={() => handleFolderClick(item)}
               className={cn(
-                "w-full text-left px-4 py-2 text-lg transition-all duration-200 rounded-lg flex items-center gap-2",
+                "w-full text-left px-3 py-2 text-sm transition-all duration-200 rounded-md flex items-center gap-2",
                 currentFolder?.path === item.path 
-                  ? "text-blue-600 font-medium bg-white/50" 
-                  : "text-stone-800 hover:bg-white/30"
+                  ? "text-stone-900 font-medium bg-stone-200/60" 
+                  : "text-stone-600 hover:bg-stone-200/40"
               )}
-              style={{ paddingLeft: `${16}px` }}
+              style={{ paddingLeft: `${12 + level * 12}px` }}
             >
-              <Folder className="w-4 h-4 shrink-0" />
-              <span className="truncate">{displayName}</span>
+              <Folder className={cn(
+                "w-4 h-4 shrink-0",
+                currentFolder?.path === item.path ? "text-stone-700" : "text-stone-400"
+              )} />
+              <span className="truncate font-normal">{displayName}</span>
             </button>
             {item.children && (
               <div className="overflow-hidden">
@@ -177,15 +180,18 @@ export default function BlogApp() {
             key={item.path}
             onClick={() => handlePostClick(item.post!.slug)}
             className={cn(
-              "w-full text-left px-4 py-2 text-lg transition-all duration-200 rounded-lg flex items-center gap-2",
+              "w-full text-left px-3 py-2 text-sm transition-all duration-200 rounded-md flex items-center gap-2",
               currentPost?.slug === item.post!.slug 
-                ? "text-blue-600 font-medium bg-white/50" 
-                : "text-stone-800 hover:bg-white/30"
+                ? "text-stone-900 font-medium bg-stone-200/60" 
+                : "text-stone-600 hover:bg-stone-200/40"
             )}
-            style={{ paddingLeft: `${16}px` }}
+            style={{ paddingLeft: `${12 + level * 12}px` }}
           >
-            <FileText className="w-4 h-4 shrink-0" />
-            <span className="truncate">{displayName}</span>
+            <FileText className={cn(
+              "w-4 h-4 shrink-0",
+              currentPost?.slug === item.post!.slug ? "text-stone-700" : "text-stone-400"
+            )} />
+            <span className="truncate font-normal">{displayName}</span>
           </button>
         );
       }
@@ -278,23 +284,23 @@ export default function BlogApp() {
           width: isSidebarCollapsed ? 64 : 256
         }}
         className={cn(
-          "bg-[#EAEAEA] border-r border-stone-200 flex flex-col shrink-0 overflow-hidden z-40",
+          "bg-stone-100 border-r border-stone-200 flex flex-col shrink-0 overflow-hidden z-40",
           "fixed top-0 left-0 md:relative h-full transition-transform duration-300",
           isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
-        <div className="flex-1 p-4 overflow-y-auto scrollbar-hide">
+        <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
           <div className="md:hidden flex items-center justify-between mb-4">
-            <span className="font-medium text-stone-700">导航</span>
+            <span className="font-medium text-stone-700 text-sm">导航</span>
             <button 
               onClick={() => setIsMobileSidebarOpen(false)}
-              className="p-2 hover:bg-white/50 rounded-full transition-colors"
+              className="p-1.5 hover:bg-stone-200/60 rounded-md transition-colors"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
           {!isSidebarCollapsed && (
-            <nav className="space-y-1">
+            <nav className="space-y-0.5">
               {renderFolderTree(folderTree)}
             </nav>
           )}
@@ -302,8 +308,8 @@ export default function BlogApp() {
         
         {/* Sidebar Bottom Icons */}
         <div className={cn(
-          "p-4 border-t border-stone-300 flex items-center justify-between bg-[#EAEAEA] shrink-0",
-          isSidebarCollapsed && "flex-col gap-4"
+          "p-3 border-t border-stone-200 flex items-center justify-between bg-stone-100 shrink-0",
+          isSidebarCollapsed && "flex-col gap-3"
         )}>
           <button 
             onClick={() => {
@@ -311,22 +317,22 @@ export default function BlogApp() {
               setIsMobileSidebarOpen(false);
             }}
             className={cn(
-              "p-2 rounded-lg hover:bg-white/50 transition-colors",
-              view === 'settings' && "text-blue-600 bg-white/50"
+              "p-1.5 rounded-md hover:bg-stone-200/60 transition-colors",
+              view === 'settings' && "text-stone-900 bg-stone-200/60"
             )}
             title="设置"
           >
-            <Settings className="w-6 h-6" />
+            <Settings className="w-5 h-5" />
           </button>
           <button 
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="hidden md:block p-2 rounded-lg hover:bg-white/50 transition-colors"
+            className="hidden md:block p-1.5 rounded-md hover:bg-stone-200/60 transition-colors"
             title={isSidebarCollapsed ? "展开" : "收起"}
           >
             {isSidebarCollapsed ? (
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             ) : (
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5" />
             )}
           </button>
         </div>
