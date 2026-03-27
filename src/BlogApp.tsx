@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { ArrowLeft, ChevronLeft, ChevronRight, Settings, Trash2, Folder, FileText, Menu, X, MousePointer2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils/cn';
-import CustomCursor from './components/CustomCursor';
+import CustomCursor from './components/CustomCursor.tsx';
 
 export default function BlogApp() {
   const [posts, setPosts] = useState<PostMetadata[]>([]);
