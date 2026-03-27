@@ -11,10 +11,10 @@ export default function BlogApp() {
   const [posts, setPosts] = useState<PostMetadata[]>([]);
   const [folderTree, setFolderTree] = useState<FolderItem[]>([]);
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
+  const [currentFolder, setCurrentFolder] = useState<FolderItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'list' | 'post' | 'settings'>('list');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [showCustomCursor, setShowCustomCursor] = useState(() => {
     const saved = localStorage.getItem('blog-custom-cursor');
     return saved !== null ? JSON.parse(saved) : true;
@@ -52,6 +52,7 @@ export default function BlogApp() {
     setLoading(true);
     const post = await getPostBySlug(slug);
     setCurrentPost(post);
+    setCurrentFolder(null);
     setView('post');
     setLoading(false);
     if (mainContentRef.current) {
@@ -62,58 +63,104 @@ export default function BlogApp() {
   const handleBack = () => {
     setView('list');
     setCurrentPost(null);
+    setCurrentFolder(null);
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
     }
   };
 
-  const toggleFolder = (path: string) => {
-    setExpandedFolders(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(path)) {
-        newSet.delete(path);
-      } else {
-        newSet.add(path);
+  const getFolderContents = (): FolderItem[] => {
+    if (!currentFolder) return [];
+    
+    const findFolder = (items: FolderItem[]): FolderItem | null => {
+      for (const item of items) {
+        if (item.type === 'folder' && item.path === currentFolder.path) {
+          return item;
+        }
+        if (item.type === 'folder' && item.children) {
+          const found = findFolder(item.children);
+          if (found) return found;
+        }
       }
-      return newSet;
-    });
+      return null;
+    };
+
+    const folder = findFolder(folderTree);
+    return folder?.children || [];
+  };
+
+  const getBreadcrumbs = (): { name: string; path: string | null; isFolder: boolean }[] => {
+    const breadcrumbs = [{ name: '首页', path: null, isFolder: false }];
+    
+    if (!currentFolder) return breadcrumbs;
+    
+    const pathParts = currentFolder.path.split('/');
+    let currentPath = '';
+    
+    for (const part of pathParts) {
+      currentPath = currentPath ? `${currentPath}/${part}` : part;
+      
+      const findFolder = (items: FolderItem[]): FolderItem | null => {
+        for (const item of items) {
+          if (item.type === 'folder' && item.path === currentPath) {
+            return item;
+          }
+          if (item.type === 'folder' && item.children) {
+            const found = findFolder(item.children);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      
+      const folder = findFolder(folderTree);
+      if (folder) {
+        breadcrumbs.push({
+          name: folder.title || folder.name,
+          path: folder.path,
+          isFolder: true
+        });
+      }
+    }
+    
+    return breadcrumbs;
+  };
+
+
+
+  const handleFolderClick = (folder: FolderItem) => {
+    setCurrentFolder(folder);
+    setView('list');
+    setCurrentPost(null);
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo(0, 0);
+    }
   };
 
   const renderFolderTree = (items: FolderItem[], level: number = 0) => {
     return items.map((item) => {
       if (item.type === 'folder') {
-        const isExpanded = expandedFolders.has(item.path);
         const displayName = item.title || item.name;
         return (
           <div key={item.path} className="mt-1">
             <button
-              onClick={() => toggleFolder(item.path)}
+              onClick={() => handleFolderClick(item)}
               className={cn(
                 "w-full text-left px-4 py-2 text-lg transition-all duration-200 rounded-lg flex items-center gap-2",
-                "text-stone-800 hover:bg-white/30"
+                currentFolder?.path === item.path 
+                  ? "text-blue-600 font-medium bg-white/50" 
+                  : "text-stone-800 hover:bg-white/30"
               )}
-              style={{ paddingLeft: `${16 + level * 16}px` }}
+              style={{ paddingLeft: `${16}px` }}
             >
-              {isExpanded ? (
-                <ChevronDown className="w-4 h-4 shrink-0" />
-              ) : (
-                <ChevronUp className="w-4 h-4 shrink-0" />
-              )}
               <Folder className="w-4 h-4 shrink-0" />
               <span className="truncate">{displayName}</span>
             </button>
-            <AnimatePresence>
-              {isExpanded && item.children && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden"
-                >
-                  {renderFolderTree(item.children, level + 1)}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {item.children && (
+              <div className="overflow-hidden">
+                {renderFolderTree(item.children, level + 1)}
+              </div>
+            )}
           </div>
         );
       } else {
@@ -128,7 +175,7 @@ export default function BlogApp() {
                 ? "text-blue-600 font-medium bg-white/50" 
                 : "text-stone-800 hover:bg-white/30"
             )}
-            style={{ paddingLeft: `${32 + level * 16}px` }}
+            style={{ paddingLeft: `${16}px` }}
           >
             <FileText className="w-4 h-4 shrink-0" />
             <span className="truncate">{displayName}</span>
@@ -154,7 +201,7 @@ export default function BlogApp() {
       <header className="bg-white border-b border-stone-100 sticky top-0 z-20 h-16 flex items-center px-6 shrink-0">
         <div className="flex items-center w-full">
           <button 
-            onClick={() => setView('list')}
+            onClick={() => window.location.reload()}
             className="text-xl font-medium tracking-tight hover:text-blue-600 transition-colors shrink-0 w-[232px] text-left"
           >
             OninesixY的小站
@@ -235,34 +282,88 @@ export default function BlogApp() {
             <AnimatePresence mode="wait">
               {view === 'list' ? (
                 <motion.div
-                  key="list"
+                  key={currentFolder ? `folder-${currentFolder.path}` : 'list'}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {posts.map((post) => (
-                      <motion.article 
-                        key={post.slug} 
-                        whileHover={{ 
-                          scale: 1.01,
-                          boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)"
-                        }}
-                        className="bg-white border border-blue-100 rounded-xl p-8 cursor-pointer transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-blue-100"
-                        onClick={() => handlePostClick(post.slug)}
-                      >
-                        <div className="flex items-baseline gap-3 mb-4">
-                          <h3 className="text-2xl font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
-                            {post.title}
-                          </h3>
-                          <span className="text-xs font-medium text-stone-400 shrink-0">{post.date}</span>
-                        </div>
-                        <p className="text-stone-600 leading-relaxed line-clamp-4 text-sm">
-                          {post.excerpt}
-                        </p>
-                      </motion.article>
-                    ))}
-                  </div>
+                  {currentFolder && (
+                    <div className="mb-8 flex items-center gap-2 text-sm">
+                      {getBreadcrumbs().map((crumb, index) => (
+                        <React.Fragment key={index}>
+                          <button
+                            onClick={() => crumb.path ? handleFolderClick({ path: crumb.path, name: crumb.name, type: 'folder', children: [] }) : setCurrentFolder(null)}
+                            className="text-blue-600 hover:underline"
+                          >
+                            {crumb.name}
+                          </button>
+                          {index < getBreadcrumbs().length - 1 && (
+                            <span className="text-stone-400">/</span>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  )}
+                  {currentFolder ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      {getFolderContents().map((item) => (
+                        <motion.article 
+                          key={item.path} 
+                          whileHover={{ 
+                            scale: 1.01,
+                            boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)"
+                          }}
+                          className="bg-white border border-blue-100 rounded-xl p-8 cursor-pointer transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-blue-100"
+                          onClick={() => item.type === 'folder' ? handleFolderClick(item) : handlePostClick(item.post!.slug)}
+                        >
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <div className="flex items-center gap-2">
+                              {item.type === 'folder' ? (
+                                <Folder className="w-5 h-5 text-stone-600" />
+                              ) : (
+                                <FileText className="w-5 h-5 text-blue-600" />
+                              )}
+                              <h3 className="text-2xl font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
+                                {item.title || item.post?.title || item.name}
+                              </h3>
+                            </div>
+                            {item.type === 'file' && item.post?.date && (
+                              <span className="text-xs font-medium text-stone-400 shrink-0">{item.post.date}</span>
+                            )}
+                          </div>
+                          {item.type === 'file' && item.post?.excerpt && (
+                            <p className="text-stone-600 leading-relaxed line-clamp-4 text-sm">
+                              {item.post.excerpt}
+                            </p>
+                          )}
+                        </motion.article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      {posts.map((post) => (
+                        <motion.article 
+                          key={post.slug} 
+                          whileHover={{ 
+                            scale: 1.01,
+                            boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)"
+                          }}
+                          className="bg-white border border-blue-100 rounded-xl p-8 cursor-pointer transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-blue-100"
+                          onClick={() => handlePostClick(post.slug)}
+                        >
+                          <div className="flex items-baseline gap-3 mb-4">
+                            <h3 className="text-2xl font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
+                              {post.title}
+                            </h3>
+                            <span className="text-xs font-medium text-stone-400 shrink-0">{post.date}</span>
+                          </div>
+                          <p className="text-stone-600 leading-relaxed line-clamp-4 text-sm">
+                            {post.excerpt}
+                          </p>
+                        </motion.article>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               ) : view === 'post' ? (
                 <motion.div
