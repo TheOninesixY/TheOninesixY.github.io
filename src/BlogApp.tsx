@@ -345,7 +345,7 @@ export default function BlogApp() {
         {/* Main Content */}
         <main 
           ref={mainContentRef}
-          className="flex-1 overflow-y-auto p-6 md:p-12 scroll-smooth"
+          className="flex-1 overflow-y-auto p-6 md:p-12 smooth-scroll"
         >
           <div className="max-w-6xl mx-auto">
             <AnimatePresence mode="wait">
@@ -379,7 +379,7 @@ export default function BlogApp() {
                     <div className="relative">
                       <input
                         type="text"
-                        placeholder="搜索文档..."
+                        placeholder="Search"
                         value={searchTerm}
                         onChange={handleSearchChange}
                         className="w-full px-4 py-3 pl-10 bg-white border border-stone-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
