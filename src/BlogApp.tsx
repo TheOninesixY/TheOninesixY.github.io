@@ -23,6 +23,8 @@ export default function BlogApp() {
   const [toc, setToc] = useState<TocItem[]>([]);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [theme, setTheme] = useState<'system' | 'dark' | 'light'>('system');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
 
@@ -201,7 +203,7 @@ export default function BlogApp() {
               <span className="truncate">{displayName}</span>
             </button>
             {item.children && (
-              <div className="overflow-hidden">
+              <div key={`children-${item.path}`} className="overflow-hidden">
                 {renderFolderTree(item.children, level + 1)}
               </div>
             )}
@@ -257,16 +259,78 @@ export default function BlogApp() {
           ) : (
             <div className="flex items-center justify-between w-full">
               <h1 className="font-medium text-lg text-stone-900">OninesixY 的小站</h1>
-              <button className="p-1.5 hover:bg-stone-200 rounded transition-colors">
+              <button 
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-1.5 hover:bg-stone-200 rounded transition-colors"
+              >
                 <Search className="w-4 h-4 text-stone-500" />
               </button>
             </div>
           )}
         </header>
 
+        <AnimatePresence>
+          {searchOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden border-b border-stone-200"
+            >
+              <div className="p-3">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="搜索文档..."
+                  className="w-full px-3 py-2 text-sm bg-stone-100 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-400 text-stone-900 placeholder-stone-400"
+                  autoFocus
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto p-3">
-          {view === 'list' ? (
+          {searchOpen ? (
+            <div className="space-y-0.5">
+              <div className="px-3 py-1 text-xs text-stone-400 font-medium uppercase tracking-wider">
+                搜索结果
+              </div>
+              {posts.filter(post => 
+                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+              ).map((post) => (
+                <button
+                  key={post.slug}
+                  onClick={() => {
+                    handlePostClick(post.slug);
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                  }}
+                  className="w-full text-left px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100 rounded transition-colors flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4 shrink-0 text-stone-400" />
+                  <span className="truncate">{post.title}</span>
+                </button>
+              ))}
+              {searchQuery && posts.filter(post => 
+                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+              ).length === 0 && (
+                <div className="px-3 py-4 text-sm text-stone-400 text-center">
+                  未找到相关文档
+                </div>
+              )}
+              {!searchQuery && (
+                <div className="px-3 py-4 text-sm text-stone-400 text-center">
+                  输入关键词搜索文档
+                </div>
+              )}
+            </div>
+          ) : view === 'list' ? (
             <div className="space-y-0.5">
               <div className="px-3 py-1 text-xs text-stone-400 font-medium uppercase tracking-wider">
                 分类
