@@ -267,21 +267,30 @@
 
   /* Article cards - only for list view */
   .search-results article,
-  .grid-cols-2 article {
+  .grid-cols-1 article,
+  .grid-cols-2 article,
+  .grid-cols-3 article,
+  .grid-cols-4 article {
     padding: 16px !important;
     border-radius: 8px !important;
     background-color: #f0f0ed !important;
   }
 
   .search-results article h2,
-  .grid-cols-2 article h2 {
+  .grid-cols-1 article h2,
+  .grid-cols-2 article h2,
+  .grid-cols-3 article h2,
+  .grid-cols-4 article h2 {
     font-size: 16px !important;
     margin-bottom: 6px !important;
     font-weight: 600;
   }
 
   .search-results article p,
-  .grid-cols-2 article p {
+  .grid-cols-1 article p,
+  .grid-cols-2 article p,
+  .grid-cols-3 article p,
+  .grid-cols-4 article p {
     font-size: 14px;
     line-height: 1.5;
     color: #6b7280;

@@ -426,60 +426,59 @@ export default function BlogApp() {
         ref={mainContentRef}
         className="flex-1 overflow-y-auto p-8"
       >
-        <div className="max-w-3xl mx-auto">
-          <AnimatePresence mode="wait">
-            {searchOpen ? (
-              <motion.div
-                key="search-results"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="search-results"
-              >
-                {posts.filter(post => 
-                  post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
-                ).map((post) => (
-                  <motion.article
-                    key={post.slug}
-                    whileHover={{ scale: 1.002 }}
-                    className="bg-stone-100 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-stone-150 mb-4"
-                    onClick={() => {
-                      handlePostClick(post.slug);
-                      setSearchOpen(false);
-                      setSearchQuery('');
-                    }}
-                  >
-                    <h2 className="text-xl font-bold text-stone-900 mb-3">
-                      {post.title}
-                    </h2>
-                    <p className="text-stone-600 text-sm line-clamp-2">
-                      {post.excerpt || '文档的一部分正文'}
-                    </p>
-                  </motion.article>
-                ))}
-                {searchQuery && posts.filter(post => 
-                  post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
-                ).length === 0 && (
-                  <div className="text-center py-12 text-stone-400">
-                    未找到相关文档
-                  </div>
-                )}
-                {!searchQuery && (
-                  <div className="text-center py-12 text-stone-400">
-                    输入关键词搜索文档
-                  </div>
-                )}
-              </motion.div>
-            ) : view === 'list' ? (
-              <motion.div
-                key={currentFolder ? `folder-${currentFolder.path}` : 'list'}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="grid grid-cols-2 gap-4"
-              >
+        <AnimatePresence mode="wait">
+          {searchOpen ? (
+            <motion.div
+              key="search-results"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            >
+              {posts.filter(post => 
+                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+              ).map((post) => (
+                <motion.article
+                  key={post.slug}
+                  whileHover={{ scale: 1.002 }}
+                  className="bg-stone-100 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-stone-150"
+                  onClick={() => {
+                    handlePostClick(post.slug);
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                  }}
+                >
+                  <h2 className="text-xl font-bold text-stone-900 mb-3">
+                    {post.title}
+                  </h2>
+                  <p className="text-stone-600 text-sm line-clamp-2">
+                    {post.excerpt || '文档的一部分正文'}
+                  </p>
+                </motion.article>
+              ))}
+              {searchQuery && posts.filter(post => 
+                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+              ).length === 0 && (
+                <div className="col-span-full text-center py-12 text-stone-400">
+                  未找到相关文档
+                </div>
+              )}
+              {!searchQuery && (
+                <div className="col-span-full text-center py-12 text-stone-400">
+                  输入关键词搜索文档
+                </div>
+              )}
+            </motion.div>
+          ) : view === 'list' ? (
+            <motion.div
+              key={currentFolder ? `folder-${currentFolder.path}` : 'list'}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+            >
                 {(currentFolder ? getFolderContents() : posts).filter(item => {
                   if (!searchTerm) return true;
                   const searchLower = searchTerm.toLowerCase();
@@ -508,15 +507,16 @@ export default function BlogApp() {
                 })}
               </motion.div>
             ) : (
-              <motion.div
-                key="post"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-              >
-                {currentPost && (
-                  <article>
-                    <div className="markdown-body">
+              <div className="max-w-3xl mx-auto">
+                <motion.div
+                  key="post"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  {currentPost && (
+                    <article>
+                      <div className="markdown-body">
                       <Markdown 
                         remarkPlugins={[remarkGfm]}
                         components={{
@@ -580,9 +580,9 @@ export default function BlogApp() {
                   </article>
                 )}
               </motion.div>
+              </div>
             )}
           </AnimatePresence>
-        </div>
       </main>
     </div>
   );
