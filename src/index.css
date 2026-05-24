@@ -19,11 +19,26 @@ body {
   background-color: white;
   color: #1f2937;
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
 }
 
 .dark body {
   background-color: var(--color-dark-bg);
   color: var(--color-dark-text);
+}
+
+.app-container {
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+@media (min-width: 769px) {
+  .app-container {
+    height: 100vh;
+    overflow: hidden;
+  }
 }
 
 .markdown-body {
@@ -190,4 +205,42 @@ body {
 
 .dark .text-stone-500 {
   color: var(--color-dark-text-muted);
+}
+
+/* Desktop sidebar styling */
+@media (min-width: 769px) {
+  aside {
+    position: relative !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 16rem !important;
+    height: 100% !important;
+    box-shadow: none !important;
+    z-index: 1 !important;
+    flex-shrink: 0;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  aside > div:last-child {
+    flex-shrink: 0;
+    margin-top: auto !important;
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  .mobile-header {
+    display: none !important;
+  }
+
+  /* Desktop main content */
+  main {
+    flex: 1 !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+  }
 }

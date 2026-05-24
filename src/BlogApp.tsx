@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree } from './utils/markdown';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun } from 'lucide-react';
+import { ArrowLeft, Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils/cn';
 
@@ -25,8 +25,17 @@ export default function BlogApp() {
   const [theme, setTheme] = useState<'system' | 'dark' | 'light'>('system');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('blog-theme') as 'system' | 'dark' | 'light' | null;
@@ -243,9 +252,82 @@ export default function BlogApp() {
   }
 
   return (
-    <div className="h-screen bg-white flex overflow-hidden">
+    <div className="h-screen bg-white flex overflow-hidden app-container">
+      {/* Mobile Header */}
+      <header className={cn(
+        "mobile-header md:hidden",
+        searchOpen && "search-mode",
+        view === 'post' && "with-back"
+      )}>
+        {searchOpen ? (
+          <>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="点击此处搜索"
+              className="mobile-search-input"
+              autoFocus
+            />
+            <button
+              onClick={() => {
+                setSearchOpen(false);
+                setSearchQuery('');
+              }}
+              className="mobile-search-close"
+            >
+              <X className="w-5 h-5 text-stone-500" />
+            </button>
+          </>
+        ) : view === 'post' ? (
+          <>
+            <div className="mobile-header-left">
+              <button
+                onClick={handleBack}
+                className="mobile-back-btn"
+              >
+                <ArrowLeft />
+              </button>
+              <span className="mobile-header-title">返回</span>
+            </div>
+            <button
+              onClick={toggleSidebar}
+              className="mobile-menu-btn"
+            >
+              <Menu />
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={toggleSidebar}
+              className="mobile-menu-btn"
+            >
+              <Menu />
+            </button>
+            <span className="mobile-header-title">OninesixY的小站</span>
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="mobile-search-btn"
+            >
+              <Search />
+            </button>
+          </>
+        )}
+      </header>
+
+      {/* Sidebar Overlay */}
+      <div 
+        className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
+        onClick={closeSidebar}
+      />
+
       {/* Sidebar */}
-      <aside className="w-64 bg-stone-50 border-r border-stone-200 flex flex-col shrink-0">
+      <aside className={cn(
+        "w-64 bg-stone-50 border-r border-stone-200 flex flex-col shrink-0 md:block",
+        sidebarOpen && "open",
+        view === 'post' ? "right" : "left"
+      )}>
         {/* Sidebar Header */}
         <header className="h-14 flex items-center px-4 border-b border-stone-200">
           {view === 'post' ? (
@@ -294,43 +376,7 @@ export default function BlogApp() {
 
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto p-3">
-          {searchOpen ? (
-            <div className="space-y-0.5">
-              <div className="px-3 py-1 text-xs text-stone-400 font-medium uppercase tracking-wider">
-                搜索结果
-              </div>
-              {posts.filter(post => 
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
-              ).map((post) => (
-                <button
-                  key={post.slug}
-                  onClick={() => {
-                    handlePostClick(post.slug);
-                    setSearchOpen(false);
-                    setSearchQuery('');
-                  }}
-                  className="w-full text-left px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100 rounded transition-colors flex items-center gap-2"
-                >
-                  <FileText className="w-4 h-4 shrink-0 text-stone-400" />
-                  <span className="truncate">{post.title}</span>
-                </button>
-              ))}
-              {searchQuery && posts.filter(post => 
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
-              ).length === 0 && (
-                <div className="px-3 py-4 text-sm text-stone-400 text-center">
-                  未找到相关文档
-                </div>
-              )}
-              {!searchQuery && (
-                <div className="px-3 py-4 text-sm text-stone-400 text-center">
-                  输入关键词搜索文档
-                </div>
-              )}
-            </div>
-          ) : view === 'list' ? (
+          {view === 'list' ? (
             <div className="space-y-0.5">
               <div className="px-3 py-1 text-xs text-stone-400 font-medium uppercase tracking-wider">
                 分类
@@ -382,7 +428,51 @@ export default function BlogApp() {
       >
         <div className="max-w-3xl mx-auto">
           <AnimatePresence mode="wait">
-            {view === 'list' ? (
+            {searchOpen ? (
+              <motion.div
+                key="search-results"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="search-results"
+              >
+                {posts.filter(post => 
+                  post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+                ).map((post) => (
+                  <motion.article
+                    key={post.slug}
+                    whileHover={{ scale: 1.002 }}
+                    className="bg-stone-100 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-stone-150 mb-4"
+                    onClick={() => {
+                      handlePostClick(post.slug);
+                      setSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                  >
+                    <h2 className="text-xl font-bold text-stone-900 mb-3">
+                      {post.title}
+                    </h2>
+                    <p className="text-stone-600 text-sm line-clamp-2">
+                      {post.excerpt || '文档的一部分正文'}
+                    </p>
+                  </motion.article>
+                ))}
+                {searchQuery && posts.filter(post => 
+                  post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+                ).length === 0 && (
+                  <div className="text-center py-12 text-stone-400">
+                    未找到相关文档
+                  </div>
+                )}
+                {!searchQuery && (
+                  <div className="text-center py-12 text-stone-400">
+                    输入关键词搜索文档
+                  </div>
+                )}
+              </motion.div>
+            ) : view === 'list' ? (
               <motion.div
                 key={currentFolder ? `folder-${currentFolder.path}` : 'list'}
                 initial={{ opacity: 0, y: 10 }}
