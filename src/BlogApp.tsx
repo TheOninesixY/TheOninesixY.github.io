@@ -3,6 +3,8 @@ import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolder
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils/cn';
 
@@ -533,39 +535,61 @@ export default function BlogApp() {
                             if (isBlock) {
                               const codeText = React.Children.toArray(children).join('');
                               const codeKey = `code-${codeText.length}-${Date.now()}`;
+                              const lang = className?.replace('language-', '') || 'text';
+                              const language = lang as 'javascript' | 'typescript' | 'python' | 'bash' | 'json' | 'html' | 'css' | 'text';
                               const lines = codeText.split('\n');
+                              const lineCount = lines.length;
+                              
                               return (
-                                <div key={codeKey} className="my-6">
-                                  <div className="flex items-center justify-between bg-stone-800 px-4 py-2 border-t border-r border-l border-stone-700 rounded-t">
-                                    <span className="text-xs text-stone-400 font-medium">Text</span>
+                                <div key={codeKey} className="my-6 relative">
+                                  {/* Header */}
+                                  <div className="flex items-center justify-between bg-stone-800 px-4 py-2.5 border border-stone-700 rounded-t-lg">
+                                    <span className="text-xs text-stone-400 font-medium uppercase tracking-wider">{lang}</span>
                                     <button
                                       onClick={() => copyToClipboard(codeText, codeKey)}
-                                      className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-200 transition-colors"
+                                      className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-200 transition-colors"
                                     >
                                       {copiedKey === codeKey ? (
                                         <>
-                                          <Check className="w-3 h-3" />
+                                          <Check className="w-4 h-4" />
                                           <span>已复制</span>
                                         </>
                                       ) : (
                                         <>
-                                          <Copy className="w-3 h-3" />
+                                          <Copy className="w-4 h-4" />
                                           <span>复制</span>
                                         </>
                                       )}
                                     </button>
                                   </div>
-                                  <div className="bg-black p-4 border-b border-l border-r border-stone-700 rounded-b overflow-x-auto">
-                                    <pre className="text-stone-300 text-sm font-mono">
-                                      {lines.map((line, i) => (
-                                        <div key={i} className="flex">
-                                          <span className="text-stone-600 select-none w-8 text-right pr-4">
-                                            {i + 1}
-                                          </span>
-                                          <span>{line || '\u00A0'}</span>
-                                        </div>
-                                      ))}
-                                    </pre>
+                                  {/* Code with line numbers */}
+                                  <div className="bg-stone-900 rounded-b-lg border border-t-0 border-stone-700 overflow-hidden">
+                                    <div className="flex">
+                                      {/* Line numbers */}
+                                      <div className="select-none bg-stone-800 px-4 py-4 text-stone-500 text-sm font-mono text-right border-r border-stone-700 shrink-0">
+                                        {Array.from({ length: lineCount }, (_, i) => (
+                                          <div key={i} className="leading-6">{i + 1}</div>
+                                        ))}
+                                      </div>
+                                      {/* Code */}
+                                      <div className="overflow-x-auto">
+                                        <SyntaxHighlighter
+                                          language={language}
+                                          style={oneDark}
+                                          showLineNumbers={false}
+                                          wrapLines={true}
+                                          customStyle={{
+                                            margin: 0,
+                                            backgroundColor: 'transparent',
+                                            padding: '16px',
+                                            fontSize: '14px',
+                                            lineHeight: '1.6',
+                                          }}
+                                        >
+                                          {codeText}
+                                        </SyntaxHighlighter>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               );
