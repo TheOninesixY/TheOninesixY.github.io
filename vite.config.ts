@@ -1,8 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import { publicFilesPlugin } from './vite-plugin-public-files'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss(), publicFilesPlugin()],
   base: '/',
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 })
