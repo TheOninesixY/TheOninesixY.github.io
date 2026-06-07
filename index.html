@@ -7,6 +7,14 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <script>
       (function() {
+        // 重定向逻辑：除 /public 外，所有路径跳转到 /
+        const path = window.location.pathname;
+        if (path !== '/' && !path.startsWith('/public')) {
+          window.location.replace('/');
+          return;
+        }
+
+        // 暗色模式逻辑
         const saved = localStorage.getItem('isDarkMode');
         if (saved === 'true' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');

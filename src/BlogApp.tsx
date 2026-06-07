@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree } from './utils/markdown';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ArrowLeft, Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X } from 'lucide-react';
+import rehypeRaw from 'rehype-raw';
+import { ArrowLeft, Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
@@ -98,7 +99,7 @@ export default function BlogApp() {
       case 'light':
         return '浅色模式';
       default:
-        return '跟随浏览器';
+        return '系统';
     }
   };
 
@@ -415,18 +416,30 @@ export default function BlogApp() {
         </div>
 
         {/* Sidebar Bottom */}
-        <div className="p-3 border-t border-stone-200">
+        <div className="p-3 border-t border-stone-200 flex gap-2">
+          <button
+            onClick={() => window.location.href = '/public'}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg",
+              "text-stone-600 hover:bg-stone-200 transition-all duration-200",
+              "hover:scale-105 active:scale-95"
+            )}
+            title="资源区"
+          >
+            <FolderOpen className="w-5 h-5" />
+            <span>资源区</span>
+          </button>
           <button
             onClick={toggleTheme}
             className={cn(
-              "w-full flex items-center justify-center gap-2 px-4 py-2 text-sm rounded-lg",
+              "flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg",
               "text-stone-600 hover:bg-stone-200 transition-all duration-200",
               "hover:scale-105 active:scale-95"
             )}
             title={getThemeTitle()}
           >
             {getThemeIcon()}
-            <span className="hidden sm:inline">{getThemeTitle()}</span>
+            <span>{getThemeTitle()}</span>
           </button>
         </div>
       </aside>
@@ -543,6 +556,7 @@ export default function BlogApp() {
                       <div className="markdown-body">
                       <Markdown 
                         remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeRaw]}
                         components={{
                           h2: ({ children, ...props }) => {
                             const id = React.Children.toArray(children).join('').toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
