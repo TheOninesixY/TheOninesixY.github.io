@@ -45,6 +45,27 @@ async function loadFolderConfig(folderPath: string): Promise<FolderConfig | null
   }
 }
 
+function extractTitleFromContent(content: string): string | null {
+  const h1Match = content.match(/^#\s+(.+)$/m);
+  if (h1Match) return h1Match[1].trim();
+  
+  const h2Match = content.match(/^##\s+(.+)$/m);
+  if (h2Match) return h2Match[1].trim();
+  
+  return null;
+}
+
+function extractFileNameWithoutPath(path: string): string {
+  const pathParts = path.replace('/docs/', '').replace('.md', '').split('/');
+  let fileName = pathParts[pathParts.length - 1];
+  
+  if (fileName === 'index' && pathParts.length > 1) {
+    fileName = pathParts[pathParts.length - 2];
+  }
+  
+  return fileName.replace(/[-_]/g, ' ');
+}
+
 // In a real app, we might fetch this from an API.
 // Here we use Vite's import.meta.glob to find all markdown files in /docs recursively.
 export async function getAllPosts(): Promise<PostMetadata[]> {
@@ -57,12 +78,20 @@ export async function getAllPosts(): Promise<PostMetadata[]> {
       slug = slug.slice(0, -6);
     }
     
-    const { data } = matter(content as string);
+    const { data, content: markdownContent } = matter(content as string);
+    
+    let title = data.title;
+    if (!title) {
+      title = extractTitleFromContent(markdownContent);
+    }
+    if (!title) {
+      title = extractFileNameWithoutPath(path);
+    }
     
     return {
       slug,
       path,
-      title: data.title || slug,
+      title,
       date: data.date || '',
       excerpt: data.excerpt || '',
     };
@@ -94,10 +123,18 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   const { data, content: markdownContent } = matter(content as string);
 
+  let title = data.title;
+  if (!title) {
+    title = extractTitleFromContent(markdownContent);
+  }
+  if (!title) {
+    title = extractFileNameWithoutPath(matchedPath);
+  }
+
   return {
     slug,
     path: matchedPath,
-    title: data.title || slug,
+    title,
     date: data.date || '',
     excerpt: data.excerpt || '',
     content: markdownContent,

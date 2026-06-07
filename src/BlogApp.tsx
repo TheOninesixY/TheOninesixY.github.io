@@ -31,6 +31,14 @@ export default function BlogApp() {
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
 
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const yy = String(date.getFullYear()).slice(-2);
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yy}年${mm}月${dd}日`;
+  };
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -451,12 +459,19 @@ export default function BlogApp() {
                     setSearchQuery('');
                   }}
                 >
-                  <h2 className="text-xl font-bold text-stone-900 mb-3">
+                  <h2 className="text-xl font-bold text-stone-900 mb-1">
                     {post.title}
                   </h2>
-                  <p className="text-stone-600 text-sm line-clamp-2">
-                    {post.excerpt || '文档的一部分正文'}
-                  </p>
+                  {post.date && (
+                    <p className="text-stone-400 text-xs mb-2">
+                      {formatDate(post.date)}
+                    </p>
+                  )}
+                  {post.excerpt && (
+                    <p className="text-stone-600 text-sm line-clamp-2">
+                      {post.excerpt}
+                    </p>
+                  )}
                 </motion.article>
               ))}
               {searchQuery && posts.filter(post => 
@@ -498,12 +513,19 @@ export default function BlogApp() {
                       className="bg-stone-100 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-stone-150"
                       onClick={() => isFolder ? handleFolderClick(item as FolderItem) : handlePostClick((item as FolderItem).post?.slug || (item as PostMetadata).slug)}
                     >
-                      <h2 className="text-xl font-bold text-stone-900 mb-3">
+                      <h2 className="text-xl font-bold text-stone-900 mb-1">
                         {displayName}
                       </h2>
-                      <p className="text-stone-600 text-sm line-clamp-2">
-                        {excerpt || (isFolder ? '点击查看内容' : '文档的一部分正文')}
-                      </p>
+                      {!isFolder && ((item as FolderItem).post?.date || (item as PostMetadata).date) && (
+                        <p className="text-stone-400 text-xs mb-2">
+                          {formatDate((item as FolderItem).post?.date || (item as PostMetadata).date)}
+                        </p>
+                      )}
+                      {(excerpt || isFolder) && (
+                        <p className="text-stone-600 text-sm line-clamp-2">
+                          {excerpt || '点击查看内容'}
+                        </p>
+                      )}
                     </motion.article>
                   );
                 })}
