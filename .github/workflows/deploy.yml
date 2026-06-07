@@ -28,8 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          # 开启零安装后，依赖已存在于代码库中，不再需要 Actions 级别的缓存机制
-          cache: '' 
+          cache: 'yarn' 
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
