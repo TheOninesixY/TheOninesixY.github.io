@@ -42,25 +42,25 @@ Recovery是安卓设备的一个系统分区，可在设备不启动系统的情
 2. 在电脑上打开CMD
 3. 以下命令并回车
 
-    ~~~code
+    ~~~cmd
     cd C:\platform-tools
     ~~~
 
 4. 若正常反馈，则输入
 
-    ~~~code
+    ~~~cmd
     fastboot devices
     ~~~
 
 5. 若显示设备序列号，则输入以下命令并回车
 
-    ~~~code
+    ~~~cmd
     fastboot oem unlock
     ~~~
 
 6. 若解锁失败，则尝试
 
-    ~~~code
+    ~~~cmd
     fastboot flashing unlock
     ~~~
 
