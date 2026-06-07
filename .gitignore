@@ -2,4 +2,21 @@
 /dist
 /.vscode
 /.vitepress/cache
-/.yarn
+
+# 现代 Yarn (v4) 的官方推荐配置
+
+# 1. 应该被 Git 忽略的文件（绝对不要 push）
+.pnp.*
+.yarn/unplugged
+.yarn/install-state.gz
+.yarn/build-state.yml
+
+# 2. 应该被 Git 记录的文件（建议 push，用于零安装）
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# 核心：允许把依赖压缩包传上去
+!.yarn/cache
