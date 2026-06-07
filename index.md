@@ -4,20 +4,22 @@ layout: home
 
 hero:
   name: "OninesixY的小站"
-  text: ""
-  tagline: OninesixY.pages.dev
-  image:
-    ## src: favicon.ico
+  text: "所以这个网站有什么用？"
+  tagline: My great project tagline
   actions:
     - theme: brand
-      text: 去看看有什么
-      link: /docs
+      text: Markdown Examples
+      link: /markdown-examples
     - theme: alt
-      text: 关于
-      link: README
+      text: API Examples
+      link: /api-examples
 
 features:
-  - title: 温馨提示
-    details: 本站只是我空余时间建着玩的，所以质量比较差。
+  - title: Feature A
+    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Feature B
+    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Feature C
+    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
 
