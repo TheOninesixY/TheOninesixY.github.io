@@ -4,6 +4,9 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "OninesixY的小站",
   description: "所以这个网站有什么用？",
+  head:[
+    ['link', { rel: 'icon', href: '/favicon.png' }]
+  ],
   base: '/',                          // 链接前缀
   ignoreDeadLinks: true ,             // 禁用死链检查
   themeConfig: {
