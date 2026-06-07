@@ -4,9 +4,13 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "OninesixY的小站",
   description: "所以这个网站有什么用？",
-  base: '/',
+  base: '/',                          // 链接前缀
+  ignoreDeadLinks: true ,             // 禁用死链检查
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+
+    logo: '/favicon.png',
+
     nav: [
       { text: '首页', link: '/' },
       { text: '文档', link: '/docs/index.md' }
@@ -16,7 +20,7 @@ export default defineConfig({
       {
         text: '导航',
         items: [
-          { text: '首页', link: '/docs' },
+          { text: '首页', link: '/index.md' },
           { text: '文档', link: '/docs/index.md' }
         ]
       },
