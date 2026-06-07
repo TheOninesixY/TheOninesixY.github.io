@@ -8,3 +8,5 @@ coverage/
 !.env.example
 .vite/
 .vscode/
+!.next/
+!.nuxt/
