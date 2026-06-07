@@ -5,6 +5,7 @@ export default defineConfig({
   title: "OninesixY的小站",
   description: "一个非常网站的网站",
   cleanUrls: true,
+  base: '/',
   head:[
     // 网站图标
     ['link', { rel: 'icon', href: 'favicon.ico' }]
