@@ -9,15 +9,36 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '首页', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: '文档', link: '/docs/index.md' }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: '导航',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: '首页', link: '/' },
+          { text: '文档', link: '/docs/index.md' }
+        ]
+      },
+      {
+        text: '教程',
+        items: [
+          { text: '为设备刷入Recovery', link: '/docs/help/FlashRecovery/index.md' },
+          { text: '为设备Root', link: '/docs/help/Root/index.md' }
+        ]
+      },
+      {
+        text: '工具',
+        items: [
+          { text: 'autoRe 自动刷新', link: '/docs/tool/autoRe/index.md' },
+          { text: 'ByeCNBing 再见！中国必应', link: '/docs/tool/ByeCNBing/index.md' },
+          { text: 'CFAD CloudflareAutoToDash', link: '/docs/tool/CFAD/index.md' }
+        ]
+      },
+      {
+        text: '以及',
+        items: [
+          { text: '神奇数字马戏团第9集解析', link: '/docs/and/TADC9解析/index.md'}
         ]
       }
     ],
