@@ -24,7 +24,8 @@ export default defineConfig({
         text: '导航',
         items: [
           { text: '首页', link: '/index.md' },
-          { text: '文档', link: '/Docs/index.md' }
+          { text: '文档', link: '/Docs/index.md' },
+          { text: 'README', link :'/README.md'}
         ]
       },
       {
