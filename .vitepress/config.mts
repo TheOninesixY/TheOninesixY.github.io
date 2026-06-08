@@ -13,7 +13,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
 
     search: {
-      provider: 'local'
+      provider: 'local',
     },
 
     logo: '/favicon.png',
