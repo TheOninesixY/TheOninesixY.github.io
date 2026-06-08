@@ -2,10 +2,11 @@
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
+
 hero:
   name: "OninesixY的小站"
   text: "所以这个网站有什么用？"
-  tagline: 救命啊，我写的啥啊，写那么久写出坨达芬还需要诡异的维护，要给我看死了啊
+  tagline: 不想上学！😭
   actions:
     - theme: brand
       text: 看看吧

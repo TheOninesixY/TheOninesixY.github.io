@@ -12,6 +12,10 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 
+    search: {
+      provider: 'local'
+    },
+
     logo: '/favicon.png',
 
     nav: [
@@ -27,6 +31,12 @@ export default defineConfig({
           { text: '文档', link: '/Docs/index.md' },
           { text: 'README', link :'/README.md'}
         ]
+      },
+      {
+        text: '一些事',
+        items: [
+          { text: '这分明不是我的错', link: '/Docs/Note/这分明不是我的错/index.md' },
+        ],
       },
       {
         text: '教程',
@@ -52,7 +62,8 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/TheOninesixY/TheOninesixY.github.io' }
+      { icon: 'github', link: 'https://github.com/TheOninesixY/TheOninesixY.github.io' },
+      { icon: 'bilibili', link: 'https://space.bilibili.com/1133117111' }
     ]
   }
 })
