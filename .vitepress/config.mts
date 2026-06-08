@@ -16,7 +16,7 @@ export default defineConfig({
 
     nav: [
       { text: '首页', link: '/' },
-      { text: '文档', link: '/docs/index.md' }
+      { text: '文档', link: '/Docs/index.md' }
     ],
 
     sidebar: [
@@ -24,28 +24,28 @@ export default defineConfig({
         text: '导航',
         items: [
           { text: '首页', link: '/index.md' },
-          { text: '文档', link: '/docs/index.md' }
+          { text: '文档', link: '/Docs/index.md' }
         ]
       },
       {
         text: '教程',
         items: [
-          { text: '为设备刷入Recovery', link: '/docs/help/FlashRecovery/index.md' },
-          { text: '为设备Root', link: '/docs/help/Root/index.md' }
+          { text: '为设备刷入Recovery', link: '/Docs/Help/FlashRecovery/index.md' },
+          { text: '为设备Root', link: '/Docs/Help/Root/index.md' }
         ]
       },
       {
         text: '工具',
         items: [
-          { text: 'autoRe 自动刷新', link: '/docs/tool/autoRe/index.md' },
-          { text: 'ByeCNBing 再见！中国必应', link: '/docs/tool/ByeCNBing/index.md' },
-          { text: 'CFAD CloudflareAutoToDash', link: '/docs/tool/CFAD/index.md' }
+          { text: 'autoRe 自动刷新', link: '/Docs/Tools/autoRe/index.md' },
+          { text: 'ByeCNBing 再见！中国必应', link: '/Docs/Tools/ByeCNBing/index.md' },
+          { text: 'CFAD CloudflareAutoToDash', link: '/Docs/Tools/CFAD/index.md' }
         ]
       },
       {
         text: '以及',
         items: [
-          { text: '神奇数字马戏团第9集解析', link: '/docs/and/TADC9解析/index.md'}
+          { text: '神奇数字马戏团第9集解析', link: '/Docs/More/TADC9解析/index.md'}
         ]
       }
     ],
