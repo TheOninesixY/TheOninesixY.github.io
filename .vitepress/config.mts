@@ -7,6 +7,7 @@ export default defineConfig({
   title: "OninesixY的小站",
   description: "也许是吧",
   cleanUrls: true ,             //纯净URL
+  outDir: 'docs',
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
