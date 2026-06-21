@@ -7,8 +7,24 @@ const LoadingOverlay = defineComponent({
   setup() {
     const visible = ref(true)
     const hiding = ref(false)
+    const isDark = ref(false)
+
+    const updateDarkMode = () => {
+      isDark.value = document.documentElement.classList.contains('dark')
+    }
 
     onMounted(() => {
+      updateDarkMode()
+
+      const observer = new MutationObserver(() => {
+        updateDarkMode()
+      })
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      })
+
       const timer = window.setTimeout(() => {
         hiding.value = true
 
@@ -17,7 +33,10 @@ const LoadingOverlay = defineComponent({
         }, 350)
       }, 500)
 
-      return () => window.clearTimeout(timer)
+      return () => {
+        observer.disconnect()
+        window.clearTimeout(timer)
+      }
     })
 
     return () =>
@@ -25,11 +44,28 @@ const LoadingOverlay = defineComponent({
         ? h(
             'div',
             {
-              class: ['site-loading-overlay', hiding.value ? 'is-hiding' : '']
+              class: ['site-loading-overlay', hiding.value ? 'is-hiding' : ''],
+              style: {
+                background: isDark.value ? '#1B1B1F' : 'rgba(255, 255, 255, 0.98)'
+              }
             },
             [
-              h('div', { class: 'site-loading-spinner' }),
-              h('span', { class: 'site-loading-text' }, '加载中...')
+              h('div', {
+                class: 'site-loading-spinner',
+                style: {
+                  borderTopColor: isDark.value ? '#3E63DD' : '#5672CD'
+                }
+              }),
+              h(
+                'span',
+                {
+                  class: 'site-loading-text',
+                  style: {
+                    color: isDark.value ? '#E5E7EB' : '#4B5563'
+                  }
+                },
+                '加载中...'
+              )
             ]
           )
         : null
