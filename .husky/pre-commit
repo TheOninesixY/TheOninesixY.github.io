@@ -1,0 +1,11 @@
+echo "🚚 正在打包中..."
+
+bunx vitepress build
+
+if [ $? -ne 0 ]; then
+    echo "❌ 打包失败！已拦截提交"
+    exit 1
+fi
+
+git add .
+echo "✔️ 打包成功，已成功提交"

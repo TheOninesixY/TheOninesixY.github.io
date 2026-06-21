@@ -8,9 +8,6 @@ export default defineConfig({
   cleanUrls: true ,             //纯净URL
   outDir: 'docs',               //Build产物目录
   srcDir: "Space",              //文档目录
-  head: [
-    ['link', { rel: 'icon', href: 'https://avatars.githubusercontent.com/u/218122324' }]
-  ],
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -23,7 +20,7 @@ export default defineConfig({
       provider: 'local',
     },
 
-    logo: 'https://avatars.githubusercontent.com/u/218122324',
+    logo: '/favicon.png',
 
     sidebar: [
       {
@@ -38,7 +35,6 @@ export default defineConfig({
         text: '一些事',
         items: [
           { text: '这分明不是我的错', link: '/Note/这分明不是我的错' },
-          { text: '学校你还能再阴点吗？', link: '/Note/学校你还能再阴点吗？' },
         ],
       },
       {
