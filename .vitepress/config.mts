@@ -4,7 +4,10 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "OninesixY的小站",
   description: "所以这个网站有什么用？",
+<<<<<<< HEAD
   outDir: '../docs',                     // 输出目录
+=======
+>>>>>>> parent of 44b2236 (.)
   head:[
     ['link', { rel: 'icon', href: '/favicon.png' }]
   ],
@@ -21,7 +24,7 @@ export default defineConfig({
 
     nav: [
       { text: '首页', link: '/' },
-      { text: '文档', link: '/Space/index.md' }
+      { text: '文档', link: '/Docs/index.md' }
     ],
 
     sidebar: [
@@ -29,35 +32,35 @@ export default defineConfig({
         text: '导航',
         items: [
           { text: '首页', link: '/index.md' },
-          { text: '文档', link: '/Space/index.md' },
+          { text: '文档', link: '/Docs/index.md' },
           { text: 'README', link :'/README.md'}
         ]
       },
       {
         text: '一些事',
         items: [
-          { text: '这分明不是我的错', link: '/Space/Note/这分明不是我的错/index.md' },
+          { text: '这分明不是我的错', link: '/Docs/Note/这分明不是我的错/index.md' },
         ],
       },
       {
         text: '教程',
         items: [
-          { text: '为设备刷入Recovery', link: '/Space/Help/FlashRecovery/index.md' },
-          { text: '为设备Root', link: '/Space/Help/Root/index.md' }
+          { text: '为设备刷入Recovery', link: '/Docs/Help/FlashRecovery/index.md' },
+          { text: '为设备Root', link: '/Docs/Help/Root/index.md' }
         ]
       },
       {
         text: '工具',
         items: [
-          { text: 'autoRe 自动刷新', link: '/Space/Tools/autoRe/index.md' },
-          { text: 'ByeCNBing 再见！中国必应', link: '/Space/Tools/ByeCNBing/index.md' },
-          { text: 'CFAD CloudflareAutoToDash', link: '/Space/Tools/CFAD/index.md' }
+          { text: 'autoRe 自动刷新', link: '/Docs/Tools/autoRe/index.md' },
+          { text: 'ByeCNBing 再见！中国必应', link: '/Docs/Tools/ByeCNBing/index.md' },
+          { text: 'CFAD CloudflareAutoToDash', link: '/Docs/Tools/CFAD/index.md' }
         ]
       },
       {
         text: '以及',
         items: [
-          { text: '神奇数字马戏团第9集解析', link: '/Space/More/TADC9解析/index.md'}
+          { text: '神奇数字马戏团第9集解析', link: '/Docs/More/TADC9解析/index.md'}
         ]
       }
     ],
