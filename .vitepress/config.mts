@@ -2,12 +2,12 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  srcDir: "Space",
   
   title: "OninesixY的小站",
   description: "也许是吧",
   cleanUrls: true ,             //纯净URL
-  outDir: 'docs',
+  outDir: 'docs',               //Build产物目录
+  srcDir: "Space",              //文档目录
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
