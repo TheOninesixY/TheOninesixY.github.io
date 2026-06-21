@@ -1,0 +1,91 @@
+name: Deploy site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # 拉取仓库代码，确保后续能判断哪些文件发生了变化
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 从配置文件中读取实际的输出目录，避免在 YAML 里重复维护同一个路径
+      - name: Resolve build output directory
+        id: config
+        run: |
+          BUILD_DIR=$(node - <<'EOF'
+          const fs = require('fs')
+          const configPath = '.vitepress/config.mts'
+          const config = fs.readFileSync(configPath, 'utf8')
+          const cleaned = config.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '')
+          const match = cleaned.match(/outDir\s*:\s*['"]([^'"]+)['"]/)
+          const resolved = match ? match[1] : '.vitepress/dist'
+          console.log(resolved)
+          EOF
+          )
+          echo "build_dir=$BUILD_DIR" >> "$GITHUB_OUTPUT"
+          echo "Resolved build output directory: $BUILD_DIR"
+
+      # 如果配置文件指定的输出目录有变化，说明提交里已经包含了构建结果
+      # 这时不需要在 Actions 里重新构建，直接使用该目录部署
+      - name: Check if build folder changed
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            build:
+              - '${{ steps.config.outputs.build_dir }}/**'
+
+      # 只有在输出目录没有变化时，才在云端执行构建流程
+      - name: Setup pnpm
+        if: steps.changes.outputs.build != 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        if: steps.changes.outputs.build != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.changes.outputs.build != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Build site
+        if: steps.changes.outputs.build != 'true'
+        run: pnpm run docs:build
+
+      # 无论是“直接使用配置文件指定的输出目录”还是“云端重新构建”，最终都要部署同一个静态目录
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.config.outputs.build_dir }}
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
