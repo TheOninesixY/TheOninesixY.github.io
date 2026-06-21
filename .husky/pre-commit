@@ -1,0 +1,15 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🚚 打包并提交中..."
+
+# 执行打包命令
+vitepress build
+
+if [ $? -ne 0 ]; then
+    echo "❌ 打包失败！已自动拦截提交"
+    exit 1 # 显式返回错误码，强制中断 Git 提交程序
+fi
+
+echo "✔️ 打包成功，已放入暂存区"
+git add .
