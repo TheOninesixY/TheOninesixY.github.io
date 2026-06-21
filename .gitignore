@@ -1,17 +1,4 @@
 # 1. 忽略的文件
-.pnp.*
-.yarn/unplugged
-.yarn/install-state.gz
-.yarn/build-state.yml
 node_modules
-dist
 .vscode
 .vitepress/cache
-
-# 2. 接受的文件
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-!.yarn/cache
