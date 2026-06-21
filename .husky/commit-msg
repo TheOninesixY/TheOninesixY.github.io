@@ -1,0 +1,28 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🚚 本地打包中..."
+
+# 1. 执行打包命令
+vitepress build
+
+if [ $? -ne 0 ]; then
+    echo "❌ 打包失败！已自动拦截提交"
+    exit 1 
+fi
+
+echo "✔️ 打包成功，已将产物放入暂存区"
+git add .
+
+# 2. 注入暗号
+COMMIT_MSG_FILE=$1
+
+if [ -n "$COMMIT_MSG_FILE" ] && [ -f "$COMMIT_MSG_FILE" ]; then
+    ORIGINAL_MSG=$(cat "$COMMIT_MSG_FILE")
+    
+    # 检查是否已经有暗号，避免重复添加
+    if ! echo "$ORIGINAL_MSG" | grep -q "^\[build\]"; then
+        echo "[build] $ORIGINAL_MSG" > "$COMMIT_MSG_FILE"
+        echo "🔒 已在提交信息开头注入已构建暗号"
+    fi
+fi
