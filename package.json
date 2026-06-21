@@ -1,6 +1,7 @@
 {
   "dependencies": {},
   "devDependencies": {
+    "husky": "^9.1.7",
     "vitepress": "^2.0.0-alpha.17"
   },
   "scripts": {
