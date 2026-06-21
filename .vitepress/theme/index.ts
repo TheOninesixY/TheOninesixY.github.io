@@ -7,10 +7,15 @@ const LoadingOverlay = defineComponent({
   setup() {
     const visible = ref(true)
     const hiding = ref(false)
-    const isDark = ref(false)
+    const isDark = ref(
+      typeof document !== 'undefined' &&
+        document.documentElement.classList.contains('dark')
+    )
 
     const updateDarkMode = () => {
-      isDark.value = document.documentElement.classList.contains('dark')
+      if (typeof document !== 'undefined') {
+        isDark.value = document.documentElement.classList.contains('dark')
+      }
     }
 
     onMounted(() => {
