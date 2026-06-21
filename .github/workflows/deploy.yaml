@@ -28,8 +28,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 从配置文件中读取实际的输出目录，避免在 YAML 里重复维护同一个路径
-      - name: Resolve build output directory
+      # 从配置文件读取实际输出目录，避免在 YAML 里重复写一遍路径
+      - name: 解析构建输出目录
         id: config
         run: |
           BUILD_DIR=$(node - <<'EOF'
@@ -43,11 +43,11 @@ jobs:
           EOF
           )
           echo "build_dir=$BUILD_DIR" >> "$GITHUB_OUTPUT"
-          echo "Resolved build output directory: $BUILD_DIR"
+          echo "解析到的输出目录：$BUILD_DIR"
 
-      # 如果配置文件指定的输出目录有变化，说明提交里已经包含了构建结果
-      # 这时不需要在 Actions 里重新构建，直接使用该目录部署
-      - name: Check if build folder changed
+      # 如果配置文件指定的输出目录有变化，就说明提交里已经包含了构建结果
+      # 这时不用再云端重新构建，直接用现成目录部署
+      - name: 检查构建目录是否有变化
         id: changes
         uses: dorny/paths-filter@v3
         with:
@@ -55,37 +55,37 @@ jobs:
             build:
               - '${{ steps.config.outputs.build_dir }}/**'
 
-      # 只有在输出目录没有变化时，才在云端执行构建流程
-      - name: Setup pnpm
-        if: steps.changes.outputs.build != 'true'
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
+      # 只有当输出目录没有变化时，才在云端执行构建流程
+      # 这里使用 Yarn 的方式来安装依赖和构建站点
+      - name: 设置 Node.js
         if: steps.changes.outputs.build != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+          cache: yarn
+          cache-dependency-path: yarn.lock
 
-      - name: Install dependencies
+      - name: 启用 Corepack
         if: steps.changes.outputs.build != 'true'
-        run: pnpm install --frozen-lockfile
+        run: corepack enable
 
-      - name: Build site
+      - name: 安装依赖
         if: steps.changes.outputs.build != 'true'
-        run: pnpm run docs:build
+        run: yarn install --mode=skip-build
 
-      # 无论是“直接使用配置文件指定的输出目录”还是“云端重新构建”，最终都要部署同一个静态目录
-      - name: Setup Pages
+      - name: 构建站点
+        if: steps.changes.outputs.build != 'true'
+        run: yarn docs:build
+
+      # 无论是直接使用配置文件指定的目录，还是云端重新构建，最终都要部署同一个静态目录
+      - name: 设置 Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact
+      - name: 上传 Pages 构建产物
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ steps.config.outputs.build_dir }}
 
-      - name: Deploy to GitHub Pages
+      - name: 部署到 GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

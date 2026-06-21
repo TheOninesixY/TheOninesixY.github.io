@@ -1,6 +1,6 @@
 echo "🚚 正在打包中..."
 
-bunx vitepress build
+yarn run vitepress build
 
 if [ $? -ne 0 ]; then
     echo "❌ 打包失败！已拦截提交"
