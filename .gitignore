@@ -1,4 +1,4 @@
-# 1. 忽略的文件
 node_modules
 .vscode
 .vitepress/cache
+bun.lock
