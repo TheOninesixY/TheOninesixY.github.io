@@ -75,7 +75,7 @@ jobs:
 
       - name: 构建站点
         if: steps.changes.outputs.build != 'true'
-        run: yarn docs:build
+        run: yarn run vitepress build
 
       # 无论是直接使用配置文件指定的目录，还是云端重新构建，最终都要部署同一个静态目录
       - name: 设置 Pages
