@@ -4,7 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "OninesixY的小站",
   description: "所以这个网站有什么用？",
-  outDir: 'docs',                     // 输出目录
+  outDir: '../docs',                     // 输出目录
   head:[
     ['link', { rel: 'icon', href: '/favicon.png' }]
   ],
