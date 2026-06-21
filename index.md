@@ -10,7 +10,7 @@ hero:
   actions:
     - theme: brand
       text: 看看吧
-      link: /Docs/index.md
+      link: /Space/index.md
     - theme: alt
       text: 去GitHub
       link: https://github.com/TheOninesixY/TheOninesixY.github.io
