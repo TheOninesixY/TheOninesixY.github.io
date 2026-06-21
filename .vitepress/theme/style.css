@@ -23,6 +23,50 @@ body {
   font-family: var(--vp-font-family-base);
 }
 
+.site-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.35s ease;
+}
+
+.site-loading-overlay.is-hiding {
+  opacity: 0;
+}
+
+.site-loading-spinner {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #5672CD;
+  animation: site-loading-spin 0.9s linear infinite;
+}
+
+.site-loading-text {
+  margin-top: 14px;
+  color: #4b5563;
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+@keyframes site-loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 code,
 pre,
 kbd,
