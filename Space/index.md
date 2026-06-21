@@ -5,7 +5,7 @@ layout: home
 
 hero:
   name: "OninesixY的小站"
-  text: "也许是吧。"
+  text: "也许是吧"
   tagline: 学校你赶紧塌了吧，压死它们那群畜生
   actions:
     - theme: brand
