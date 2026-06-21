@@ -35,6 +35,7 @@ export default defineConfig({
         text: '一些事',
         items: [
           { text: '这分明不是我的错', link: '/Note/这分明不是我的错' },
+          { text: '学校你还能再阴点吗？', link: '/Note/学校你还能再阴点吗？' },
         ],
       },
       {
