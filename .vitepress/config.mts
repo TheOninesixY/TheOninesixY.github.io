@@ -35,6 +35,7 @@ export default defineConfig({
         text: '一些事',
         items: [
           { text: '这分明不是我的错', link: '/Note/这分明不是我的错' },
+          { text: '我其实知道', link: '/Note/我其实知道'}
         ],
       },
       {
