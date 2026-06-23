@@ -5,8 +5,8 @@ layout: home
 
 hero:
   name: "OninesixY的小站"
-  text: "何意味？"
-  tagline: "学校你赶紧塌了吧，压死它们那群畜生"
+  text: "阿巴阿巴"
+  tagline: "意义何在"
   actions:
     - theme: brand
       text: "看看吧"
