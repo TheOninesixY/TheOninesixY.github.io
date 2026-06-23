@@ -6,7 +6,6 @@
 node_modules/
 .vscode/
 .vitepress/cache/
-.vitepress/dist/
 .husky/_
 
 # 接受的文件
