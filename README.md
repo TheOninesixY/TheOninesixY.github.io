@@ -1,2 +1,2 @@
 # OninesixY的小站
-## [去看！](oninesixy.qzz.io)
+## [去看！](https://oninesixy.qzz.io)
