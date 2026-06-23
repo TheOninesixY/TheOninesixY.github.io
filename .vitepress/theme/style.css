@@ -1,3 +1,6 @@
+
+/*字体设置*/
+
 @font-face {
   font-family: 'MiSans';
   src: url('./fonts/MiSans-Regular.ttf') format('truetype');
@@ -28,4 +31,93 @@ pre,
 kbd,
 samp {
   font-family: var(--vp-font-family-mono);
+}
+
+
+
+/*主题色设置*/
+
+:root {
+  /* 移除大部分组件的圆角 */
+  --vp-button-radius: 0px;
+  --vp-custom-block-radius: 0px;
+  --vp-input-radius: 0px;
+  --vp-badge-radius: 0px;
+  --vp-avatar-radius: 0px;
+  --vp-card-radius: 0px;
+  --vp-code-block-radius: 0px;
+
+  /* 基础微调 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f6f6f6;
+  --vp-c-bg-mute: #eeeeee;
+  --vp-c-default-1: #1a1a1a;
+  --vp-c-default-2: #4d4d4d;
+
+  /* 浅色模式：Brand 按钮纯黑背景，文字纯白 */
+  --vp-button-brand-border: #000000;
+  --vp-button-brand-bg: #000000;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-border: #222222;
+  --vp-button-brand-hover-bg: #222222;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-border: #333333;
+  --vp-button-brand-active-bg: #333333;
+
+  /* 浅色模式：Alt 按钮悬停优化 (防止亮度过度变化导致字迹不清) */
+  --vp-button-alt-border: #e2e8f0;
+  --vp-button-alt-bg: #f8fafc;
+  --vp-button-alt-text: #0f172a;
+  --vp-button-alt-hover-border: #cbd5e1;
+  --vp-button-alt-hover-bg: #f1f5f9;
+  --vp-button-alt-hover-text: #0f172a;
+  --vp-button-alt-active-border: #94a3b8;
+  --vp-button-alt-active-bg: #e2e8f0;
+
+  /* 文字高亮与链接颜色 */
+  --vp-c-brand-1: #000000;
+  --vp-c-brand-2: #222222;
+  --vp-c-brand-3: #444444;
+  --vp-c-brand-next: #666666;
+}
+
+/* 深色模式微调 */
+.dark {
+  --vp-c-bg: #121212;
+  --vp-c-bg-soft: #1e1e1e;
+  --vp-c-bg-mute: #2d2d2d;
+  --vp-c-default-1: #ffffff;
+  --vp-c-default-2: #b5b5b5;
+
+  /* 深色模式：Brand 按钮纯白背景，文字纯黑 */
+  --vp-button-brand-border: #ffffff;
+  --vp-button-brand-bg: #ffffff;
+  --vp-button-brand-text: #000000;
+  --vp-button-brand-hover-border: #e0e0e0;
+  --vp-button-brand-hover-bg: #e0e0e0;
+  --vp-button-brand-hover-text: #000000;
+  --vp-button-brand-active-border: #b5b5b5;
+  --vp-button-brand-active-bg: #b5b5b5;
+
+  /* 深色模式：Alt 按钮悬停优化 */
+  --vp-button-alt-border: #2d2d2d;
+  --vp-button-alt-bg: #1e1e1e;
+  --vp-button-alt-text: #ffffff;
+  --vp-button-alt-hover-border: #444444;
+  --vp-button-alt-hover-bg: #2a2a2a;
+  --vp-button-alt-hover-text: #ffffff;
+  --vp-button-alt-active-border: #555555;
+  --vp-button-alt-active-bg: #333333;
+
+  /* 文字高亮与链接颜色 */
+  --vp-c-brand-1: #ffffff;
+  --vp-c-brand-2: #e0e0e0;
+  --vp-c-brand-3: #b5b5b5;
+  --vp-c-brand-next: #8c8c8c;
+}
+
+*:not(.VPSwitch):not(.VPSwitch *),
+*:not(.VPSwitch):not(.VPSwitch *)::before,
+*:not(.VPSwitch):not(.VPSwitch *)::after {
+  border-radius: 0px !important;
 }

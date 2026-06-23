@@ -20,7 +20,7 @@ export default defineConfig({
       provider: 'local',
     },
 
-    logo: '/favicon.png',
+    // logo: '/favicon.png',
 
     sidebar: [
       {
