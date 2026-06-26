@@ -24,7 +24,7 @@ jobs:
     steps:
       # 拉取仓库代码，确保后续能判断哪些文件发生了变化
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 

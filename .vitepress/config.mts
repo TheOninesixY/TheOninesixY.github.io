@@ -8,6 +8,7 @@ export default defineConfig({
   cleanUrls: true ,              // 纯净URL       \\
   // outDir: '.build',          //  Build产物目录  \\
   srcDir: "Docs",              //   文档目录        \\
+  lastUpdated: true,          //    开启时间戳       \\
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -20,8 +21,11 @@ export default defineConfig({
       provider: 'local',
     },
 
+    lastUpdatedText: '最后更新时间',
+
     editLink: {
-      pattern: 'https://github.com/TheOninesixY/TheOninesixY.github.io/edit/main/Docs/:path'
+      pattern: 'https://github.com/TheOninesixY/TheOninesixY.github.io/edit/main/Docs/:path',
+      text: '编辑此页'
     },
 
     // logo: '/favicon.png',
