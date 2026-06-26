@@ -5,8 +5,8 @@ layout: home
 
 hero:
   name: "OninesixY的小站"
-  text: "阿巴阿巴"
-  tagline: "意义何在"
+  text: "所以这个网站有什么用？"
+  tagline: "我家养的小鸡怎么去拱麻袋了"
   actions:
     - theme: brand
       text: "查看文档"
