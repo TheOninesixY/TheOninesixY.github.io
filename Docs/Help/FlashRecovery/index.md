@@ -1,8 +1,3 @@
----
-title: "如何给设备刷入Recovery"
-date: "2026-03-27"
-excerpt: "Recovery是安卓设备的一个系统分区，可在设备不启动系统的情况下执行基本维护操作。刷入第三方Recovery能解锁更多功能。"
----
 
 # 如何给设备刷入Recovery
 
