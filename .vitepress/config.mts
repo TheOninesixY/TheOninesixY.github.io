@@ -22,7 +22,17 @@ export default defineConfig({
       provider: 'local',
     },
 
-    lastUpdatedText: '最后更新时间',
+    lastUpdated: {
+      text: '最后更新于',
+      formatOptions: {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }
+    },
 
     editLink: {
       pattern: 'https://github.com/TheOninesixY/TheOninesixY.github.io/edit/main/Docs/:path',
