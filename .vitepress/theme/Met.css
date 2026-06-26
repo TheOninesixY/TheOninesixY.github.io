@@ -88,23 +88,14 @@
   display: none;
 }
 
-/* 自定义文章滚动条：1px半透明线条 */
+/* 彻底隐藏滚动条 */
 html {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(87, 128, 190, 0.3) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar {
-  width: 1px;
-}
-
-html::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-html::-webkit-scrollbar-thumb {
-  background: rgba(87, 128, 190, 0.3);
-  border-radius: 0px;
+  display: none;
 }
 
 :root {
@@ -133,6 +124,20 @@ button:active {
   border-radius: var(--vp-button-border-radius) !important;
 }
 
-.dark html::-webkit-scrollbar-thumb {
-  background: rgba(163, 194, 226, 0.3);
+/* 滚动进度条 */
+:root {
+  --scroll-progress: 0;
 }
+
+.VPNavBar .divider .divider-line {
+  background: linear-gradient(
+    to right,
+    var(--vp-c-brand-1) 0%,
+    var(--vp-c-brand-1) calc(var(--scroll-progress) * 100%),
+    var(--vp-c-gutter) calc(var(--scroll-progress) * 100%),
+    var(--vp-c-gutter) 100%
+  );
+  transition: background-position 0.1s ease;
+}
+
+

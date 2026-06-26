@@ -1,5 +1,24 @@
 import DefaultTheme from 'vitepress/theme'
-import './Font.css'          // 引入字体样式
-import './Met.css'          //  引入主题样式
+import './Font.css'
+import './Met.css'
 
-export default DefaultTheme
+export default {
+  extends: DefaultTheme,
+  setup() {
+    if (typeof window !== 'undefined') {
+      const updateProgress = () => {
+        const dividerLine = document.querySelector('.VPNavBar .divider .divider-line')
+        if (!dividerLine) return
+
+        const scrollTop = window.scrollY
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight
+        const progress = docHeight > 0 ? Math.min(Math.max(scrollTop / docHeight, 0), 1) : 0
+
+        dividerLine.style.setProperty('--scroll-progress', progress.toString())
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true })
+      updateProgress()
+    }
+  }
+}
