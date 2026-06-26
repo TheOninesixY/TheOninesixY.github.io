@@ -2,6 +2,8 @@ import DefaultTheme from 'vitepress/theme'
 import './Font.css'
 import './Met.css'
 
+
+// Met主题配置
 export default {
   extends: DefaultTheme,
   setup() {
