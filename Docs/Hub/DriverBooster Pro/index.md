@@ -1,2 +1,2 @@
 # Driver Booster Pro 破解版
-## [Downlaod](./DriverBooster%20Pro.zip)
+## [Downlaod](/DriverBooster%20Pro.zip)

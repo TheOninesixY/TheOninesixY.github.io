@@ -2,7 +2,7 @@
 
 >数据恢复唯一真神
 
-[Download](./DiskGenius%20Pro.zip)
+[Download](/DiskGenius%20Pro.zip)
 
 ## 说明：
 
