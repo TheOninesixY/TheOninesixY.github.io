@@ -9,10 +9,10 @@ hero:
   tagline: "意义何在"
   actions:
     - theme: brand
-      text: "看看吧"
+      text: "查看文档"
       link: Docs
     - theme: alt
-      text: "去GitHub"
+      text: "访问仓库"
       link: https://github.com/TheOninesixY/TheOninesixY.github.io
 
 features:

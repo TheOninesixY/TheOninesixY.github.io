@@ -20,6 +20,10 @@ export default defineConfig({
       provider: 'local',
     },
 
+    editLink: {
+      pattern: 'https://github.com/TheOninesixY/TheOninesixY.github.io/edit/main/Docs/:path'
+    },
+
     // logo: '/favicon.png',
 
     sidebar: [
@@ -34,8 +38,8 @@ export default defineConfig({
       {
         text: '一些事',
         items: [
-          { text: '这分明不是我的错', link: '/Note/这分明不是我的错' },
-          { text: '我其实知道', link: '/Note/我其实知道'}
+          { text: '这分明不是我的错', link: '/Note/这分明不是我的错/index.md' },
+          { text: '我其实知道', link: '/Note/我其实知道/index.md'}
         ],
       },
       {
@@ -52,6 +56,14 @@ export default defineConfig({
           { text: 'ByeCNBing 再见！中国必应', link: '/Tools/ByeCNBing/index.md' },
           { text: 'CFAD CloudflareAutoToDash', link: '/Tools/CFAD/index.md' }
         ]
+      },
+      {
+        text: '宝库',
+        items: [
+          { text: '说明', link: '/Hub/index.md'},
+          { text: 'DiskGenius 破解版', link: '/Hub/DiskGenius Pro/index.md'},
+          { text: 'DriverBooster Pro破解版', link: '/Hub/DriverBooster Pro/index.md'}
+        ],
       },
       {
         text: '以及',
