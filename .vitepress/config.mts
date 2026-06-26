@@ -62,6 +62,7 @@ export default defineConfig({
           { text: 'CFAD CloudflareAutoToDash', link: '/Tools/CFAD/index.md' }
         ]
       },
+      /*
       {
         text: '宝库',
         items: [
@@ -70,6 +71,7 @@ export default defineConfig({
           { text: 'DriverBooster Pro破解版', link: '/Hub/DriverBooster Pro/index.md'}
         ],
       },
+      */
       {
         text: '以及',
         items: [
