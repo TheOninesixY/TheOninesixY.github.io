@@ -28,7 +28,7 @@ export default defineConfig({
       text: '编辑此页'
     },
 
-    // logo: '/favicon.png',
+    logo: '/favicon.png',
 
     sidebar: [
       {
@@ -42,6 +42,7 @@ export default defineConfig({
       {
         text: '一些事',
         items: [
+          { text: '傻逼Trae', link: '/Note/Fuck Trae AI/index.md'},
           { text: '这分明不是我的错', link: '/Note/这分明不是我的错/index.md' },
           { text: '我其实知道', link: '/Note/我其实知道/index.md'}
         ],

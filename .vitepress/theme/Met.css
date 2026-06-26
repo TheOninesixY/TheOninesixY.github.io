@@ -1,0 +1,138 @@
+/*Met浅蓝主题*/
+
+:root {
+
+  /* 基础微调 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f6f6f6;
+  --vp-c-bg-mute: #eeeeee;
+  --vp-c-default-1: #1a1a1a;
+  --vp-c-default-2: #4d4d4d;
+
+  /* 浅色模式：Brand 按钮浅蓝背景，文字纯白 */
+  --vp-button-brand-border: #5780BE;
+  --vp-button-brand-bg: #5780BE;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-border: #6E95CC;
+  --vp-button-brand-hover-bg: #6E95CC;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-border: #466BA0;
+  --vp-button-brand-active-bg: #466BA0;
+
+  /* 浅色模式：Alt 按钮悬停优化 */
+  --vp-button-alt-border: #C5D4E8;
+  --vp-button-alt-bg: #E8F0F8;
+  --vp-button-alt-text: #466BA0;
+  --vp-button-alt-hover-border: #A8C0DC;
+  --vp-button-alt-hover-bg: #D4E2F0;
+  --vp-button-alt-hover-text: #355A80;
+  --vp-button-alt-active-border: #8AADD6;
+  --vp-button-alt-active-bg: #B8D0E8;
+
+  /* 文字高亮与链接颜色 */
+  --vp-c-brand-1: #466BA0;
+  --vp-c-brand-2: #5780BE;
+  --vp-c-brand-3: #6E95CC;
+  --vp-c-brand-next: #8AADD6;
+}
+
+/* 深色模式微调 */
+.dark {
+  --vp-c-bg: #121212;
+  --vp-c-bg-soft: #1e1e1e;
+  --vp-c-bg-mute: #2d2d2d;
+  --vp-c-default-1: #ffffff;
+  --vp-c-default-2: #b5b5b5;
+
+  /* 深色模式：Brand 按钮浅蓝背景，文字纯白 */
+  --vp-button-brand-border: #5780BE;
+  --vp-button-brand-bg: #5780BE;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-border: #6E95CC;
+  --vp-button-brand-hover-bg: #6E95CC;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-border: #466BA0;
+  --vp-button-brand-active-bg: #466BA0;
+
+  /* 深色模式：Alt 按钮悬停优化 */
+  --vp-button-alt-border: #2D4260;
+  --vp-button-alt-bg: #203448;
+  --vp-button-alt-text: #8AADD6;
+  --vp-button-alt-hover-border: #3D5270;
+  --vp-button-alt-hover-bg: #2D4260;
+  --vp-button-alt-hover-text: #A3C2E2;
+  --vp-button-alt-active-border: #4D6280;
+  --vp-button-alt-active-bg: #3D5270;
+
+  /* 文字高亮与链接颜色 */
+  --vp-c-brand-1: #A3C2E2;
+  --vp-c-brand-2: #8AADD6;
+  --vp-c-brand-3: #6E95CC;
+  --vp-c-brand-next: #6E95CC;
+
+  /* 深色模式滚动条 */
+  scrollbar-color: rgba(163, 194, 226, 0.3) transparent;
+}
+
+/* Logo 保持方角 */
+.VPNavBarTitle .VPImage {
+  border-radius: 0px;
+}
+
+/* 隐藏侧边栏滚动条 */
+.VPSidebar {
+  scrollbar-width: none;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 自定义文章滚动条：1px半透明线条 */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(87, 128, 190, 0.3) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 1px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: rgba(87, 128, 190, 0.3);
+  border-radius: 0px;
+}
+
+:root {
+  --vp-button-border-radius: 20px;
+}
+
+.VPButton,
+.VPButton.medium,
+button {
+  border-radius: var(--vp-button-border-radius) !important;
+  transition: border-radius 0.3s ease !important;
+}
+
+.VPButton:hover:not(:active),
+.VPButton.medium:hover:not(:active),
+.VPButton:focus-visible:not(:active),
+.VPButton.medium:focus-visible:not(:active),
+button:hover:not(:active),
+button:focus-visible:not(:active) {
+  border-radius: 10px !important;
+}
+
+.VPButton:active,
+.VPButton.medium:active,
+button:active {
+  border-radius: var(--vp-button-border-radius) !important;
+}
+
+.dark html::-webkit-scrollbar-thumb {
+  background: rgba(163, 194, 226, 0.3);
+}
