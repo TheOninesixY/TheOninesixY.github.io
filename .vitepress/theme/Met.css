@@ -129,15 +129,41 @@ button:active {
   --scroll-progress: 0;
 }
 
-.VPNavBar .divider .divider-line {
-  background: linear-gradient(
-    to right,
-    var(--vp-c-brand-1) 0%,
-    var(--vp-c-brand-1) calc(var(--scroll-progress) * 100%),
-    var(--vp-c-gutter) calc(var(--scroll-progress) * 100%),
-    var(--vp-c-gutter) 100%
-  );
-  transition: background-position 0.1s ease;
+@media (min-width: 960px) {
+  .VPNavBar .divider .divider-line {
+    background: linear-gradient(
+      to right,
+      var(--vp-c-brand-1) 0%,
+      var(--vp-c-brand-1) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) 100%
+    );
+    transition: background-position 0.1s ease;
+  }
+}
+
+@media (max-width: 959px) {
+  .VPLocalNav {
+    position: relative;
+    border-bottom: none !important;
+  }
+
+  .VPLocalNav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--vp-c-brand-1) 0%,
+      var(--vp-c-brand-1) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) 100%
+    );
+    transition: background-position 0.1s ease;
+  }
 }
 
 
