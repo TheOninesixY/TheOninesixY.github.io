@@ -1,0 +1,4 @@
+arcanis.vscode-zipfs
+marscode.marscode-extension
+ms-ceintl.vscode-language-pack-zh-hans
+pkief.material-icon-theme
