@@ -15,7 +15,7 @@ hero:
       text: "访问仓库"
       link: https://github.com/TheOninesixY/TheOninesixY.github.io
   image:
-    src: https://raw.githubusercontent.com/icon11-community/Folder-Ico/main/ico/minecraft_axolotl-cyan.ico
+    src: /minecraft_axolotl-cyan.ico
 
 features:
   - icon: "📢"

@@ -17,6 +17,10 @@ const config = defineConfig({
   // outDir: '.build',          //  Build产物目录  \\
   srcDir: "Docs",              //   文档目录        \
   lastUpdated: true,          //    开启时间戳       \
+  
+  head: [
+    ['link', { rel: 'icon', href: '/minecraft_axolotl-cyan.ico', type: 'image/x-icon'}]
+  ],
 
   vite: {
     plugins: [watchDocsPlugin()]
