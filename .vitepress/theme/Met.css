@@ -20,13 +20,13 @@
   --vp-button-brand-active-bg: #466BA0;
 
   /* 浅色模式：Alt 按钮悬停优化 */
-  --vp-button-alt-border: #C5D4E8;
+  --vp-button-alt-border: transparent;
   --vp-button-alt-bg: #E8F0F8;
   --vp-button-alt-text: #466BA0;
-  --vp-button-alt-hover-border: #A8C0DC;
+  --vp-button-alt-hover-border: transparent;
   --vp-button-alt-hover-bg: #D4E2F0;
   --vp-button-alt-hover-text: #355A80;
-  --vp-button-alt-active-border: #8AADD6;
+  --vp-button-alt-active-border: transparent;
   --vp-button-alt-active-bg: #B8D0E8;
 
   /* 文字高亮与链接颜色 */
@@ -55,13 +55,13 @@
   --vp-button-brand-active-bg: #466BA0;
 
   /* 深色模式：Alt 按钮悬停优化 */
-  --vp-button-alt-border: #2D4260;
+  --vp-button-alt-border: transparent;
   --vp-button-alt-bg: #203448;
   --vp-button-alt-text: #8AADD6;
-  --vp-button-alt-hover-border: #3D5270;
+  --vp-button-alt-hover-border: transparent;
   --vp-button-alt-hover-bg: #2D4260;
   --vp-button-alt-hover-text: #A3C2E2;
-  --vp-button-alt-active-border: #4D6280;
+  --vp-button-alt-active-border: transparent;
   --vp-button-alt-active-bg: #3D5270;
 
   /* 文字高亮与链接颜色 */
@@ -165,5 +165,3 @@ button:active {
     transition: background-position 0.1s ease;
   }
 }
-
-
