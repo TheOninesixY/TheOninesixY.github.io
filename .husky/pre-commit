@@ -1,3 +1,5 @@
+# 更新依赖
+yarn install
 # 打包项目
 yarn run vitepress build
 
