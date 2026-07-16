@@ -5,7 +5,7 @@ layout: home
 
 hero:
   name: "OninesixY的小站"
-  text: ""
+  text: "在那栀子花树还未干枯的时候"
   tagline: "阿巴阿巴……咦？这什么？能吃吗？"
   actions:
     - theme: brand

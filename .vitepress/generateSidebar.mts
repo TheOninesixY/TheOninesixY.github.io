@@ -48,11 +48,15 @@ function getArticleFolders(dirPath: string): string[] {
     return readdirSync(dirPath)
       .filter(item => {
         const itemPath = join(dirPath, item)
-        return isDirectory(itemPath) && existsSync(join(itemPath, 'index.md'))
+        return isDirectory(itemPath) && item !== 'public' && existsSync(join(itemPath, 'index.md'))
       })
   } catch {
     return []
   }
+}
+
+function isIgnoredDirectory(name: string): boolean {
+  return name === 'public'
 }
 
 /**
@@ -66,6 +70,23 @@ function getCategoryName(dirPath: string): string | null {
   } catch {
     return null
   }
+}
+
+function getMarkdownFiles(dirPath: string): string[] {
+  try {
+    return readdirSync(dirPath)
+      .filter(item => {
+        const itemPath = join(dirPath, item)
+        return existsSync(itemPath) && statSync(itemPath).isFile() && extname(item) === '.md'
+      })
+  } catch {
+    return []
+  }
+}
+
+function hasIndexMarkdown(dirPath: string): boolean {
+  const indexPath = join(dirPath, 'index.md')
+  return existsSync(indexPath) && statSync(indexPath).isFile()
 }
 
 /**
@@ -87,18 +108,62 @@ export function generateSidebar(srcDir: string): SidebarItem[] {
     return sidebar
   }
 
+  const directories = entries.filter(entry => {
+    const entryPath = join(srcDir, entry)
+    return !isIgnoredDirectory(entry) && isDirectory(entryPath)
+  })
+  const hasDirectories = directories.length > 0
+  const files = entries.filter(entry => {
+    const entryPath = join(srcDir, entry)
+    return existsSync(entryPath) && statSync(entryPath).isFile()
+  })
+  const extensionlessFiles = files.filter(file => isExtensionlessFile(file, srcDir))
+  const mdFiles = files.filter(file => extname(file) === '.md' && file !== 'index.md' && file.toLowerCase() !== 'docs.md')
+  const otherFiles = files.filter(file => !isExtensionlessFile(file, srcDir) && extname(file) !== '.md')
+
+  // 无分类模式：srcDir 中没有子目录，且只有一个无扩展名分类名称文件和若干 md 文件
+  if (!hasDirectories && extensionlessFiles.length === 1 && mdFiles.length > 0 && otherFiles.length === 0) {
+    const categoryName = extensionlessFiles[0]
+    const categoryItem: SidebarItem = {
+      text: categoryName,
+      items: mdFiles.map(file => ({
+        text: basename(file, '.md'),
+        link: `/${relative(srcDir, join(srcDir, file)).replace(/\\/g, '/')}`
+      }))
+    }
+
+    sidebar.push(categoryItem)
+    return sidebar
+  }
+
+  // 无分类文件夹模式：srcDir 中只有文档文件夹，每个文件夹下直接包含 index.md
+  const directArticleFolders = directories.filter(dir => hasIndexMarkdown(join(srcDir, dir)))
+  if (directories.length > 0 && directArticleFolders.length === directories.length) {
+    for (const articleFolder of directArticleFolders) {
+      const articlePath = join(srcDir, articleFolder)
+      const relativePath = relative(srcDir, join(articlePath, 'index.md')).replace(/\\/g, '/')
+
+      sidebar.push({
+        text: basename(articleFolder),
+        link: `/${relativePath}`
+      })
+    }
+
+    return sidebar
+  }
+
   // 遍历一级目录，识别分类
   for (const entry of entries) {
     const entryPath = join(srcDir, entry)
 
-    // 只处理目录
-    if (!isDirectory(entryPath)) continue
+    // 忽略 public 目录，并且只处理目录
+    if (isIgnoredDirectory(entry) || !isDirectory(entryPath)) continue
 
     const subItems = readdirSync(entryPath)
     const hasExtensionlessFile = subItems.some(item => isExtensionlessFile(item, entryPath))
     const hasSubfolders = subItems.some(item => {
       const itemPath = join(entryPath, item)
-      return isDirectory(itemPath) && item !== 'index.md'
+      return isDirectory(itemPath) && item !== 'index.md' && !isIgnoredDirectory(item)
     })
 
     // 分类条件：包含无扩展名文件 AND 至少一个子文件夹
