@@ -1,9 +1,9 @@
 import DefaultTheme from 'vitepress/theme'
 import './Font.css'
-import './Met.css'
+import './RayGreen.css'
 
 
-// Met主题配置
+// Met、RayGreen主题配置
 export default {
   extends: DefaultTheme,
   setup() {

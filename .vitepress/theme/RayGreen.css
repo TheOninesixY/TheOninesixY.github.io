@@ -1,0 +1,167 @@
+/*Met浅蓝主题*/
+
+:root {
+
+  /* 基础微调 */
+  --vp-c-bg: #f3faf7;
+  --vp-c-bg-soft: #ecf5f1;
+  --vp-c-bg-mute: #e5efea;
+  --vp-c-default-1: #1a1a1a;
+  --vp-c-default-2: #4d4d4d;
+
+  /* 浅色模式：Brand 按钮绿背景，文字纯白 */
+  --vp-button-brand-border: #5db3a5;
+  --vp-button-brand-bg: #5db3a5;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-border: #4c9789;
+  --vp-button-brand-hover-bg: #4c9789;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-border: #3f7f73;
+  --vp-button-brand-active-bg: #3f7f73;
+
+  /* 浅色模式：Alt 按钮悬停优化 */
+  --vp-button-alt-border: transparent;
+  --vp-button-alt-bg: #c0e5de;
+  --vp-button-alt-text: #2f7b71;
+  --vp-button-alt-hover-border: transparent;
+  --vp-button-alt-hover-bg: #9ed1c6;
+  --vp-button-alt-hover-text: #1f685e;
+  --vp-button-alt-active-border: transparent;
+  --vp-button-alt-active-bg: #7cbfb4;
+
+  /* 文字高亮与链接颜色 */
+  --vp-c-brand-1: #5db3a5;
+  --vp-c-brand-2: #4c9789;
+  --vp-c-brand-3: #3e7b6f;
+  --vp-c-brand-next: #4f9383;
+}
+
+/* 深色模式微调 */
+.dark {
+  --vp-c-bg: #10251f;
+  --vp-c-bg-soft: #172f2a;
+  --vp-c-bg-mute: #223936;
+  --vp-c-default-1: #f5fdf9;
+  --vp-c-default-2: #b8d8cf;
+
+  /* 深色模式：Brand 按钮绿背景，文字纯白 */
+  --vp-button-brand-border: #76d7c4;
+  --vp-button-brand-bg: #76d7c4;
+  --vp-button-brand-text: #2b584f;
+  --vp-button-brand-hover-border: #8fe0d2;
+  --vp-button-brand-hover-bg: #8fe0d2;
+  --vp-button-brand-hover-text: #2b584f;
+  --vp-button-brand-active-border: #5ab9aa;
+  --vp-button-brand-active-bg: #5ab9aa;
+
+  /* 深色模式：Alt 按钮悬停优化 */
+  --vp-button-alt-border: transparent;
+  --vp-button-alt-bg: #1b3430;
+  --vp-button-alt-text: #76d7c4;
+  --vp-button-alt-hover-border: transparent;
+  --vp-button-alt-hover-bg: #27504b;
+  --vp-button-alt-hover-text: #a7ebe3;
+  --vp-button-alt-active-border: transparent;
+  --vp-button-alt-active-bg: #3a6b67;
+
+  /* 文字高亮与链接颜色 */
+  --vp-c-brand-1: #76d7c4;
+  --vp-c-brand-2: #8fe0d2;
+  --vp-c-brand-3: #a7ebe3;
+  --vp-c-brand-next: #a7ebe3;
+
+  /* 深色模式滚动条 */
+  scrollbar-color: rgba(118, 215, 196, 0.3) transparent;
+}
+
+/* Logo 保持方角 */
+.VPNavBarTitle .VPImage {
+  border-radius: 0px;
+}
+
+/* 隐藏侧边栏滚动条 */
+.VPSidebar {
+  scrollbar-width: none;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 彻底隐藏滚动条 */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+:root {
+  --vp-button-border-radius: 20px;
+}
+
+.VPButton,
+.VPButton.medium,
+button {
+  border-radius: var(--vp-button-border-radius) !important;
+  transition: border-radius 0.3s ease !important;
+}
+
+.VPButton:hover:not(:active),
+.VPButton.medium:hover:not(:active),
+.VPButton:focus-visible:not(:active),
+.VPButton.medium:focus-visible:not(:active),
+button:hover:not(:active),
+button:focus-visible:not(:active) {
+  border-radius: 10px !important;
+}
+
+.VPButton:active,
+.VPButton.medium:active,
+button:active {
+  border-radius: var(--vp-button-border-radius) !important;
+}
+
+/* 滚动进度条 */
+:root {
+  --scroll-progress: 0;
+}
+
+@media (min-width: 960px) {
+  .VPNavBar .divider .divider-line {
+    background: linear-gradient(
+      to right,
+      var(--vp-c-brand-1) 0%,
+      var(--vp-c-brand-1) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) 100%
+    );
+    transition: background-position 0.1s ease;
+  }
+}
+
+@media (max-width: 959px) {
+  .VPLocalNav {
+    position: relative;
+    border-bottom: none !important;
+  }
+
+  .VPLocalNav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--vp-c-brand-1) 0%,
+      var(--vp-c-brand-1) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) calc(var(--scroll-progress) * 100%),
+      var(--vp-c-gutter) 100%
+    );
+    transition: background-position 0.1s ease;
+  }
+}
