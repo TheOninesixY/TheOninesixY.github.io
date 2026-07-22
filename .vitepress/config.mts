@@ -39,7 +39,7 @@ const config = defineConfig({
     },
 
     lastUpdated: {
-      text: '最后更新于',
+      text: '编写于',
       formatOptions: {
         year: '2-digit',
         month: '2-digit',
