@@ -15,8 +15,8 @@ const config = defineConfig({
   description: "也许是吧",
   cleanUrls: true ,              // 纯净URL       \\
   // outDir: '.build',          //  Build产物目录  \\
-  srcDir: "Docs",              //   文档目录        \
-  lastUpdated: true,          //    开启时间戳       \
+  srcDir: "Docs",              //   文档目录        \\
+  lastUpdated: true,          //    开启时间戳       \\
   
   head: [
     ['link', { rel: 'icon', href: '/minecraft_axolotl-cyan.ico', type: 'image/x-icon'}]
