@@ -74,9 +74,9 @@
   scrollbar-color: rgba(163, 194, 226, 0.3) transparent;
 }
 
-/* Logo 保持方角 */
+/* Logo 微圆角 */
 .VPNavBarTitle .VPImage {
-  border-radius: 0px;
+  border-radius: 5px;
 }
 
 /* 隐藏侧边栏滚动条 */

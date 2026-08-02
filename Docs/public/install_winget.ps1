@@ -1,0 +1,2 @@
+iwr "https://github.com/microsoft/winget-cli/releases/download/v1.29.280/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "$env:TEMP\winget_installer.msixbundle"
+Add-AppxPackage -Path "$env:TEMP\winget_installer.msixbundle"

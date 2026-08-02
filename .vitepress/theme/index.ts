@@ -1,6 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
-import './Font.css'
-import './RayGreen.css'
+import './Font.css'       // 设置字体
+import './Met.css'        // 选择主题
 
 
 // Met、RayGreen主题配置
