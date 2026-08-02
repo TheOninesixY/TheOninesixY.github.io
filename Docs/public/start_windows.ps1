@@ -1,6 +1,6 @@
 # 检查是否存在 winget，不存在则下载安装
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    irm "https://onsy.qzz.io/winget_installer.ps1" | iex
+    irm "https://onsy.qzz.io/install_winget.ps1" | iex
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
 
