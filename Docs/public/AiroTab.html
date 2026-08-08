@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiroTab</title>
+    <style>
+        /* Material You 设计系统 - 美化版 */
+/* 全局样式增强 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--outline);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-light);
+}
+@media (max-width: 768px) {
+    .title {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+.toggle-description {
+    margin-left: 16px;
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    max-width: 300px;
+}
+
+/* 单选按钮组样式 */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+}
+
+.radio-input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    outline: none;
+    margin-right: 8px;
+    position: relative;
+}
+
+.radio-input:checked::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radio-label {
+    font-size: 16px;
+    color: var(--on-surface);
+    cursor: pointer;
+}
+
+/* 切换开关样式 */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    margin: 0 16px;
+}
+
+.toggle-switch .toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch .toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-switch .toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggle-switch .toggle-input:checked + .toggle-label {
+    background-color: var(--primary-color);
+}
+
+.toggle-switch .toggle-input:focus + .toggle-label {
+    box-shadow: 0 0 1px var(--primary-color);
+}
+
+.toggle-switch .toggle-input:checked + .toggle-label:before {
+    transform: translateX(24px);
+}
+
+    .search-box {
+        padding: 12px 16px;
+        width: 90%;
+    }
+    .settings-panel {
+        width: 100%;
+    }
+    .nav-sidebar {
+        width: 200px;
+    }
+    .settings-content {
+        padding: 20px 15px;
+    }
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    .search-engine-option,
+    .color-picker {
+        padding: 10px 12px;
+    }
+    .settings-icon {
+        width: 48px;
+        height: 48px;
+        bottom: 16px;
+        right: 16px;
+    }
+}
+@media (max-width: 480px) {
+    .title {
+        font-size: 28px;
+    }
+    .panel-container {
+        flex-direction: column;
+    }
+    .nav-sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .nav-menu {
+        display: flex;
+        overflow-x: auto;
+    }
+    .nav-item {
+        flex: 0 0 auto;
+        border-bottom: none;
+        border-right: 1px solid var(--border-color);
+    }
+    .nav-link {
+        padding: 10px 12px;
+        flex-direction: column;
+    }
+    .nav-icon {
+        margin-right: 0;
+        margin-bottom: 4px;
+    }
+    .nav-text {
+        font-size: 12px;
+    }
+}
+:root {
+    /* 主色调 - 基于用户壁纸的个性化色彩 */
+    --primary-color: #6200ee;
+    --primary-color-rgb: 98, 0, 238;
+    --primary-light: #bb86fc;
+    --primary-dark: #3700b3;
+
+    /* 辅助色 */
+    --secondary-color: #03dac6;
+    --secondary-light: #66ffed;
+    --secondary-dark: #018786;
+
+    /* 中性色 */
+    --background: #f9f9f9;
+    --surface: #ffffff;
+    --surface-variant: #f2f2f7;
+    --on-background: #121212;
+    --on-surface: #121212;
+    --on-surface-variant: #424242;
+    --outline: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+
+    /* 状态颜色 */
+    --error: #b00020;
+    --success: #00c853;
+
+    /* 间距和圆角 */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 16px;
+    --border-radius-lg: 24px;
+    --border-radius-full: 50%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
+    background-color: var(--background);
+    color: var(--on-background);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 28px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.search-box {
+    background-color: var(--surface);
+    padding: 16px 24px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    width: 640px;
+    max-width: 90%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+.search-box:hover {
+    box-shadow: 0 8px 30px rgba(var(--primary-color-rgb), 0.12);
+    transform: translateY(-3px);
+}
+
+.search-box:focus-within {
+    box-shadow: 0 10px 36px rgba(var(--primary-color-rgb), 0.15);
+    transform: translateY(-3px);
+    border-color: var(--primary-light);
+}
+
+.search-box:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.search-box:focus-within {
+    box-shadow: 0 8px 30px rgba(var(--primary-color-rgb), 0.12);
+    transform: translateY(-2px);
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    padding: 8px 0;
+    color: var(--on-surface);
+    transition: all 0.2s ease;
+}
+
+.search-box input::placeholder {
+    color: var(--on-surface-variant);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.search-box input:focus::placeholder {
+    opacity: 0.4;
+}
+
+.search-box button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px;
+    color: var(--primary-color);
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.search-box button:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.08);
+}
+
+/* 设置图标和面板样式 */
+.settings-icon {
+    position: fixed;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-xl);
+    width: 56px;
+    height: 56px;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-full);
+    box-shadow: 0 6px 20px rgba(var(--primary-color-rgb), 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 28px rgba(var(--primary-color-rgb), 0.5);
+}
+
+.settings-icon:active {
+    transform: scale(0.95);
+}
+
+.settings-icon:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 24px rgba(var(--primary-color-rgb), 0.5);
+}
+
+.settings-icon svg {
+    fill: white;
+    stroke: white;
+    width: 24px;
+    height: 24px;
+}
+
+/* 设置面板样式 */
+.settings-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 800px;
+    height: 100%;
+    background-color: var(--surface);
+    box-shadow: -4px 0 20px var(--shadow-color);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow: hidden;
+    border-top-left-radius: var(--border-radius-lg);
+    border-bottom-left-radius: var(--border-radius-lg);
+}
+
+.settings-panel.active {
+    transform: translateX(0);
+    box-shadow: -8px 0 30px var(--shadow-color);
+}
+
+.settings-panel.active {
+    transform: translateX(0);
+}
+
+.panel-container {
+    display: flex;
+    height: 100%;
+}
+
+/* 侧边导航栏 */
+.nav-sidebar {
+    width: 240px;
+    background-color: var(--sidebar-background);
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.nav-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: var(--primary-color);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link.active::after {
+    transform: translateX(0);
+}
+
+.nav-link:hover {
+    background-color: var(--hover-background);
+    color: var(--text-primary);
+}
+
+.nav-link.active {
+    background-color: var(--active-background);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.nav-icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* 主内容区域 */
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+    padding: 0 10px;
+}
+
+.close-btn:hover {
+    color: var(--text-primary);
+}
+
+.settings-content {
+    padding: 30px;
+}
+
+.settings-section {
+    display: none;
+}
+
+.settings-section.active {
+    display: block;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.settings-card {
+    background-color: var(--surface);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+.settings-item {
+    margin-bottom: 24px;
+}
+
+.settings-item:last-child {
+    margin-bottom: 0;
+}
+
+.wallpaper-upload {
+    margin-top: 15px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.wallpaper-upload .file-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.wallpaper-upload .btn {
+    white-space: nowrap;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--on-surface-variant);
+}
+
+.file-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--outline);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--on-surface);
+    background-color: var(--surface);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.file-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+    background-color: var(--surface);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    min-width: 64px;
+}
+
+.btn-primary {
+    color: white;
+    background-color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(var(--primary-color-rgb), 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    box-shadow: 0 4px 8px rgba(var(--primary-color-rgb), 0.3);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(var(--primary-color-rgb), 0.2);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn-outline-secondary {
+    color: var(--on-surface-variant);
+    background-color: var(--surface);
+    border: 1px solid var(--outline);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--surface-variant);
+    border-color: var(--outline);
+    transform: translateY(-1px);
+}
+
+.search-engine-option {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.search-engine-option:hover {
+    background-color: var(--surface-variant);
+}
+
+/* 搜索引擎分组样式 */
+.search-engine-group {
+    margin-top: 16px;
+}
+
+.group-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background-color: var(--surface);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.group-title:hover {
+    background-color: var(--surface-variant);
+}
+
+.group-text {
+    font-size: 16px;
+    color: var(--on-surface);
+    font-weight: 500;
+}
+
+.group-icon {
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+}
+
+.group-title.active .group-icon {
+    transform: rotate(180deg);
+}
+
+.group-options {
+    margin-top: 8px;
+    padding-left: 20px;
+}
+
+.subgroup-option {
+    padding-left: 20px;
+}
+
+.radio-input {
+    margin-right: 16px;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-color);
+    transition: transform 0.2s ease;
+}
+
+.radio-input:checked {
+    transform: scale(1.15);
+}
+
+.radio-label {
+    font-size: 16px;
+    color: var(--on-surface);
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.theme-color-options {
+    margin-bottom: 24px;
+}
+
+.color-picker {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.color-picker:hover {
+    background-color: var(--surface-variant);
+}
+
+/* 关于页面样式 */
+.about-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.about-version {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.about-description {
+    font-size: 1rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.about-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.about-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+
+.about-link:hover {
+    color: var(--primary-variant);
+    text-decoration: underline;
+}
+/* 移动端设置面板优化 */
+@media (max-width: 768px) {
+    .settings-panel {
+        width: 100%;
+    }
+    .settings-panel .panel-container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+    }
+    .nav-sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .nav-menu {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    .nav-item {
+        margin-right: 15px;
+        white-space: nowrap;
+        border-bottom: none;
+    }
+    .main-content {
+        width: 100%;
+        height: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .settings-card {
+        padding: 15px;
+    }
+    .settings-item {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-panel .panel-container {
+        width: 95%;
+    }
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    .radio-label {
+        font-size: 0.9rem;
+    }
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+    </style>
+
+</head>
+<body>
+        <div class="title" id="page-title">AiroTab</div>
+        <form class="search-box" id="search-form">
+        <input type="text" placeholder="输入搜索内容..." id="search-input">
+        <button type="submit" id="search-btn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+</button>
+    </form>
+
+    <!-- 设置图标 -->
+    <div class="settings-icon" id="settings-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3" stroke="#666" stroke-width="2"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="#666" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="panel-container">
+            <div class="nav-sidebar">
+                <div class="nav-header">
+                    <h2 class="nav-title">设置</h2>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-target="search-settings">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">搜索设置</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-target="appearance-settings">
+                            <span class="nav-icon">🎨</span>
+                            <span class="nav-text">外观设置</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-target="about-settings">
+                            <span class="nav-icon">ℹ️</span>
+                            <span class="nav-text">关于</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <div class="panel-header">
+                    <button class="close-btn" id="close-btn">&times;</button>
+                </div>
+                <div class="settings-content">
+                    <div id="search-settings" class="settings-section active">
+                        <h1 class="section-title">搜索设置</h1>
+                        <div class="settings-card">
+                            <div class="settings-item">
+                                <div class="search-engine-option">
+                                    <input type="radio" id="google" name="search-engine" value="google" checked class="radio-input">
+                                    <label for="google" class="radio-label">Google</label>
+                                </div>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="duckduckgo" name="search-engine" value="duckduckgo" class="radio-input">
+                                    <label for="duckduckgo" class="radio-label">DuckDuckGo</label>
+                                </div>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="bing" name="search-engine" value="bing" class="radio-input">
+                                    <label for="bing" class="radio-label">必应</label>
+                                </div>
+                                <!-- 国产搜索引擎2级入口 -->
+                                <div class="search-engine-group">
+                                    <div class="group-title" id="domestic-group-title">
+                                        <span class="group-text">其他搜索引擎</span>
+                                        <span class="group-icon">▼</span>
+                                    </div>
+                                    <div class="group-options" id="domestic-group-options" style="display: none;">
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="baidu" name="search-engine" value="baidu" class="radio-input">
+                                            <label for="baidu" class="radio-label">百度</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="sogou" name="search-engine" value="sogou" class="radio-input">
+                                            <label for="sogou" class="radio-label">搜狗</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="360" name="search-engine" value="360" class="radio-input">
+                                            <label for="360" class="radio-label">360搜索</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="yandex" name="search-engine" value="yandex" class="radio-input">
+                                            <label for="yandex" class="radio-label">Yandex</label>
+                                        </div>
+                                        <div class="search-engine-option subgroup-option">
+                                            <input type="radio" id="naver" name="search-engine" value="naver" class="radio-input">
+                                            <label for="naver" class="radio-label">Naver</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <label class="form-label">搜索结果打开方式</label>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="current-tab" name="search-target" value="current" checked class="radio-input">
+                                    <label for="current-tab" class="radio-label">在当前标签页打开</label>
+                                </div>
+                                <div class="search-engine-option">
+                                    <input type="radio" id="new-tab" name="search-target" value="new" class="radio-input">
+                                    <label for="new-tab" class="radio-label">在新标签页打开</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="appearance-settings" class="settings-section">
+                        <h1 class="section-title">外观设置</h1>
+                        <div class="settings-card">
+                            <div class="settings-item">
+                                <label class="form-label">标题样式</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="title-style" name="display-style" value="title" class="radio-input" checked>
+                                        <label for="title-style" class="radio-label">标题样式</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="time-style" name="display-style" value="time" class="radio-input">
+                                        <label for="time-style" class="radio-label">时间样式</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item" id="clock-style-settings" style="display: none;">
+                                <label class="form-label">时钟样式</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="24h-style" name="clock-style" value="24h" class="radio-input" checked>
+                                        <label for="24h-style" class="radio-label">24小时制</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="12h-style" name="clock-style" value="12h" class="radio-input">
+                                        <label for="12h-style" class="radio-label">12小时制</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="theme-color-options">
+                                    <label class="form-label">主题色</label>
+                                    <div class="color-picker">
+                                        <input type="radio" id="purple" name="theme-color" value="purple" class="radio-input">
+                                        <label for="purple" class="radio-label">紫色</label>
+                                    </div>
+                                    <div class="color-picker">
+                                        <input type="radio" id="blue" name="theme-color" value="blue" checked class="radio-input">
+                                        <label for="blue" class="radio-label">蓝色</label>
+                                    </div>
+                                    <div class="color-picker">
+                                        <input type="radio" id="green" name="theme-color" value="green" class="radio-input">
+                                        <label for="green" class="radio-label">绿色</label>
+                                    </div>
+                                    <div class="color-picker">
+                                        <input type="radio" id="red" name="theme-color" value="red" class="radio-input">
+                                        <label for="red" class="radio-label">红色</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="wallpaper-upload">
+                                    <label for="wallpaper-upload" class="form-label">更换壁纸</label>
+                                    <input type="file" id="wallpaper-upload" accept="image/*" class="file-input">
+                                    <button id="reset-wallpaper" class="btn btn-outline-secondary">重置壁纸</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="about-settings" class="settings-section">
+                        <h1 class="section-title">关于</h1>
+                        <div class="settings-card">
+                            <div class="settings-item">
+                                <h2 class="about-title">AiroTab</h2>
+                                <p class="about-version">版本 1.0.0</p>
+                                <p class="about-description">AiroTab 是一个使用AI编写的简洁、高效的新标签页应用，提供搜索、主题和壁纸自定义功能。</p>
+                                <p class="about-author">By OninesixY</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 加载设置
+function loadSettings() {
+    // 加载搜索引擎设置
+    const savedEngine = localStorage.getItem('searchEngine') || 'google';
+    document.querySelector(`input[name="search-engine"][value="${savedEngine}"]`).checked = true;
+
+    // 加载搜索打开方式设置
+    const savedTarget = localStorage.getItem('searchTarget') || 'current';
+    document.querySelector(`input[name="search-target"][value="${savedTarget}"]`).checked = true;
+
+    // 加载壁纸设置
+    const savedWallpaper = localStorage.getItem('wallpaper');
+    if (savedWallpaper) {
+        document.body.style.backgroundImage = `url(${savedWallpaper})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+    }
+
+    // 加载主题色设置
+    const savedThemeColor = localStorage.getItem('themeColor') || 'blue';
+    document.querySelector(`input[name="theme-color"][value="${savedThemeColor}"]`).checked = true;
+    applyThemeColor(savedThemeColor);
+}
+
+// 保存搜索打开方式设置
+function saveSearchTarget() {
+    const selectedTarget = document.querySelector('input[name="search-target"]:checked').value;
+    localStorage.setItem('searchTarget', selectedTarget);
+}
+
+// 保存搜索引擎设置
+function saveSearchEngine() {
+    const selectedEngine = document.querySelector('input[name="search-engine"]:checked').value;
+    localStorage.setItem('searchEngine', selectedEngine);
+}
+
+// 保存壁纸设置
+function saveWallpaper(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const wallpaperUrl = e.target.result;
+            localStorage.setItem('wallpaper', wallpaperUrl);
+            document.body.style.backgroundImage = `url(${wallpaperUrl})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// 重置壁纸
+function resetWallpaper() {
+    localStorage.removeItem('wallpaper');
+    document.body.style.backgroundImage = '';
+    document.getElementById('wallpaper-upload').value = '';
+}
+
+// 主题色配置
+const themeColors = {
+    purple: {
+        primary: '#6200ee',
+        primaryVariant: '#3700b3',
+        secondary: '#03dac6',
+        secondaryVariant: '#018786',
+        background: '#ffffff',
+        surface: '#ffffff',
+        error: '#b00020',
+        onPrimary: '#ffffff',
+        onSecondary: '#000000',
+        onBackground: '#000000',
+        onSurface: '#000000',
+        onError: '#ffffff'
+    },
+    blue: {
+        primary: '#2196f3',
+        primaryVariant: '#0d47a1',
+        secondary: '#ff4081',
+        secondaryVariant: '#c2185b',
+        background: '#ffffff',
+        surface: '#ffffff',
+        error: '#b00020',
+        onPrimary: '#ffffff',
+        onSecondary: '#ffffff',
+        onBackground: '#000000',
+        onSurface: '#000000',
+        onError: '#ffffff'
+    },
+    green: {
+        primary: '#4caf50',
+        primaryVariant: '#388e3c',
+        secondary: '#ffeb3b',
+        secondaryVariant: '#fbc02d',
+        background: '#ffffff',
+        surface: '#ffffff',
+        error: '#b00020',
+        onPrimary: '#ffffff',
+        onSecondary: '#000000',
+        onBackground: '#000000',
+        onSurface: '#000000',
+        onError: '#ffffff'
+    },
+    red: {
+        primary: '#f44336',
+        primaryVariant: '#d32f2f',
+        secondary: '#4caf50',
+        secondaryVariant: '#388e3c',
+        background: '#ffffff',
+        surface: '#ffffff',
+        error: '#b00020',
+        onPrimary: '#ffffff',
+        onSecondary: '#ffffff',
+        onBackground: '#000000',
+        onSurface: '#000000',
+        onError: '#ffffff'
+    }
+};
+
+// 应用主题色
+function applyThemeColor(colorName) {
+    const colors = themeColors[colorName];
+    if (!colors) return;
+
+    document.documentElement.style.setProperty('--primary-color', colors.primary);
+    // 更新RGB格式的主色调变量
+    document.documentElement.style.setProperty('--primary-color-rgb', hexToRgb(colors.primary));
+    document.documentElement.style.setProperty('--primary-variant', colors.primaryVariant);
+    document.documentElement.style.setProperty('--secondary-color', colors.secondary);
+    document.documentElement.style.setProperty('--secondary-variant', colors.secondaryVariant);
+    document.documentElement.style.setProperty('--background-color', colors.background);
+    document.documentElement.style.setProperty('--surface-color', colors.surface);
+    document.documentElement.style.setProperty('--error-color', colors.error);
+    document.documentElement.style.setProperty('--on-primary', colors.onPrimary);
+    document.documentElement.style.setProperty('--on-secondary', colors.onSecondary);
+    document.documentElement.style.setProperty('--on-background', colors.onBackground);
+    document.documentElement.style.setProperty('--on-surface', colors.onSurface);
+    document.documentElement.style.setProperty('--on-error', colors.onError);
+
+    // 额外的主题色变量
+    document.documentElement.style.setProperty('--sidebar-background', colors.background);
+    document.documentElement.style.setProperty('--card-background', colors.surface);
+    document.documentElement.style.setProperty('--hover-background', `rgba(${hexToRgb(colors.primary)}, 0.04)`);
+    document.documentElement.style.setProperty('--active-background', `rgba(${hexToRgb(colors.primary)}, 0.1)`);
+}
+
+// 十六进制转RGB
+function hexToRgb(hex) {
+    // 移除#号
+    hex = hex.replace('#', '');
+
+    // 解析RGB值
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `${r}, ${g}, ${b}`;
+}
+
+// 保存主题色设置
+function saveThemeColor() {
+    const selectedColor = document.querySelector('input[name="theme-color"]:checked').value;
+    localStorage.setItem('themeColor', selectedColor);
+    applyThemeColor(selectedColor);
+}
+
+// 切换设置面板
+function toggleSettingsPanel() {
+    document.getElementById('settings-panel').classList.toggle('active');
+}
+
+// 切换设置部分
+function switchSettingsSection(targetId) {
+    // 隐藏所有部分
+    document.querySelectorAll('.settings-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // 显示目标部分
+    document.getElementById(targetId).classList.add('active');
+
+    // 更新导航链接状态
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-target') === targetId) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// 搜索引擎分组切换
+document.getElementById('domestic-group-title').addEventListener('click', function() {
+    this.classList.toggle('active');
+    const options = document.getElementById('domestic-group-options');
+    options.style.display = options.style.display === 'none' ? 'block' : 'none';
+});
+
+// 切换标题/时间显示
+  function toggleTitleTime() {
+      const selectedStyle = document.querySelector('input[name="display-style"]:checked').value;
+      const showTime = selectedStyle === 'time';
+      localStorage.setItem('showTime', showTime);
+      
+      // 显示或隐藏时钟样式设置
+      document.getElementById('clock-style-settings').style.display = showTime ? 'block' : 'none';
+      
+      updateTitleDisplay();
+  }
+
+  // 更新标题显示
+  function updateTitleDisplay() {
+      const pageTitle = document.getElementById('page-title');
+      if (!pageTitle) return;
+      
+      const showTime = localStorage.getItem('showTime') === 'true';
+      if (showTime) {
+          const now = new Date();
+          const clockStyle = localStorage.getItem('clockStyle') || '24h';
+          
+          let hours = now.getHours();
+          
+          if (clockStyle === '12h') {
+              hours = hours % 12 || 12; // 将0转换为12
+          }
+          
+          const hoursStr = hours.toString().padStart(2, '0');
+          const minutes = now.getMinutes().toString().padStart(2, '0');
+          
+          pageTitle.textContent = `${hoursStr}:${minutes}`;
+      } else {
+          pageTitle.textContent = 'AiroTab';
+      }
+  }
+
+  // 搜索函数
+  function search() {
+    const query = document.getElementById('search-input').value.trim();
+    if (query) {
+        const engine = document.querySelector('input[name="search-engine"]:checked').value;
+        const target = document.querySelector('input[name="search-target"]:checked').value;
+        const targetWindow = target === 'current' ? '_self' : '_blank';
+        let url;
+        switch(engine) {
+            case 'google':
+                url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                break;
+            case 'duckduckgo':
+                url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+                break;
+            case 'bing':
+                url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+                break;
+            case 'baidu':
+                url = `https://www.baidu.com/s?wd=${encodeURIComponent(query)}`;
+                break;
+            case 'sogou':
+                url = `https://www.sogou.com/web?query=${encodeURIComponent(query)}`;
+                break;
+            case '360':
+                url = `https://www.so.com/s?q=${encodeURIComponent(query)}`;
+                break;
+            case 'yandex':
+                url = `https://yandex.com/search/?text=${encodeURIComponent(query)}`;
+                break;
+            case 'naver':
+                url = `https://search.naver.com/search.naver?query=${encodeURIComponent(query)}`;
+                break;
+            default:
+                url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        }
+        window.open(url, targetWindow);
+    }
+}
+
+// 添加事件监听器
+document.addEventListener('DOMContentLoaded', function() {
+    // 加载设置
+      loadSettings();
+    
+    // 设置标题样式切换
+    const displayStyleRadios = document.querySelectorAll('input[name="display-style"]');
+    const savedShowTime = localStorage.getItem('showTime') === 'true';
+    document.getElementById(savedShowTime ? 'time-style' : 'title-style').checked = true;
+    displayStyleRadios.forEach(radio => {
+        radio.addEventListener('change', toggleTitleTime);
+    });
+    
+    // 设置时钟样式切换
+    const clockStyleRadios = document.querySelectorAll('input[name="clock-style"]');
+    const savedClockStyle = localStorage.getItem('clockStyle') || '24h';
+    document.getElementById(`${savedClockStyle}-style`).checked = true;
+    clockStyleRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            localStorage.setItem('clockStyle', this.value);
+            if (localStorage.getItem('showTime') === 'true') {
+                updateTitleDisplay();
+            }
+        });
+    });
+    
+    // 初始显示或隐藏时钟样式设置
+    document.getElementById('clock-style-settings').style.display = savedShowTime ? 'block' : 'none';
+    
+    // 初始更新标题显示
+    updateTitleDisplay();
+    
+    // 每分钟更新时间
+    setInterval(function() {
+        if (localStorage.getItem('showTime') === 'true') {
+            updateTitleDisplay();
+        }
+    }, 60000);
+
+
+
+    // 设置面板切换
+    document.getElementById('settings-icon').addEventListener('click', toggleSettingsPanel);
+    document.getElementById('close-btn').addEventListener('click', toggleSettingsPanel);
+
+    // 导航链接切换
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            switchSettingsSection(targetId);
+        });
+    });
+
+    // 搜索引擎设置
+    const engineRadios = document.querySelectorAll('input[name="search-engine"]');
+    engineRadios.forEach(radio => {
+        radio.addEventListener('change', saveSearchEngine);
+    });
+
+    // 搜索打开方式设置
+    const targetRadios = document.querySelectorAll('input[name="search-target"]');
+    targetRadios.forEach(radio => {
+        radio.addEventListener('change', saveSearchTarget);
+    });
+
+    // 壁纸设置
+    document.getElementById('wallpaper-upload').addEventListener('change', saveWallpaper);
+    document.getElementById('reset-wallpaper').addEventListener('click', resetWallpaper);
+
+    // 主题色设置
+    const colorRadios = document.querySelectorAll('input[name="theme-color"]');
+    colorRadios.forEach(radio => {
+        radio.addEventListener('change', saveThemeColor);
+    });
+
+    // 搜索功能
+    document.getElementById('search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            search();
+        }
+    });
+
+    document.getElementById('search-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        search();
+    });
+
+    // 处理表单提交
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        search();
+    });
+});
+    </script>
+</body>
+</html>
