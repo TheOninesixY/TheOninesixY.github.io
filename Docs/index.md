@@ -18,9 +18,9 @@ hero:
     src: /minecraft_axolotl-cyan.ico
 
 features:
-  - icon: "📢"
-    title: "公告"
-    details: "最近我重新初始化了一下我的网站，然后我发现我可以缩短文档路径，去掉了 /Docs/ 开头，现在路径会短一些，但是之前的路径将无法访问，所以会404，然后跳转到主站，也就是 TheOninesixY.github.io，因为我其他的站点都是用Cloudflare Worker 重定向的，GitHub Actions 配置第三方域名太麻烦了，再加上我的域名都在Cloudflare上，所以在Cloudflare上配置会简单许多，但这样有可能在某些情况下跳转到TheOninesixY.github.io，而这个GitHub域名在中国是访问不了的，所以dddd"
+  - icon: "❗"
+    title: "新东西"
+    details: "我开发了一个使用 Google MD3 设计语言的浏览器起始页，可通过 <a href='https://stune.onsy.qzz.io' target='_blank' rel='noopener noreferrer'>startune.onsy.qzz.io</a>访问 "
   - icon: "⚠️"
     title: "说明"
     details: "本网站是我闲着没事干建的，因此质量也许比较差，不过，都闲着没事了，那还要啥质量 <br> 此外，我的文章都很达芬，然后再交给AI让它神秘的优化，然后这坨达芬就更达芬了，然后我没招了，我就直接上架到网站了，然后网站变达芬了"
