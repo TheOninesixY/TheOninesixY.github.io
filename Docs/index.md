@@ -20,7 +20,7 @@ hero:
 features:
   - icon: "❗"
     title: "新东西"
-    details: "我开发了一个使用 Google MD3 设计语言的浏览器起始页，可通过 <a href='https://stune.onsy.qzz.io' target='_blank' rel='noopener noreferrer'>startune.onsy.qzz.io</a>访问 "
+    details: "我开发了一个使用 Google MD3 设计语言的浏览器起始页，可通过 <a href='https://stune.onsy.qzz.io' target='_blank' rel='noopener noreferrer'>stune.onsy.qzz.io</a>访问 "
   - icon: "⚠️"
     title: "说明"
     details: "本网站是我闲着没事干建的，因此质量也许比较差，不过，都闲着没事了，那还要啥质量 <br> 此外，我的文章都很达芬，然后再交给AI让它神秘的优化，然后这坨达芬就更达芬了，然后我没招了，我就直接上架到网站了，然后网站变达芬了"
