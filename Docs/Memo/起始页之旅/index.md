@@ -8,7 +8,7 @@
 AiroTab是第一个我用AI写的起始页，那时我甚至是对它比较满意的，但我现在只觉得那是一坨屎
 好在，那时我并没有把它给彻底删除掉，而是把它丢到我网站的old文件夹就不管了
 
-所以，你现在仍然可以[访问它](https:/onsy.qzz.io/AiroTab.html)
+所以，你现在仍然可以[访问它](https://onsy.qzz.io/AiroTab.html)
 
 ## 在那QingTab还未干枯的时候
 
@@ -20,7 +20,7 @@ AiroTab是第一个我用AI写的起始页，那时我甚至是对它比较满�
 
 而现在，回看起它……仍然一坨
 
-但我依旧没删它，所以你还可以[访问它](https:/onsy.qzz.io/QingTab.html)
+但我依旧没删它，所以你还可以[访问它](https://onsy.qzz.io/QingTab.html)
 
 ## 终点在Startune
 
