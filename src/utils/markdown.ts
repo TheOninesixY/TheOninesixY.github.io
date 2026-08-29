@@ -111,11 +111,19 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     ...import.meta.glob('/Docs/**/*.md', { as: 'raw', eager: true }),
   };
   
+  let cleanSlug = slug;
+  try {
+    cleanSlug = decodeURIComponent(slug);
+  } catch (e) {
+    cleanSlug = slug;
+  }
+  cleanSlug = cleanSlug.replace(/^\/+/, '').replace(/^[Dd]ocs\//, '').replace(/\/+$/, '');
+
   const possiblePaths = [
-    `/docs/${slug}.md`,
-    `/docs/${slug}/index.md`,
-    `/Docs/${slug}.md`,
-    `/Docs/${slug}/index.md`,
+    `/docs/${cleanSlug}.md`,
+    `/docs/${cleanSlug}/index.md`,
+    `/Docs/${cleanSlug}.md`,
+    `/Docs/${cleanSlug}/index.md`,
   ];
   
   let content = null;
@@ -126,6 +134,23 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       content = modules[path];
       matchedPath = path;
       break;
+    }
+  }
+
+  // Fallback: match by cleaned slug
+  if (!content) {
+    const lowerClean = cleanSlug.toLowerCase();
+    for (const [path, modContent] of Object.entries(modules)) {
+      let pSlug = path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '');
+      if (pSlug.endsWith('/index')) {
+        pSlug = pSlug.slice(0, -6);
+      }
+      if (pSlug.toLowerCase() === lowerClean) {
+        content = modContent;
+        matchedPath = path;
+        cleanSlug = pSlug;
+        break;
+      }
     }
   }
 
@@ -142,7 +167,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   }
 
   return {
-    slug,
+    slug: cleanSlug,
     path: matchedPath,
     title,
     date: data.date || '',

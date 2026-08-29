@@ -191,14 +191,7 @@ export default function PublicFileList() {
           <div className="px-2 py-1 mb-2 border-b border-neutral-100 dark:border-neutral-900 font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold">
             // 资源导航
           </div>
-          <button
-            onClick={handleBack}
-            className="w-full text-left px-2.5 py-1.5 text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white transition-colors border-l-2 border-transparent flex items-center gap-1"
-          >
-            <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-            <span>查看所有文档</span>
-          </button>
-          <div className="w-full text-left px-2.5 py-1.5 text-xs font-mono bg-black text-white dark:bg-white dark:text-black font-bold border-l-2 border-black dark:border-white mt-1">
+          <div className="w-full text-left px-2.5 py-1.5 text-xs font-mono bg-black text-white dark:bg-white dark:text-black font-bold border-l-2 border-black dark:border-white">
             公共文件列表 [{files.length}]
           </div>
         </div>

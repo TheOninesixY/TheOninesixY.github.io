@@ -1,3 +1,9 @@
+---
+title: "DiskGenius Pro 破解版"
+date: "2026-08-29"
+excerpt: "数据恢复唯一真神，单文件版，经测试在多款PE中可正常运行"
+---
+
 # DiskGenius Pro 破解版
 
 >数据恢复唯一真神

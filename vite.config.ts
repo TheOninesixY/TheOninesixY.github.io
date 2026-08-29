@@ -7,7 +7,7 @@ import { publicFilesPlugin } from './vite-plugin-public-files';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    base: '/  ',
+    base: '/',
     plugins: [react(), tailwindcss(), publicFilesPlugin()],
     resolve: {
       alias: {

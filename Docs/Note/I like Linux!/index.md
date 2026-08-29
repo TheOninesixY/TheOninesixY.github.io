@@ -1,3 +1,9 @@
+---
+title: "Linux太好用了！"
+date: "2026-08-29"
+excerpt: "最近几天，我被Windows折磨的实在受不了了，所以我就尝试转到Linux"
+---
+
 # Linux太好用了！
 最近几天，我被Windows折磨的实在受不了了，所以我就尝试转到Linux
 

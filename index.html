@@ -10,12 +10,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script>
       (function() {
-        const path = window.location.pathname;
-        if (path !== '/' && !path.startsWith('/public')) {
-          window.location.replace('/');
-          return;
-        }
-
         const saved = localStorage.getItem('blog-theme');
         if (saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
