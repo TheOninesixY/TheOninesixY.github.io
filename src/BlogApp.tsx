@@ -316,7 +316,7 @@ export default function BlogApp() {
             >
               <Menu />
             </button>
-            <span className="mobile-header-title">OninesixY的小站</span>
+            <span className="mobile-header-title">TindMark</span>
             <button
               onClick={() => setSearchOpen(!searchOpen)}
               className="mobile-search-btn"
@@ -351,7 +351,7 @@ export default function BlogApp() {
             </button>
           ) : (
             <div className="flex items-center justify-between w-full">
-              <h1 className="font-medium text-lg text-stone-900">OninesixY 的小站</h1>
+              <h1 className="font-medium text-lg text-stone-900">TindMark</h1>
               <button 
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="p-1.5 hover:bg-stone-200 rounded transition-colors"
