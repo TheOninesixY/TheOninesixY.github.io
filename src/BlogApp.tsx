@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree } from './utils/markdown';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { ArrowLeft, Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen } from 'lucide-react';
+import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
@@ -29,15 +29,18 @@ export default function BlogApp() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({});
 
-  const mainContentRef = React.useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
     const date = new Date(dateStr);
-    const yy = String(date.getFullYear()).slice(-2);
+    if (isNaN(date.getTime())) return dateStr;
+    const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
-    return `${yy}年${mm}月${dd}日`;
+    return `${yyyy}.${mm}.${dd}`;
   };
 
   const toggleSidebar = () => {
@@ -46,6 +49,14 @@ export default function BlogApp() {
 
   const closeSidebar = () => {
     setSidebarOpen(false);
+  };
+
+  const toggleFolderExpand = (path: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedFolders(prev => ({
+      ...prev,
+      [path]: !prev[path]
+    }));
   };
 
   useEffect(() => {
@@ -84,20 +95,20 @@ export default function BlogApp() {
   const getThemeIcon = () => {
     switch (theme) {
       case 'dark':
-        return <Moon className="w-5 h-5" />;
+        return <Moon className="w-4 h-4" />;
       case 'light':
-        return <Sun className="w-5 h-5" />;
+        return <Sun className="w-4 h-4" />;
       default:
-        return <Monitor className="w-5 h-5" />;
+        return <Monitor className="w-4 h-4" />;
     }
   };
 
   const getThemeTitle = () => {
     switch (theme) {
       case 'dark':
-        return '深色模式';
+        return '深色';
       case 'light':
-        return '浅色模式';
+        return '浅色';
       default:
         return '系统';
     }
@@ -107,7 +118,16 @@ export default function BlogApp() {
     async function loadPosts() {
       const allPosts = await getAllPosts();
       setPosts(allPosts);
-      setFolderTree(await buildFolderTree(allPosts));
+      const tree = await buildFolderTree(allPosts);
+      setFolderTree(tree);
+      // Expand top level folders by default
+      const defaultExpanded: Record<string, boolean> = {};
+      tree.forEach(item => {
+        if (item.type === 'folder') {
+          defaultExpanded[item.path] = true;
+        }
+      });
+      setExpandedFolders(defaultExpanded);
       setLoading(false);
     }
     loadPosts();
@@ -133,6 +153,15 @@ export default function BlogApp() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    if (window.innerWidth <= 768) {
+      closeSidebar();
+    }
+  };
+
+  const scrollToTop = () => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const copyToClipboard = async (text: string, key: string) => {
@@ -155,6 +184,9 @@ export default function BlogApp() {
     setCurrentFolder(null);
     setView('post');
     setLoading(false);
+    if (window.innerWidth <= 768) {
+      closeSidebar();
+    }
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
     }
@@ -175,6 +207,9 @@ export default function BlogApp() {
     setView('list');
     setCurrentPost(null);
     setToc([]);
+    if (window.innerWidth <= 768) {
+      closeSidebar();
+    }
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
     }
@@ -200,30 +235,60 @@ export default function BlogApp() {
     return folder?.children || [];
   };
 
+  const countFolderItems = (folder: FolderItem): number => {
+    if (!folder || !folder.children) return 0;
+    let count = 0;
+    for (const child of folder.children) {
+      if (child.type === 'file') count += 1;
+      else if (child.type === 'folder') count += countFolderItems(child);
+    }
+    return count;
+  };
+
   const renderFolderTree = (items: FolderItem[], level: number = 0) => {
     return items.map((item) => {
       if (item.type === 'folder') {
         const displayName = item.title || item.name;
+        const isCurrentFolder = currentFolder?.path === item.path;
+        const isExpanded = expandedFolders[item.path] ?? true;
+        const itemCount = countFolderItems(item);
+
         return (
-          <div key={item.path} className="mt-0.5">
-            <button
+          <div key={item.path} className="my-0.5">
+            <div
               onClick={() => handleFolderClick(item)}
               className={cn(
-                "w-full text-left px-3 py-1.5 text-sm transition-all duration-200 rounded flex items-center gap-2",
-                currentFolder?.path === item.path 
-                  ? "text-stone-900 font-medium" 
-                  : "text-stone-600 hover:bg-stone-100"
+                "w-full text-left px-2.5 py-1.5 text-xs font-mono cursor-pointer transition-colors duration-150 flex items-center justify-between group border-l-2",
+                isCurrentFolder
+                  ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
+                  : "border-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900"
               )}
-              style={{ paddingLeft: `${16 + level * 12}px` }}
+              style={{ paddingLeft: `${8 + level * 10}px` }}
             >
-              <Folder className={cn(
-                "w-4 h-4 shrink-0",
-                currentFolder?.path === item.path ? "text-stone-600" : "text-stone-400"
-              )} />
-              <span className="truncate">{displayName}</span>
-            </button>
-            {item.children && (
-              <div key={`children-${item.path}`} className="overflow-hidden">
+              <div className="flex items-center gap-2 truncate">
+                <button
+                  onClick={(e) => toggleFolderExpand(item.path, e)}
+                  className="p-0.5 hover:opacity-75 focus:outline-none flex items-center justify-center"
+                >
+                  <span className={cn(
+                    "material-symbols-outlined text-[16px] transition-transform duration-150 shrink-0",
+                    isExpanded && "rotate-90"
+                  )}>
+                    chevron_right
+                  </span>
+                </button>
+                <Folder className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">{displayName}</span>
+              </div>
+              <span className={cn(
+                "text-[10px] px-1 font-mono shrink-0 ml-1",
+                isCurrentFolder ? "opacity-75" : "text-neutral-400 dark:text-neutral-600"
+              )}>
+                [{itemCount}]
+              </span>
+            </div>
+            {isExpanded && item.children && (
+              <div key={`children-${item.path}`} className="border-l border-neutral-200 dark:border-neutral-800 ml-3.5 my-0.5">
                 {renderFolderTree(item.children, level + 1)}
               </div>
             )}
@@ -231,24 +296,23 @@ export default function BlogApp() {
         );
       } else {
         const displayName = item.title || item.post?.title || item.name;
+        const isCurrentPost = currentPost?.slug === item.post!.slug;
+
         return (
-          <button
+          <div
             key={item.path}
             onClick={() => handlePostClick(item.post!.slug)}
             className={cn(
-              "w-full text-left px-3 py-1.5 text-sm transition-all duration-200 rounded flex items-center gap-2",
-              currentPost?.slug === item.post!.slug 
-                ? "text-stone-900 font-medium" 
-                : "text-stone-600 hover:bg-stone-100"
+              "w-full text-left px-2.5 py-1.5 text-xs font-mono cursor-pointer transition-colors duration-150 flex items-center gap-2 border-l-2",
+              isCurrentPost
+                ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
+                : "border-transparent text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white"
             )}
-            style={{ paddingLeft: `${16 + level * 12}px` }}
+            style={{ paddingLeft: `${8 + level * 10}px` }}
           >
-            <FileText className={cn(
-              "w-4 h-4 shrink-0",
-              currentPost?.slug === item.post!.slug ? "text-stone-600" : "text-stone-400"
-            )} />
+            <FileText className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{displayName}</span>
-          </button>
+          </div>
         );
       }
     });
@@ -256,14 +320,26 @@ export default function BlogApp() {
 
   if (loading && posts.length === 0) {
     return (
-      <div className="h-screen bg-white flex items-center justify-center">
-        <div className="text-stone-400">加载中...</div>
+      <div className="h-screen bg-white dark:bg-black flex items-center justify-center">
+        <div className="font-mono text-xs uppercase tracking-widest text-neutral-500 flex items-center gap-2">
+          <div className="w-3 h-3 border-2 border-black dark:border-white animate-spin"></div>
+          <span>LOADING // TindMark</span>
+        </div>
       </div>
     );
   }
 
+  const filteredPosts = posts.filter(post => {
+    if (!searchQuery && !searchTerm) return true;
+    const query = (searchQuery || searchTerm).toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      (post.excerpt && post.excerpt.toLowerCase().includes(query))
+    );
+  });
+
   return (
-    <div className="h-screen bg-white flex overflow-hidden app-container">
+    <div className="h-screen bg-white dark:bg-black text-black dark:text-white flex overflow-hidden app-container selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
       {/* Mobile Header */}
       <header className={cn(
         "mobile-header md:hidden",
@@ -276,7 +352,7 @@ export default function BlogApp() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="点击此处搜索"
+              placeholder="SEARCH_Docs..."
               className="mobile-search-input"
               autoFocus
             />
@@ -286,8 +362,9 @@ export default function BlogApp() {
                 setSearchQuery('');
               }}
               className="mobile-search-close"
+              title="关闭搜索"
             >
-              <X className="w-5 h-5 text-stone-500" />
+              <X className="w-4 h-4" />
             </button>
           </>
         ) : view === 'post' ? (
@@ -295,17 +372,21 @@ export default function BlogApp() {
             <div className="mobile-header-left">
               <button
                 onClick={handleBack}
-                className="mobile-back-btn"
+                className="mobile-back-btn flex items-center gap-1 font-mono text-xs uppercase"
               >
-                <ArrowLeft />
+                <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+                <span>返回</span>
               </button>
-              <span className="mobile-header-title">返回</span>
             </div>
+            <span className="mobile-header-title font-mono text-xs font-bold uppercase truncate max-w-[160px]">
+              {currentPost?.title || 'DOCUMENT'}
+            </span>
             <button
               onClick={toggleSidebar}
-              className="mobile-menu-btn"
+              className="mobile-menu-btn font-mono text-xs"
+              title="目录"
             >
-              <Menu />
+              <Menu className="w-4 h-4" />
             </button>
           </>
         ) : (
@@ -313,15 +394,19 @@ export default function BlogApp() {
             <button
               onClick={toggleSidebar}
               className="mobile-menu-btn"
+              title="菜单"
             >
-              <Menu />
+              <Menu className="w-4 h-4" />
             </button>
-            <span className="mobile-header-title">TindMark</span>
+            <span className="mobile-header-title font-mono text-sm font-bold uppercase tracking-wider">
+              TINDMARK
+            </span>
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => setSearchOpen(true)}
               className="mobile-search-btn"
+              title="搜索"
             >
-              <Search />
+              <Search className="w-4 h-4" />
             </button>
           </>
         )}
@@ -335,51 +420,74 @@ export default function BlogApp() {
 
       {/* Sidebar */}
       <aside className={cn(
-        "w-64 bg-stone-50 border-r border-stone-200 flex flex-col shrink-0 md:block",
+        "w-72 bg-white dark:bg-black border-r border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0 md:block",
         sidebarOpen && "open",
         view === 'post' ? "right" : "left"
       )}>
         {/* Sidebar Header */}
-        <header className="h-14 flex items-center px-4 border-b border-stone-200">
+        <header className="h-14 flex items-center justify-between px-4 border-b border-neutral-200 dark:border-neutral-800">
           {view === 'post' ? (
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 text-stone-700 hover:text-stone-900 transition-colors"
+              className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase text-black dark:text-white hover:opacity-60 transition-opacity"
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">返回</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span>返回主列表</span>
             </button>
           ) : (
             <div className="flex items-center justify-between w-full">
-              <h1 className="font-medium text-lg text-stone-900">TindMark</h1>
+              <div 
+                onClick={() => { setCurrentFolder(null); setView('list'); }} 
+                className="cursor-pointer font-mono font-black text-sm tracking-wider uppercase text-black dark:text-white flex items-center gap-1.5"
+              >
+                <span>TINDMARK</span>
+                <span className="text-[10px] font-normal text-neutral-400 dark:text-neutral-600">//Docs</span>
+              </div>
               <button 
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="p-1.5 hover:bg-stone-200 rounded transition-colors"
+                className={cn(
+                  "p-1.5 border transition-colors",
+                  searchOpen 
+                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white" 
+                    : "border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white"
+                )}
+                title="搜索"
               >
-                <Search className="w-4 h-4 text-stone-500" />
+                <Search className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
         </header>
 
+        {/* Search Bar in Sidebar */}
         <AnimatePresence>
           {searchOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden border-b border-stone-200"
+              transition={{ duration: 0.15 }}
+              className="overflow-hidden border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950"
             >
               <div className="p-3">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="搜索文档..."
-                  className="w-full px-3 py-2 text-sm bg-stone-100 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-400 text-stone-900 placeholder-stone-400"
-                  autoFocus
-                />
+                <div className="relative flex items-center">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="SEARCH_Docs..."
+                    className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-black border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-black dark:focus:border-white text-black dark:text-white placeholder-neutral-400"
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <button 
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2 text-neutral-400 hover:text-black dark:hover:text-white"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
             </motion.div>
           )}
@@ -388,54 +496,88 @@ export default function BlogApp() {
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto p-3">
           {view === 'list' ? (
-            <div className="space-y-0.5">
-              <div className="px-3 py-1 text-xs text-stone-400 font-medium uppercase tracking-wider">
-                分类
+            <div className="space-y-1">
+              <div className="flex items-center justify-between px-2 py-1 mb-1 border-b border-neutral-100 dark:border-neutral-900">
+                <span className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold">
+                  // 目录导航
+                </span>
+                {currentFolder && (
+                  <button
+                    onClick={() => setCurrentFolder(null)}
+                    className="font-mono text-[10px] uppercase text-neutral-500 hover:text-black dark:hover:text-white underline"
+                  >
+                    全部
+                  </button>
+                )}
+              </div>
+              <div
+                onClick={() => { setCurrentFolder(null); setView('list'); }}
+                className={cn(
+                  "w-full text-left px-2.5 py-1.5 text-xs font-mono cursor-pointer transition-colors duration-150 flex items-center justify-between border-l-2 mb-1",
+                  currentFolder === null
+                    ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
+                    : "border-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <FolderOpen className="w-3.5 h-3.5 shrink-0" />
+                  <span>全部文档</span>
+                </div>
+                <span className={cn(
+                  "text-[10px] font-mono",
+                  currentFolder === null ? "opacity-75" : "text-neutral-400 dark:text-neutral-600"
+                )}>
+                  [{posts.length}]
+                </span>
               </div>
               {renderFolderTree(folderTree)}
             </div>
           ) : (
-            <div className="space-y-0.5">
-              <div className="px-3 py-1 text-xs text-stone-400 font-medium uppercase tracking-wider">
-                目录
+            <div className="space-y-1">
+              <div className="px-2 py-1 mb-2 border-b border-neutral-100 dark:border-neutral-900 flex items-center justify-between">
+                <span className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold">
+                  // 本文大纲
+                </span>
+                <span className="font-mono text-[10px] text-neutral-400">
+                  {toc.length} 节
+                </span>
               </div>
-              {toc.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToHeading(item.id)}
-                  className={cn(
-                    "w-full text-left px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100 rounded transition-colors",
-                    item.level === 3 && "pl-8"
-                  )}
-                >
-                  {item.text}
-                </button>
-              ))}
+              {toc.length === 0 ? (
+                <div className="px-2 py-4 text-xs font-mono text-neutral-400 italic">
+                  无标题目录
+                </div>
+              ) : (
+                toc.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToHeading(item.id)}
+                    className={cn(
+                      "w-full text-left px-2 py-1.5 text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors flex items-center gap-1.5 border-l-2 border-transparent hover:border-black dark:hover:border-white",
+                      item.level === 3 && "pl-5 text-[11px]"
+                    )}
+                  >
+                    <Hash className="w-3 h-3 opacity-40 shrink-0" />
+                    <span className="truncate">{item.text}</span>
+                  </button>
+                ))
+              )}
             </div>
           )}
         </div>
 
         {/* Sidebar Bottom */}
-        <div className="p-3 border-t border-stone-200 flex gap-2">
+        <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
           <button
             onClick={() => window.location.href = '/public'}
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg",
-              "text-stone-600 hover:bg-stone-200 transition-all duration-200",
-              "hover:scale-105 active:scale-95"
-            )}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
             title="资源区"
           >
-            <FolderOpen className="w-5 h-5" />
-            <span>资源区</span>
+            <FolderOpen className="w-3.5 h-3.5" />
+            <span>公共文件</span>
           </button>
           <button
             onClick={toggleTheme}
-            className={cn(
-              "flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg",
-              "text-stone-600 hover:bg-stone-200 transition-all duration-200",
-              "hover:scale-105 active:scale-95"
-            )}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
             title={getThemeTitle()}
           >
             {getThemeIcon()}
@@ -447,202 +589,326 @@ export default function BlogApp() {
       {/* Main Content */}
       <main
         ref={mainContentRef}
-        className="flex-1 overflow-y-auto p-8"
+        className="flex-1 overflow-y-auto p-6 md:p-10 bg-white dark:bg-black"
       >
         <AnimatePresence mode="wait">
-          {searchOpen ? (
+          {searchOpen || searchQuery ? (
             <motion.div
               key="search-results"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="max-w-6xl mx-auto"
             >
-              {posts.filter(post => 
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
-              ).map((post) => (
-                <motion.article
-                  key={post.slug}
-                  whileHover={{ scale: 1.002 }}
-                  className="bg-stone-100 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-stone-150"
-                  onClick={() => {
-                    handlePostClick(post.slug);
-                    setSearchOpen(false);
-                    setSearchQuery('');
-                  }}
-                >
-                  <h2 className="text-xl font-bold text-stone-900 mb-1">
-                    {post.title}
+              <div className="mb-6 pb-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+                <div>
+                  <h2 className="font-mono text-sm uppercase tracking-wider font-bold text-black dark:text-white">
+                    // 搜索结果
                   </h2>
-                  {post.date && (
-                    <p className="text-stone-400 text-xs mb-2">
-                      {formatDate(post.date)}
-                    </p>
-                  )}
-                  {post.excerpt && (
-                    <p className="text-stone-600 text-sm line-clamp-2">
-                      {post.excerpt}
-                    </p>
-                  )}
-                </motion.article>
-              ))}
-              {searchQuery && posts.filter(post => 
-                post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
-              ).length === 0 && (
-                <div className="col-span-full text-center py-12 text-stone-400">
-                  未找到相关文档
+                  <p className="font-mono text-xs text-neutral-500 mt-0.5">
+                    关键词: "{searchQuery}" — 找到 {filteredPosts.length} 篇文档
+                  </p>
                 </div>
-              )}
-              {!searchQuery && (
-                <div className="col-span-full text-center py-12 text-stone-400">
-                  输入关键词搜索文档
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="font-mono text-xs border border-neutral-300 dark:border-neutral-700 px-2 py-1 hover:border-black dark:hover:border-white"
+                  >
+                    [ 清空 ]
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredPosts.map((post) => (
+                  <article
+                    key={post.slug}
+                    className="border border-neutral-300 dark:border-neutral-800 hover:border-black dark:hover:border-white p-5 cursor-pointer transition-colors duration-150 bg-white dark:bg-neutral-950 flex flex-col justify-between group"
+                    onClick={() => {
+                      handlePostClick(post.slug);
+                      setSearchOpen(false);
+                    }}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-mono text-[11px] text-neutral-500 uppercase">
+                          {formatDate(post.date) || 'DOC'}
+                        </span>
+                        <span className="font-mono text-[10px] text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors flex items-center gap-0.5">
+                          <span>// READ</span>
+                          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                        </span>
+                      </div>
+                      <h3 className="text-base font-bold text-black dark:text-white mb-2 leading-snug">
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="text-neutral-600 dark:text-neutral-400 text-xs line-clamp-3 leading-relaxed">
+                          {post.excerpt}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {filteredPosts.length === 0 && (
+                <div className="border border-dashed border-neutral-300 dark:border-neutral-800 p-12 text-center font-mono text-xs text-neutral-400 uppercase tracking-widest">
+                  未找到与 "{searchQuery}" 相关的文档
                 </div>
               )}
             </motion.div>
           ) : view === 'list' ? (
             <motion.div
               key={currentFolder ? `folder-${currentFolder.path}` : 'list'}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="max-w-6xl mx-auto"
             >
-                {(currentFolder ? getFolderContents() : posts).filter(item => {
-                  if (!searchTerm) return true;
-                  const searchLower = searchTerm.toLowerCase();
-                  const title = ((item as FolderItem).title || (item as PostMetadata).title || (item as FolderItem).name || '').toLowerCase();
-                  return title.includes(searchLower);
-                }).map((item) => {
+              {/* Header Info */}
+              <div className="mb-6 pb-3 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-2 font-mono text-xs text-neutral-400 mb-1">
+                    <span>ROOT</span>
+                    {currentFolder && (
+                      <>
+                        <span>/</span>
+                        <span className="text-black dark:text-white font-bold uppercase">{currentFolder.title || currentFolder.name}</span>
+                      </>
+                    )}
+                  </div>
+                  <h2 className="text-xl font-black uppercase tracking-tight text-black dark:text-white">
+                    {currentFolder ? (currentFolder.title || currentFolder.name) : '全部文档'}
+                  </h2>
+                </div>
+                <div className="flex items-center gap-3">
+                  {currentFolder && (
+                    <button
+                      onClick={() => setCurrentFolder(null)}
+                      className="font-mono text-xs border border-neutral-300 dark:border-neutral-700 px-2.5 py-1 hover:border-black dark:hover:border-white transition-colors flex items-center gap-1"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                      <span>返回根目录</span>
+                    </button>
+                  )}
+                  <span className="font-mono text-xs text-neutral-400 border border-neutral-200 dark:border-neutral-800 px-2.5 py-1">
+                    COUNT: {(currentFolder ? getFolderContents() : posts).length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(currentFolder ? getFolderContents() : posts).map((item) => {
                   const isFolder = (item as FolderItem).type === 'folder';
                   const displayName = (item as FolderItem).title || (item as FolderItem).post?.title || (item as PostMetadata).title || (item as FolderItem).name;
                   const excerpt = isFolder ? '' : ((item as FolderItem).post?.excerpt || (item as PostMetadata).excerpt || '');
+                  const date = !isFolder ? ((item as FolderItem).post?.date || (item as PostMetadata).date) : '';
+                  const targetSlug = isFolder ? '' : ((item as FolderItem).post?.slug || (item as PostMetadata).slug);
                   
                   return (
-                    <motion.article
+                    <article
                       key={isFolder ? (item as FolderItem).path : (item as PostMetadata).slug}
-                      whileHover={{ scale: 1.002 }}
-                      className="bg-stone-100 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-stone-150"
-                      onClick={() => isFolder ? handleFolderClick(item as FolderItem) : handlePostClick((item as FolderItem).post?.slug || (item as PostMetadata).slug)}
+                      className={cn(
+                        "border border-neutral-300 dark:border-neutral-800 hover:border-black dark:hover:border-white p-5 cursor-pointer transition-colors duration-150 flex flex-col justify-between group",
+                        isFolder ? "bg-neutral-50 dark:bg-neutral-900/50" : "bg-white dark:bg-neutral-950"
+                      )}
+                      onClick={() => isFolder ? handleFolderClick(item as FolderItem) : handlePostClick(targetSlug)}
                     >
-                      <h2 className="text-xl font-bold text-stone-900 mb-1">
-                        {displayName}
-                      </h2>
-                      {!isFolder && ((item as FolderItem).post?.date || (item as PostMetadata).date) && (
-                        <p className="text-stone-400 text-xs mb-2">
-                          {formatDate((item as FolderItem).post?.date || (item as PostMetadata).date)}
-                        </p>
-                      )}
-                      {(excerpt || isFolder) && (
-                        <p className="text-stone-600 text-sm line-clamp-2">
-                          {excerpt || '点击查看内容'}
-                        </p>
-                      )}
-                    </motion.article>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-mono text-[10px] tracking-wider uppercase px-1.5 py-0.5 border border-neutral-200 dark:border-neutral-800 text-neutral-500">
+                            {isFolder ? 'FOLDER // 文件夹' : (formatDate(date) || 'DOC // 文档')}
+                          </span>
+                          <span className="font-mono text-[10px] text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors flex items-center gap-0.5">
+                            <span>{isFolder ? 'ENTER' : 'READ'}</span>
+                            <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                          </span>
+                        </div>
+                        <h3 className="text-base font-bold text-black dark:text-white mb-2 leading-snug group-hover:underline underline-offset-4">
+                          {displayName}
+                        </h3>
+                        {(excerpt || isFolder) && (
+                          <p className="text-neutral-600 dark:text-neutral-400 text-xs line-clamp-2 leading-relaxed">
+                            {excerpt || '点击展开分类内容'}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-900 flex items-center justify-between font-mono text-[10px] text-neutral-400">
+                        <span>{isFolder ? `[ ${countFolderItems(item as FolderItem)} ITEMS ]` : `[ ${targetSlug} ]`}</span>
+                        <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                      </div>
+                    </article>
                   );
                 })}
-              </motion.div>
-            ) : (
-              <div className="max-w-3xl mx-auto">
-                <motion.div
-                  key="post"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  {currentPost && (
-                    <article>
-                      <div className="markdown-body">
+              </div>
+            </motion.div>
+          ) : (
+            <div className="max-w-3xl mx-auto">
+              <motion.div
+                key="post"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                {currentPost && (
+                  <article>
+                    {/* Post Top Bar */}
+                    <div className="mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+                      <button
+                        onClick={handleBack}
+                        className="font-mono text-xs border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                        <span>返回列表</span>
+                      </button>
+
+                      <div className="flex items-center gap-2 font-mono text-xs text-neutral-500">
+                        {currentPost.date && (
+                          <span className="border border-neutral-200 dark:border-neutral-800 px-2 py-1">
+                            {formatDate(currentPost.date)}
+                          </span>
+                        )}
+                        <span className="border border-neutral-200 dark:border-neutral-800 px-2 py-1 uppercase truncate max-w-[150px]">
+                          {currentPost.slug}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Markdown Body */}
+                    <div className="markdown-body">
                       <Markdown 
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeRaw]}
                         components={{
-                          h2: ({ children, ...props }) => {
-                            const id = React.Children.toArray(children).join('').toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
-                            return <h2 id={id} {...props}>{children}</h2>;
+                          h2: ({ children, node, ...props }: any) => {
+                            const text = React.Children.toArray(children).map(c => typeof c === 'string' ? c : '').join('');
+                            const id = text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
+                            return (
+                              <h2 id={id} className="group flex items-center gap-2" {...props}>
+                                <span>{children}</span>
+                                <a href={`#${id}`} className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-black dark:hover:text-white font-mono text-sm no-underline ml-1">
+                                  #
+                                </a>
+                              </h2>
+                            );
                           },
-                          h3: ({ children, ...props }) => {
-                            const id = React.Children.toArray(children).join('').toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
-                            return <h3 id={id} {...props}>{children}</h3>;
+                          h3: ({ children, node, ...props }: any) => {
+                            const text = React.Children.toArray(children).map(c => typeof c === 'string' ? c : '').join('');
+                            const id = text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
+                            return (
+                              <h3 id={id} className="group flex items-center gap-2" {...props}>
+                                <span>{children}</span>
+                                <a href={`#${id}`} className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-black dark:hover:text-white font-mono text-xs no-underline ml-1">
+                                  #
+                                </a>
+                              </h3>
+                            );
                           },
-                          code: ({ className, children }) => {
+                          code: ({ className, children, node, ...props }: any) => {
                             const isBlock = className?.includes('language-');
                             if (isBlock) {
-                              const codeText = React.Children.toArray(children).join('');
-                              const codeKey = `code-${codeText.length}-${Date.now()}`;
+                              const codeText = Array.isArray(children)
+                                ? children.join('')
+                                : typeof children === 'string'
+                                ? children
+                                : React.Children.toArray(children).join('');
+                              const codeKey = `code-${codeText.length}`;
                               const lang = className?.replace('language-', '') || 'text';
-                              const language = lang as 'javascript' | 'typescript' | 'python' | 'bash' | 'json' | 'html' | 'css' | 'text';
                               const lines = codeText.split('\n');
                               const lineCount = lines.length;
                               
                               return (
-                                <div key={codeKey} className="my-6 relative">
-                                  {/* Header */}
-                                  <div className="flex items-center justify-between bg-stone-800 px-4 py-2.5 border border-stone-700 rounded-t-lg">
-                                    <span className="text-xs text-stone-400 font-medium uppercase tracking-wider">{lang}</span>
+                                <div key={codeKey} className="my-6 border border-neutral-800 bg-neutral-950 font-mono">
+                                  {/* Code Header */}
+                                  <div className="flex items-center justify-between bg-neutral-900 px-3 py-2 border-b border-neutral-800">
+                                    <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider font-bold">
+                                      // {lang}
+                                    </span>
                                     <button
                                       onClick={() => copyToClipboard(codeText, codeKey)}
-                                      className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-200 transition-colors"
+                                      className="flex items-center gap-1 text-[11px] font-mono border border-neutral-700 hover:border-white hover:bg-white hover:text-black px-2 py-0.5 text-neutral-300 transition-colors"
                                     >
                                       {copiedKey === codeKey ? (
                                         <>
-                                          <Check className="w-4 h-4" />
-                                          <span>已复制</span>
+                                          <Check className="w-3 h-3 text-white" />
+                                          <span>COPIED</span>
                                         </>
                                       ) : (
                                         <>
-                                          <Copy className="w-4 h-4" />
-                                          <span>复制</span>
+                                          <Copy className="w-3 h-3" />
+                                          <span>COPY</span>
                                         </>
                                       )}
                                     </button>
                                   </div>
-                                  {/* Code with line numbers */}
-                                  <div className="bg-stone-900 rounded-b-lg border border-t-0 border-stone-700 overflow-hidden">
-                                    <div className="flex">
-                                      {/* Line numbers */}
-                                      <div className="select-none bg-stone-800 px-4 py-4 text-stone-500 text-sm font-mono text-right border-r border-stone-700 shrink-0">
-                                        {Array.from({ length: lineCount }, (_, i) => (
-                                          <div key={i} className="leading-6">{i + 1}</div>
-                                        ))}
-                                      </div>
-                                      {/* Code */}
-                                      <div className="overflow-x-auto">
-                                        <SyntaxHighlighter
-                                          language={language}
-                                          style={oneDark}
-                                          showLineNumbers={false}
-                                          wrapLines={true}
-                                          customStyle={{
-                                            margin: 0,
-                                            backgroundColor: 'transparent',
-                                            padding: '16px',
-                                            fontSize: '14px',
-                                            lineHeight: '1.6',
-                                          }}
-                                        >
-                                          {codeText}
-                                        </SyntaxHighlighter>
-                                      </div>
+                                  {/* Code Content */}
+                                  <div className="flex overflow-x-auto">
+                                    {/* Line numbers */}
+                                    <div className="select-none bg-neutral-900/70 px-3 py-3 text-neutral-600 text-xs font-mono text-right border-r border-neutral-800 shrink-0">
+                                      {Array.from({ length: lineCount }, (_, i) => (
+                                        <div key={i} className="leading-6">{i + 1}</div>
+                                      ))}
+                                    </div>
+                                    {/* Highlighted text */}
+                                    <div className="overflow-x-auto flex-1">
+                                      <SyntaxHighlighter
+                                        language={lang}
+                                        style={oneDark as any}
+                                        showLineNumbers={false}
+                                        wrapLines={true}
+                                        customStyle={{
+                                          margin: 0,
+                                          backgroundColor: 'transparent',
+                                          padding: '12px 16px',
+                                          fontSize: '13px',
+                                          lineHeight: '1.6',
+                                          fontFamily: 'var(--font-mono)',
+                                        }}
+                                      >
+                                        {codeText}
+                                      </SyntaxHighlighter>
                                     </div>
                                   </div>
                                 </div>
                               );
                             }
-                            return <code className="bg-stone-100 px-1.5 py-0.5 rounded text-sm font-mono text-stone-700">{children}</code>;
+                            return <code className="bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 px-1.5 py-0.5 text-xs font-mono" {...props}>{children}</code>;
                           },
                         }}
                       >
                         {currentPost.content}
                       </Markdown>
                     </div>
+
+                    {/* Post Bottom Footer */}
+                    <div className="mt-12 pt-6 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between font-mono text-xs">
+                      <button
+                        onClick={handleBack}
+                        className="border border-neutral-300 dark:border-neutral-700 px-3 py-2 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                        <span>返回文档列表</span>
+                      </button>
+                      <button
+                        onClick={scrollToTop}
+                        className="border border-neutral-300 dark:border-neutral-700 px-3 py-2 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">arrow_upward</span>
+                        <span>回到顶部</span>
+                      </button>
+                    </div>
                   </article>
                 )}
               </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

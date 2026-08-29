@@ -1,22 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TindMark</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script>
       (function() {
-        // 重定向逻辑：除 /public 外，所有路径跳转到 /
         const path = window.location.pathname;
         if (path !== '/' && !path.startsWith('/public')) {
           window.location.replace('/');
           return;
         }
 
-        // 暗色模式逻辑
-        const saved = localStorage.getItem('isDarkMode');
-        if (saved === 'true' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        const saved = localStorage.getItem('blog-theme');
+        if (saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
@@ -36,37 +37,53 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.3s ease-out;
+        transition: opacity 0.2s ease-out;
+      }
+      .dark #loading-overlay {
+        background-color: #000000;
+        color: #ffffff;
       }
       #loading-overlay.fade-out {
         opacity: 0;
         pointer-events: none;
       }
       .loader {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #e5e7eb;
-        border-top-color: #3b82f6;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+        width: 28px;
+        height: 28px;
+        border: 2px solid #000000;
+        animation: spin 1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+      .dark .loader {
+        border-color: #ffffff;
       }
       @keyframes spin {
-        to {
+        0% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        100% {
           transform: rotate(360deg);
         }
       }
       .loading-text {
         margin-top: 16px;
-        color: #374151;
-        font-size: 14px;
-        font-family: system-ui, -apple-system, sans-serif;
+        color: #000000;
+        font-size: 13px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .dark .loading-text {
+        color: #ffffff;
       }
     </style>
   </head>
   <body>
     <div id="loading-overlay">
       <div class="loader"></div>
-      <div class="loading-text">加载中...</div>
+      <div class="loading-text">LOADING // TindMark</div>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

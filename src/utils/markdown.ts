@@ -29,9 +29,11 @@ interface FolderConfig {
 
 async function loadFolderConfig(folderPath: string): Promise<FolderConfig | null> {
   try {
-    const configPath = `/docs/${folderPath}/.folder.json`;
-    const modules = import.meta.glob('/docs/**/.folder.json', { as: 'raw', eager: true });
-    const content = modules[configPath];
+    const modules = {
+      ...import.meta.glob('/docs/**/.folder.json', { as: 'raw', eager: true }),
+      ...import.meta.glob('/Docs/**/.folder.json', { as: 'raw', eager: true }),
+    };
+    const content = modules[`/docs/${folderPath}/.folder.json`] || modules[`/Docs/${folderPath}/.folder.json`];
     
     if (!content) return null;
     
@@ -56,7 +58,7 @@ function extractTitleFromContent(content: string): string | null {
 }
 
 function extractFileNameWithoutPath(path: string): string {
-  const pathParts = path.replace('/docs/', '').replace('.md', '').split('/');
+  const pathParts = path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '').split('/');
   let fileName = pathParts[pathParts.length - 1];
   
   if (fileName === 'index' && pathParts.length > 1) {
@@ -67,12 +69,15 @@ function extractFileNameWithoutPath(path: string): string {
 }
 
 // In a real app, we might fetch this from an API.
-// Here we use Vite's import.meta.glob to find all markdown files in /docs recursively.
+// Here we use Vite's import.meta.glob to find all markdown files in /docs or /Docs recursively.
 export async function getAllPosts(): Promise<PostMetadata[]> {
-  const modules = import.meta.glob('/docs/**/*.md', { as: 'raw', eager: true });
+  const modules = {
+    ...import.meta.glob('/docs/**/*.md', { as: 'raw', eager: true }),
+    ...import.meta.glob('/Docs/**/*.md', { as: 'raw', eager: true }),
+  };
   
   const posts = Object.entries(modules).map(([path, content]) => {
-    let slug = path.replace('/docs/', '').replace('.md', '');
+    let slug = path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '');
     
     if (slug.endsWith('/index')) {
       slug = slug.slice(0, -6);
@@ -101,11 +106,16 @@ export async function getAllPosts(): Promise<PostMetadata[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const modules = import.meta.glob('/docs/**/*.md', { as: 'raw', eager: true });
+  const modules = {
+    ...import.meta.glob('/docs/**/*.md', { as: 'raw', eager: true }),
+    ...import.meta.glob('/Docs/**/*.md', { as: 'raw', eager: true }),
+  };
   
   const possiblePaths = [
     `/docs/${slug}.md`,
     `/docs/${slug}/index.md`,
+    `/Docs/${slug}.md`,
+    `/Docs/${slug}/index.md`,
   ];
   
   let content = null;
@@ -147,7 +157,7 @@ export async function buildFolderTree(posts: PostMetadata[]): Promise<FolderItem
   const folderConfigs = new Map<string, FolderConfig>();
 
   for (const post of posts) {
-    const pathParts = post.path.replace('/docs/', '').replace('.md', '').split('/');
+    const pathParts = post.path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '').split('/');
     let currentLevel = tree;
     let currentPath = '';
 
