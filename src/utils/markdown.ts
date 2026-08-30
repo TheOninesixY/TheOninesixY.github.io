@@ -1,5 +1,18 @@
 import matter from 'gray-matter';
 
+const articleFileUrls = {
+  ...import.meta.glob(['/docs/**/*', '!/docs/**/*.md', '!/docs/**/.folder.json'], {
+    eager: true,
+    query: '?url',
+    import: 'default',
+  }),
+  ...import.meta.glob(['/Docs/**/*', '!/Docs/**/*.md', '!/Docs/**/.folder.json'], {
+    eager: true,
+    query: '?url',
+    import: 'default',
+  }),
+} as Record<string, string>;
+
 export interface PostMetadata {
   title: string;
   date: string;
@@ -66,6 +79,45 @@ function extractFileNameWithoutPath(path: string): string {
   }
   
   return fileName.replace(/[-_]/g, ' ');
+}
+
+function normalizePath(path: string): string {
+  const parts: string[] = [];
+
+  for (const part of path.split('/')) {
+    if (!part || part === '.') continue;
+    if (part === '..') {
+      parts.pop();
+    } else {
+      parts.push(part);
+    }
+  }
+
+  return `/${parts.join('/')}`;
+}
+
+export function resolvePostUrl(url: string, postPath: string): string {
+  if (url.startsWith('p:')) {
+    return `/${url.slice(2).replace(/^\/+/, '')}`;
+  }
+
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/|\/|#)/i.test(url)) {
+    return url;
+  }
+
+  const [, filePath, suffix = ''] = url.match(/^([^?#]*)(.*)$/) || [];
+  const postDirectory = postPath.slice(0, postPath.lastIndexOf('/') + 1);
+  const sourcePath = normalizePath(`${postDirectory}${filePath}`);
+  let decodedSourcePath = sourcePath;
+
+  try {
+    decodedSourcePath = decodeURIComponent(sourcePath);
+  } catch {
+    // Keep the original URL when it contains an invalid escape sequence.
+  }
+
+  const assetUrl = articleFileUrls[sourcePath] || articleFileUrls[decodedSourcePath];
+  return assetUrl ? `${assetUrl}${suffix}` : url;
 }
 
 // In a real app, we might fetch this from an API.

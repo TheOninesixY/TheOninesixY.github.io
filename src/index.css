@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  color-scheme: light;
+
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   
@@ -15,6 +19,8 @@
 }
 
 .dark {
+  color-scheme: dark;
+
   --bg-primary: #000000;
   --bg-secondary: #0a0a0a;
   --bg-surface: #121212;

@@ -8,7 +8,7 @@ excerpt: "数据恢复唯一真神，单文件版，经测试在多款PE中可�
 
 >数据恢复唯一真神
 
-[Download](/DiskGenius%20Pro.zip)
+[Download](p:DiskGenius%20Pro.zip)
 
 ## 说明：
 

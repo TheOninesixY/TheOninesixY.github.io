@@ -1,9 +1,31 @@
 import fs from 'fs';
 import path from 'path';
-import type { Plugin } from 'vite';
+import type { Connect, Plugin } from 'vite';
 
 export function publicFilesPlugin(): Plugin {
   const publicDir = path.resolve(__dirname, 'public');
+
+  const serveDirectoryIndex: Connect.NextHandleFunction = (req, _res, next) => {
+    if (!req.url || !['GET', 'HEAD'].includes(req.method || '') || !req.url.split('?', 1)[0].endsWith('/')) {
+      next();
+      return;
+    }
+
+    try {
+      const url = new URL(req.url, 'http://localhost');
+      const pathname = decodeURIComponent(url.pathname);
+      const indexPath = path.resolve(publicDir, `.${pathname}`, 'index.html');
+      const publicPrefix = `${publicDir}${path.sep}`;
+
+      if (pathname !== '/' && indexPath.startsWith(publicPrefix) && fs.statSync(indexPath).isFile()) {
+        req.url = `${url.pathname}index.html${url.search}`;
+      }
+    } catch {
+      // Let Vite handle missing files and malformed URLs normally.
+    }
+
+    next();
+  };
   
   function getPublicFiles() {
     const files: { name: string; type: string; size: number }[] = [];
@@ -36,11 +58,16 @@ export function publicFilesPlugin(): Plugin {
     name: 'public-files-plugin',
     
     configureServer(server) {
+      server.middlewares.use(serveDirectoryIndex);
       server.middlewares.use('/api/public-files', (req, res) => {
         const files = getPublicFiles();
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ files }));
       });
+    },
+
+    configurePreviewServer(server) {
+      server.middlewares.use(serveDirectoryIndex);
     },
     
     generateBundle() {

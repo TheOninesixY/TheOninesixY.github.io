@@ -99,7 +99,7 @@ export default function PublicFileList() {
     const fetchFiles = async () => {
       try {
         const isDev = import.meta.env.DEV;
-        const url = isDev ? '/api/public-files' : '/public-files.json';
+        const url = isDev ? '/api/public-files' : `${import.meta.env.BASE_URL}public-files.json`;
         
         const response = await fetch(url);
         if (!response.ok) {
@@ -111,7 +111,7 @@ export default function PublicFileList() {
           const ext = file.name.split('.').pop() || '';
           return {
             name: file.name,
-            path: `/public/${file.name}`,
+            path: `${import.meta.env.BASE_URL}${file.name}`,
             size: file.size || 0,
             type: 'file' as const,
             extension: ext,
@@ -131,7 +131,7 @@ export default function PublicFileList() {
   }, []);
 
   const handleBack = () => {
-    window.location.href = '/';
+    window.location.href = import.meta.env.BASE_URL;
   };
 
   if (loading) {

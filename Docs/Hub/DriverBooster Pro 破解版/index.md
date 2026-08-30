@@ -5,4 +5,4 @@ excerpt: "Driver Booster Pro 破解版下载"
 ---
 
 # Driver Booster Pro 破解版
-## [Downlaod](/DriverBooster%20Pro.zip)
+## [Downlaod](p:DriverBooster%20Pro.zip)

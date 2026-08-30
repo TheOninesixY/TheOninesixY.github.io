@@ -9,8 +9,7 @@ excerpt: "神奇数字马戏团第9集解析的转载，已经过原作者同意
 B站原作者：[两点一勾儿](https://space.bilibili.com/1142335972)，已获得原作者同意，可放心食用
 
 >上
-><video src="./1.mp4" controls></video>
+><video src="p:TADC9解析上.mp4" controls></video>
 
 >下
-><video src="./2.mp4" controls></video>
-
+><video src="p:TADC9解析下.mp4" controls></video>

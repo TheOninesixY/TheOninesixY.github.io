@@ -5,8 +5,8 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import PublicFileList from './PublicFileList';
-import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree } from './utils/markdown';
-import Markdown from 'react-markdown';
+import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree, resolvePostUrl } from './utils/markdown';
+import Markdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash } from 'lucide-react';
@@ -20,6 +20,10 @@ interface TocItem {
   text: string;
   level: number;
 }
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const appUrl = (path = '/') => `${basePath}${path}` || '/';
+const currentPath = () => window.location.pathname.slice(basePath.length) || '/';
 
 export default function App() {
   const [isPublicPath, setIsPublicPath] = useState(false);
@@ -42,7 +46,7 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = async () => {
-      const path = window.location.pathname;
+      const path = currentPath();
       if (path.startsWith('/public')) {
         setIsPublicPath(true);
         return;
@@ -158,7 +162,7 @@ export default function App() {
 
   useEffect(() => {
     async function loadPosts() {
-      const path = window.location.pathname;
+      const path = currentPath();
       if (path.startsWith('/public')) {
         setIsPublicPath(true);
         setLoading(false);
@@ -243,7 +247,7 @@ export default function App() {
       setToc(extractToc(post.content));
       document.title = `${post.title} // TindMark`;
       if (updateUrl) {
-        const targetPath = '/' + post.slug;
+        const targetPath = appUrl('/' + post.slug);
         if (window.location.pathname !== targetPath) {
           window.history.pushState({ slug: post.slug }, '', targetPath);
         }
@@ -266,8 +270,8 @@ export default function App() {
     setCurrentFolder(null);
     setToc([]);
     document.title = 'TindMark';
-    if (updateUrl && window.location.pathname !== '/') {
-      window.history.pushState(null, '', '/');
+    if (updateUrl && window.location.pathname !== appUrl()) {
+      window.history.pushState(null, '', appUrl());
     }
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
@@ -284,8 +288,8 @@ export default function App() {
     setCurrentPost(null);
     setToc([]);
     document.title = 'TindMark';
-    if (window.location.pathname !== '/') {
-      window.history.pushState(null, '', '/');
+    if (window.location.pathname !== appUrl()) {
+      window.history.pushState(null, '', appUrl());
     }
     if (window.innerWidth <= 768) {
       closeSidebar();
@@ -454,13 +458,14 @@ export default function App() {
         ) : view === 'post' ? (
           <>
             <div className="mobile-header-left">
-              <button
-                onClick={handleBack}
-                className="mobile-back-btn flex items-center gap-1 font-mono text-xs uppercase"
-              >
-                <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-                <span>返回</span>
-              </button>
+               <button
+                 onClick={handleBack}
+                 className="mobile-back-btn"
+                 title="返回"
+                 aria-label="返回"
+               >
+                 <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+               </button>
             </div>
             <span className="mobile-header-title font-mono text-xs font-bold uppercase truncate max-w-[160px]">
               {currentPost?.title || 'DOCUMENT'}
@@ -652,7 +657,7 @@ export default function App() {
         {/* Sidebar Bottom */}
         <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
           <button
-            onClick={() => window.location.href = '/public'}
+            onClick={() => window.location.href = appUrl('/public')}
             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
             title="资源区"
           >
@@ -843,15 +848,7 @@ export default function App() {
                 {currentPost && (
                   <article>
                     {/* Post Top Bar */}
-                    <div className="mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
-                      <button
-                        onClick={handleBack}
-                        className="font-mono text-xs border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                        <span>返回列表</span>
-                      </button>
-
+                    <div className="mb-6 pb-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-end">
                       <div className="flex items-center gap-2 font-mono text-xs text-neutral-500">
                         {currentPost.date && (
                           <span className="border border-neutral-200 dark:border-neutral-800 px-2 py-1">
@@ -869,6 +866,7 @@ export default function App() {
                       <Markdown 
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeRaw]}
+                        urlTransform={(url) => defaultUrlTransform(resolvePostUrl(url, currentPost.path))}
                         components={{
                           h2: ({ children, node, ...props }: any) => {
                             const text = React.Children.toArray(children).map(c => typeof c === 'string' ? c : '').join('');
