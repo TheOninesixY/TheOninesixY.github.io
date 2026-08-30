@@ -897,8 +897,8 @@ export default function App() {
                             {isFolder ? 'FOLDER // 文件夹' : (formatDate(date) || 'DOC // 文档')}
                           </span>
                           <span className="font-mono text-[10px] text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors flex items-center gap-0.5">
-                            {isFolder ? 'ENTER' : ''}
-                            {isFolder && <span className="material-symbols-outlined text-[13px]">arrow_forward</span>}
+                            <span>{isFolder ? 'ENTER' : 'READ'}</span>
+                            <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
                           </span>
                         </div>
                         <h3 className="text-base font-bold text-black dark:text-white mb-2 leading-snug group-hover:underline underline-offset-4">
