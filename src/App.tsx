@@ -282,6 +282,14 @@ export default function App() {
     handleBack(true);
   };
 
+  const handlePublicClick = () => {
+    const targetPath = appUrl('/public');
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, '', targetPath);
+    }
+    setIsPublicPath(true);
+  };
+
   const handleFolderClick = (folder: FolderItem) => {
     setCurrentFolder(folder);
     setView('list');
@@ -657,7 +665,7 @@ export default function App() {
         {/* Sidebar Bottom */}
         <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
           <button
-            onClick={() => window.location.href = appUrl('/public')}
+            onClick={handlePublicClick}
             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
             title="资源区"
           >
