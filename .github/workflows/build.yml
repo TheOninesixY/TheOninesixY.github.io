@@ -43,6 +43,26 @@ jobs:
         run: |
           yarn build
           cp dist/index.html dist/404.html
+          # 生成静态公共文件列表，确保 GitHub Pages 能正确读取
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const publicDir = path.resolve('public');
+            const files = [];
+            for (const item of fs.readdirSync(publicDir)) {
+              const itemPath = path.join(publicDir, item);
+              const stat = fs.statSync(itemPath);
+              if (stat.isFile()) {
+                const ext = item.split('.').pop().toLowerCase();
+                let type = 'other';
+                if (['mp4','webm','mov','avi','mkv'].includes(ext)) type = 'video';
+                else if (['jpg','jpeg','png','gif','svg','webp','bmp'].includes(ext)) type = 'image';
+                files.push({ name: item, type, size: stat.size });
+              }
+            }
+            fs.writeFileSync(path.resolve('dist/public-files.json'), JSON.stringify({ files }, null, 2));
+            console.log('Generated public-files.json with', files.length, 'files');
+          "
         env:
           VITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
