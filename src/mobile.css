@@ -145,14 +145,15 @@
   aside {
     position: fixed !important;
     top: 52px;
-    bottom: 0;
     width: var(--sidebar-width);
     z-index: 40;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    height: calc(100vh - 52px) !important;
-    display: block !important;
+    height: calc(100dvh - 52px) !important;
+    display: flex !important;
+    flex-direction: column !important;
     background-color: var(--bg-primary) !important;
     border-right: 1px solid var(--border-subtle) !important;
+    box-sizing: border-box;
   }
 
   aside.left {
@@ -176,16 +177,27 @@
 
   aside .flex-1 {
     padding: 12px;
+    padding-bottom: 24px;
+    flex: 1 1 0% !important;
+    min-height: 0;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  aside .border-t {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 8px 12px;
-    border-top: 1px solid var(--border-subtle) !important;
-    background-color: var(--bg-primary);
+  aside .flex-1::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide desktop sidebar bottom buttons on mobile */
+  .desktop-sidebar-actions {
+    display: none !important;
+  }
+
+  /* Hide public file list sidebar on mobile */
+  aside.public-sidebar {
+    display: none !important;
   }
 
   /* Sidebar overlay */
@@ -238,5 +250,43 @@
 
   .markdown-body p {
     font-size: 14px;
+  }
+
+  /* Floating action buttons (bottom-right) */
+  .mobile-floating-actions {
+    position: fixed;
+    right: 16px;
+    bottom: 24px;
+    z-index: 45;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transform: translateX(150%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+
+  .mobile-floating-actions.show {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .mobile-floating-actions button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50% !important;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+
+  .mobile-floating-actions button:active {
+    transform: scale(0.9);
   }
 }

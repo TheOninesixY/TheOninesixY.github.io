@@ -9,7 +9,7 @@ import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolder
 import Markdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash } from 'lucide-react';
+import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
@@ -41,6 +41,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({});
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
 
@@ -97,6 +98,18 @@ export default function App() {
     setSidebarOpen(false);
   };
 
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [sidebarOpen]);
+
   const toggleFolderExpand = (path: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setExpandedFolders(prev => ({
@@ -136,28 +149,6 @@ export default function App() {
     setTheme(newTheme);
     localStorage.setItem('blog-theme', newTheme);
     applyTheme(newTheme);
-  };
-
-  const getThemeIcon = () => {
-    switch (theme) {
-      case 'dark':
-        return <Moon className="w-4 h-4" />;
-      case 'light':
-        return <Sun className="w-4 h-4" />;
-      default:
-        return <Monitor className="w-4 h-4" />;
-    }
-  };
-
-  const getThemeTitle = () => {
-    switch (theme) {
-      case 'dark':
-        return '深色';
-      case 'light':
-        return '浅色';
-      default:
-        return '系统';
-    }
   };
 
   useEffect(() => {
@@ -466,12 +457,12 @@ export default function App() {
         ) : view === 'post' ? (
           <>
             <div className="mobile-header-left">
-               <button
-                 onClick={handleBack}
-                 className="mobile-back-btn"
-                 title="返回"
-                 aria-label="返回"
-               >
+<button
+                  onClick={() => { handleBack(); closeSidebar(); }}
+                  className="mobile-back-btn"
+                  title="返回"
+                  aria-label="返回"
+                >
                  <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                </button>
             </div>
@@ -514,6 +505,81 @@ export default function App() {
         className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
         onClick={closeSidebar}
       />
+
+      {/* Settings Panel */}
+      <AnimatePresence>
+        {settingsOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 z-40 bg-black/60"
+              onClick={() => setSettingsOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            >
+              <div className="pointer-events-auto w-full max-w-md bg-white text-black border border-neutral-200 shadow-none">
+                {/* Settings Header */}
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200">
+                  <div className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-wider">
+                    <Settings className="w-4 h-4" />
+                    <span>设置</span>
+                  </div>
+                  <button
+                    onClick={() => setSettingsOpen(false)}
+                    className="p-1.5 border border-neutral-200 hover:border-black transition-colors"
+                    title="关闭"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Settings Body */}
+                <div className="p-5">
+                  {/* Theme Section */}
+                  <div className="mb-5">
+                    <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 font-bold mb-2.5">
+                      // 主题
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {([
+                        { key: 'system' as const, label: '系统', icon: <Monitor className="w-4 h-4" /> },
+                        { key: 'light' as const, label: '浅色', icon: <Sun className="w-4 h-4" /> },
+                        { key: 'dark' as const, label: '深色', icon: <Moon className="w-4 h-4" /> },
+                      ]).map((option) => (
+                        <button
+                          key={option.key}
+                          onClick={() => {
+                            setTheme(option.key);
+                            localStorage.setItem('blog-theme', option.key);
+                            applyTheme(option.key);
+                          }}
+                          className={cn(
+                            "flex flex-col items-center gap-1.5 px-3 py-3 border font-mono text-xs transition-colors",
+                            theme === option.key
+                              ? "bg-black text-white border-black"
+                              : "border-neutral-300 hover:border-black"
+                          )}
+                        >
+                          {option.icon}
+                          <span>{option.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <aside className={cn(
@@ -662,8 +728,8 @@ export default function App() {
           )}
         </div>
 
-        {/* Sidebar Bottom */}
-        <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
+        {/* Sidebar Bottom (desktop only) */}
+        <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 flex gap-2 desktop-sidebar-actions">
           <button
             onClick={handlePublicClick}
             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
@@ -673,15 +739,25 @@ export default function App() {
             <span>公共文件</span>
           </button>
           <button
-            onClick={toggleTheme}
+            onClick={() => setSettingsOpen(true)}
             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-            title={getThemeTitle()}
+            title="设置"
           >
-            {getThemeIcon()}
-            <span>{getThemeTitle()}</span>
+            <Settings className="w-3.5 h-3.5" />
+            <span>设置</span>
           </button>
         </div>
       </aside>
+
+      {/* Mobile floating action buttons */}
+      <div className={`mobile-floating-actions ${sidebarOpen && view === 'list' ? 'show' : ''}`}>
+        <button onClick={handlePublicClick} title="公共文件" aria-label="公共文件" className="rounded-full">
+          <FolderOpen className="w-4 h-4" />
+        </button>
+        <button onClick={() => { setSettingsOpen(true); closeSidebar(); }} title="设置" aria-label="设置" className="rounded-full">
+          <Settings className="w-4 h-4" />
+        </button>
+      </div>
 
       {/* Main Content */}
       <main

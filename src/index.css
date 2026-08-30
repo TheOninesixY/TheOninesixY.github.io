@@ -2,6 +2,15 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   color-scheme: light;
 
@@ -291,6 +300,10 @@ body {
   }
 
   .sidebar-overlay {
+    display: none !important;
+  }
+
+  .mobile-floating-actions {
     display: none !important;
   }
 

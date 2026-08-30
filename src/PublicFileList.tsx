@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { File, Video, Image, Download, Folder, Monitor, Moon, Sun, ExternalLink, Menu } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { File, Video, Image, Download, Folder, Monitor, Moon, Sun, ExternalLink, Search, X } from 'lucide-react';
 import { cn } from './utils/cn';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface PublicFile {
   name: string;
@@ -16,6 +16,14 @@ export default function PublicFileList() {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState<'system' | 'dark' | 'light'>('system');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const filteredFiles = useMemo(() => {
+    if (!searchQuery.trim()) return files;
+    const q = searchQuery.toLowerCase();
+    return files.filter(f => f.name.toLowerCase().includes(q));
+  }, [files, searchQuery]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('blog-theme') as 'system' | 'dark' | 'light' | null;
@@ -148,19 +156,46 @@ export default function PublicFileList() {
   return (
     <div className="h-screen bg-white dark:bg-black text-black dark:text-white flex overflow-hidden app-container selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
       {/* Mobile Header */}
-      <header className="mobile-header md:hidden">
-        <div className="mobile-header-left">
-          <button onClick={handleBack} className="mobile-back-btn flex items-center gap-1 font-mono text-xs uppercase">
-            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-            <span>返回</span>
-          </button>
-        </div>
-        <span className="mobile-header-title font-mono text-xs font-bold uppercase tracking-wider">
-          PUBLIC FILES // 公共文件
-        </span>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="mobile-menu-btn" title="菜单">
-          <Menu className="w-4 h-4" />
-        </button>
+      <header className={cn(
+        "mobile-header md:hidden",
+        searchOpen && "search-mode"
+      )}>
+        {searchOpen ? (
+          <>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="SEARCH_Files..."
+              className="mobile-search-input"
+              autoFocus
+            />
+            <button
+              onClick={() => {
+                setSearchOpen(false);
+                setSearchQuery('');
+              }}
+              className="mobile-search-close"
+              title="关闭搜索"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="mobile-header-left">
+              <button onClick={handleBack} className="mobile-back-btn" title="返回" aria-label="返回">
+                <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+              </button>
+            </div>
+            <span className="mobile-header-title font-mono text-xs font-bold uppercase tracking-wider">
+              PUBLIC FILES // 公共文件
+            </span>
+            <button onClick={() => setSearchOpen(true)} className="mobile-search-btn" title="搜索" aria-label="搜索">
+              <Search className="w-4 h-4" />
+            </button>
+          </>
+        )}
       </header>
 
       {/* Sidebar Overlay */}
@@ -170,13 +205,13 @@ export default function PublicFileList() {
       />
 
       {/* Sidebar */}
-      <aside className={cn(
-        "w-72 bg-white dark:bg-black border-r border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0 md:block",
+<aside className={cn(
+        "w-72 bg-white dark:bg-black border-r border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0 hidden md:flex public-sidebar",
         sidebarOpen && "open",
         "left"
       )}>
         {/* Sidebar Header */}
-        <header className="h-14 flex items-center px-4 border-b border-neutral-200 dark:border-neutral-800">
+        <header className="h-14 flex items-center justify-between px-4 border-b border-neutral-200 dark:border-neutral-800">
           <button
             onClick={handleBack}
             className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase text-black dark:text-white hover:opacity-60 transition-opacity"
@@ -184,7 +219,53 @@ export default function PublicFileList() {
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             <span>返回文档首页</span>
           </button>
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className={cn(
+              "p-1.5 border transition-colors",
+              searchOpen
+                ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white"
+                : "border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white"
+            )}
+            title="搜索"
+          >
+            <Search className="w-3.5 h-3.5" />
+          </button>
         </header>
+
+        {/* Search Bar in Sidebar */}
+        <AnimatePresence>
+          {searchOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="hidden md:block overflow-hidden border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950"
+            >
+              <div className="p-3">
+                <div className="relative flex items-center">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="SEARCH_Files..."
+                    className="w-full px-2.5 py-1.5 text-xs font-mono bg-white dark:bg-black border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-black dark:focus:border-white text-black dark:text-white placeholder-neutral-400"
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2 text-neutral-400 hover:text-black dark:hover:text-white"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto p-3">
@@ -242,15 +323,15 @@ export default function PublicFileList() {
 
           {/* Files List */}
           <div className="space-y-3">
-            {files.length === 0 ? (
+            {filteredFiles.length === 0 ? (
               <div className="border border-dashed border-neutral-300 dark:border-neutral-800 p-16 text-center">
                 <Folder className="w-12 h-12 mx-auto mb-3 text-neutral-400" />
                 <p className="font-mono text-xs uppercase tracking-wider text-neutral-500">
-                  暂无公开文件
+                  {files.length === 0 ? '暂无公开文件' : '未找到匹配文件'}
                 </p>
               </div>
             ) : (
-              files.map((file) => (
+              filteredFiles.map((file) => (
                 <div
                   key={file.name}
                   className="border border-neutral-300 dark:border-neutral-800 hover:border-black dark:hover:border-white p-4 transition-colors duration-150 bg-white dark:bg-neutral-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
