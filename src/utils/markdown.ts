@@ -98,7 +98,10 @@ function normalizePath(path: string): string {
 
 export function resolvePostUrl(url: string, postPath: string): string {
   if (url.startsWith('p:')) {
-    return `/${url.slice(2).replace(/^\/+/, '')}`;
+    // p: 链接指向站内路径（如 p:/public 指向公共文件区）。
+    // 必须带上 BASE_URL 前缀（如 /TindMark/），否则在 GitHub Pages 子路径部署下会 404。
+    const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+    return `${basePath}/${url.slice(2).replace(/^\/+/, '')}`;
   }
 
   if (/^(?:[a-z][a-z\d+.-]*:|\/\/|\/|#)/i.test(url)) {
