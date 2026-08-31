@@ -126,7 +126,7 @@ export default function App() {
           setToc(extractToc(post.content));
           setView('post');
           setCurrentFolder(null);
-          document.title = `${post.title} // TindMark`;
+          document.title = `${post.title} // OninesixY的小站`;
           if (mainContentRef.current) {
             mainContentRef.current.scrollTo(0, 0);
           }
@@ -142,7 +142,7 @@ export default function App() {
       setView('list');
       setCurrentPost(null);
       setToc([]);
-      document.title = 'TindMark';
+      document.title = 'OninesixY的小站';
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -249,7 +249,7 @@ export default function App() {
           setCurrentPost(post);
           setToc(extractToc(post.content));
           setView('post');
-          document.title = `${post.title} // TindMark`;
+          document.title = `${post.title} // OninesixY的小站`;
         } else {
           // Slug was provided but post not found, redirect to root
           if (window.location.pathname !== appUrl('/')) {
@@ -310,7 +310,7 @@ export default function App() {
     setCurrentPost(post);
     if (post) {
       setToc(extractToc(post.content));
-      document.title = `${post.title} // TindMark`;
+      document.title = `${post.title} // OninesixY的小站`;
       if (updateUrl) {
         const targetPath = appUrl('/' + post.slug);
         if (window.location.pathname !== targetPath) {
@@ -334,7 +334,7 @@ export default function App() {
     setCurrentPost(null);
     setCurrentFolder(null);
     setToc([]);
-    document.title = 'TindMark';
+    document.title = 'OninesixY的小站';
     if (updateUrl && window.location.pathname !== appUrl()) {
       window.history.pushState(null, '', appUrl());
     }
@@ -364,7 +364,7 @@ export default function App() {
     setView('list');
     setCurrentPost(null);
     setToc([]);
-    document.title = 'TindMark';
+    document.title = 'OninesixY的小站';
     if (window.location.pathname !== appUrl()) {
       window.history.pushState(null, '', appUrl());
     }
@@ -568,7 +568,7 @@ export default function App() {
               <Menu className="w-4 h-4" />
             </button>
             <span className="mobile-header-title font-mono text-sm font-bold uppercase tracking-wider">
-              TINDMARK
+              ONINESIXY的小站
             </span>
             <button
               onClick={() => setSearchOpen(true)}
@@ -727,6 +727,19 @@ export default function App() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Powered By Section */}
+                  <div className="mt-5 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
+                    <span>// 关于</span>
+                    <a
+                      href="https://github.com/TheOninesixY/TindMark"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-black dark:hover:text-white underline underline-offset-2 transition-colors"
+                    >
+                      由 TindMark (Beta) 驱动
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -756,7 +769,7 @@ export default function App() {
                 onClick={handleResetToList} 
                 className="cursor-pointer font-mono font-black text-sm tracking-wider uppercase text-black dark:text-white flex items-center gap-1.5"
               >
-                <span>TINDMARK</span>
+                <span>ONINESIXY的小站</span>
                 <span className="text-[10px] font-normal text-neutral-400 dark:text-neutral-600">//Docs</span>
               </div>
               <button 
