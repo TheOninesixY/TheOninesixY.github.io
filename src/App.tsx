@@ -169,7 +169,7 @@ export default function App() {
 
   useEffect(() => {
     const isMobile = window.innerWidth <= 768;
-    if (isMobile && sidebarOpen) {
+    if (isMobile && (sidebarOpen || settingsOpen)) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -177,7 +177,7 @@ export default function App() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [sidebarOpen]);
+  }, [sidebarOpen, settingsOpen]);
 
   const toggleFolderExpand = (path: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -507,7 +507,7 @@ export default function App() {
   });
 
   return (
-    <div className="h-screen bg-white dark:bg-black text-black dark:text-white flex overflow-hidden app-container selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+    <div className="h-screen md:h-screen bg-white dark:bg-black text-black dark:text-white flex overflow-hidden app-container selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
       {/* Mobile Header */}
       <header className={cn(
         "mobile-header md:hidden",

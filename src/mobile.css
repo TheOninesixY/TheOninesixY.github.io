@@ -10,8 +10,8 @@
 
   .app-container {
     flex-direction: column;
-    overflow: visible;
-    height: auto;
+    overflow: visible !important;
+    height: auto !important;
     min-height: 100vh;
   }
 
