@@ -25,6 +25,7 @@
   --text-primary: #000000;
   --text-secondary: #52525b;
   --text-muted: #71717a;
+  --accent-color: #000000;
 }
 
 .dark {
@@ -38,6 +39,7 @@
   --text-primary: #ffffff;
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
+  --accent-color: #ffffff;
 }
 
 /* Strict Zero Rounded Corners for Black & White Minimalist Style */
@@ -316,4 +318,65 @@ body {
     height: 100% !important;
     overflow-y: auto !important;
   }
+}
+
+/* Custom Theme Accent Overrides */
+:root[style*="--accent-color"] {
+  --border-color: var(--accent-color);
+  --text-primary: var(--accent-color);
+}
+
+.dark[style*="--accent-color"] {
+  --border-color: var(--accent-color);
+  --text-primary: var(--accent-color);
+}
+
+/* Theme accent application across elements */
+[style*="--accent-color"] .border-black,
+[style*="--accent-color"] .dark\:border-white,
+[style*="--accent-color"] .hover\:border-black:hover,
+[style*="--accent-color"] .dark\:hover\:border-white:hover,
+[style*="--accent-color"] .focus\:border-black:focus,
+[style*="--accent-color"] .dark\:focus\:border-white:focus {
+  border-color: var(--accent-color) !important;
+}
+
+[style*="--accent-color"] .bg-black,
+[style*="--accent-color"] .dark\:bg-white,
+[style*="--accent-color"] .hover\:bg-black:hover,
+[style*="--accent-color"] .dark\:hover\:bg-white:hover {
+  background-color: var(--accent-color) !important;
+}
+
+[style*="--accent-color"] .text-black,
+[style*="--accent-color"] .dark\:text-white,
+[style*="--accent-color"] .hover\:text-black:hover,
+[style*="--accent-color"] .dark\:hover\:text-white:hover,
+[style*="--accent-color"] .group:hover .group-hover\:text-black,
+[style*="--accent-color"] .group:hover .dark\:group-hover\:text-white {
+  color: var(--accent-color) !important;
+}
+
+/* Ensure text & icons on top of accent-colored background stay white in dark mode */
+.dark[style*="--accent-color"] .bg-black,
+.dark[style*="--accent-color"] .dark\:bg-white,
+.dark[style*="--accent-color"] .hover\:bg-black:hover,
+.dark[style*="--accent-color"] .dark\:hover\:bg-white:hover {
+  color: #ffffff !important;
+}
+
+.dark[style*="--accent-color"] .bg-black *,
+.dark[style*="--accent-color"] .dark\:bg-white *,
+.dark[style*="--accent-color"] .hover\:bg-black:hover *,
+.dark[style*="--accent-color"] .dark\:hover\:bg-white:hover * {
+  color: #ffffff !important;
+}
+
+/* Fix default swatch in settings so it always displays black/white */
+.theme-swatch-default {
+  background-color: #000000 !important;
+}
+
+.dark .theme-swatch-default {
+  background-color: #ffffff !important;
 }

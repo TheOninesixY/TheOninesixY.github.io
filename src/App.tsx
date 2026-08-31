@@ -6,10 +6,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PublicFileList from './PublicFileList';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree, resolvePostUrl } from './utils/markdown';
+import { loadThemeColors, applyCustomAccentColor, ThemeColorMap, DEFAULT_THEME_COLOR_KEY } from './utils/themeColor';
 import Markdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings } from 'lucide-react';
+import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings, Palette } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
@@ -58,8 +59,34 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({});
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [customColors, setCustomColors] = useState<ThemeColorMap>({});
+  const [activeColorKey, setActiveColorKey] = useState<string>(DEFAULT_THEME_COLOR_KEY);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadedColors = loadThemeColors();
+    setCustomColors(loadedColors);
+    const savedColorKey = localStorage.getItem('theme-accent-key') || DEFAULT_THEME_COLOR_KEY;
+    setActiveColorKey(savedColorKey);
+    if (savedColorKey !== DEFAULT_THEME_COLOR_KEY && loadedColors[savedColorKey]) {
+      applyCustomAccentColor(loadedColors[savedColorKey]);
+    } else {
+      applyCustomAccentColor(null);
+    }
+  }, []);
+
+  const handleColorChange = (key: string, hex: string | null) => {
+    setActiveColorKey(key);
+    localStorage.setItem('theme-accent-key', key);
+    if (hex) {
+      localStorage.setItem('theme-accent-color', hex);
+      applyCustomAccentColor(hex);
+    } else {
+      localStorage.removeItem('theme-accent-color');
+      applyCustomAccentColor(null);
+    }
+  };
 
   useEffect(() => {
     const handlePopState = async () => {
@@ -579,7 +606,7 @@ export default function App() {
                   {/* Theme Section */}
                   <div className="mb-5">
                     <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold mb-2.5">
-                      // 主题
+                      // 主题模式
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       {([
@@ -607,6 +634,49 @@ export default function App() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Accent Color Section (Dynamic from color.yaml) */}
+                  {Object.keys(customColors).length > 0 && (
+                    <div>
+                      <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold mb-2.5 flex items-center justify-between">
+                        <span>// 主题色 (COLOR.YAML)</span>
+                        <Palette className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-48 overflow-y-auto pr-1">
+                        <button
+                          onClick={() => handleColorChange(DEFAULT_THEME_COLOR_KEY, null)}
+                          className={cn(
+                            "flex items-center gap-2 px-2.5 py-2 border font-mono text-xs transition-colors text-left truncate",
+                            activeColorKey === DEFAULT_THEME_COLOR_KEY
+                              ? "border-black dark:border-white bg-neutral-100 dark:bg-neutral-900 font-bold"
+                              : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white"
+                          )}
+                        >
+                          <span className="w-3 h-3 rounded-none border border-neutral-400 dark:border-neutral-600 shrink-0 theme-swatch-default" />
+                          <span className="truncate">默认</span>
+                        </button>
+                        {Object.entries(customColors).map(([label, hex]) => (
+                          <button
+                            key={label}
+                            onClick={() => handleColorChange(label, hex)}
+                            className={cn(
+                              "flex items-center gap-2 px-2.5 py-2 border font-mono text-xs transition-colors text-left truncate",
+                              activeColorKey === label
+                                ? "border-black dark:border-white bg-neutral-100 dark:bg-neutral-900 font-bold"
+                                : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white"
+                            )}
+                            title={`${label} (${hex})`}
+                          >
+                            <span
+                              className="w-3 h-3 rounded-none border border-black/20 dark:border-white/20 shrink-0"
+                              style={{ backgroundColor: hex }}
+                            />
+                            <span className="truncate">{label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

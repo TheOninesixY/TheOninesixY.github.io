@@ -16,6 +16,12 @@
         } else {
           document.documentElement.classList.remove('dark');
         }
+        const savedAccent = localStorage.getItem('theme-accent-color');
+        if (savedAccent) {
+          document.documentElement.style.setProperty('--accent-color', savedAccent);
+          document.documentElement.style.setProperty('--border-color', savedAccent);
+          document.documentElement.style.setProperty('--text-primary', savedAccent);
+        }
       })();
     </script>
     <style>
