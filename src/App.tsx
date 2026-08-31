@@ -83,6 +83,11 @@ export default function App() {
             mainContentRef.current.scrollTo(0, 0);
           }
           return;
+        } else {
+          // Slug was provided but post not found, redirect to root
+          if (window.location.pathname !== appUrl('/')) {
+            window.history.replaceState(null, '', appUrl('/'));
+          }
         }
       }
 
@@ -197,6 +202,11 @@ export default function App() {
           setToc(extractToc(post.content));
           setView('post');
           document.title = `${post.title} // TindMark`;
+        } else {
+          // Slug was provided but post not found, redirect to root
+          if (window.location.pathname !== appUrl('/')) {
+            window.history.replaceState(null, '', appUrl('/'));
+          }
         }
       }
 
@@ -914,10 +924,6 @@ export default function App() {
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-mono text-[10px] tracking-wider uppercase px-1.5 py-0.5 border border-neutral-200 dark:border-neutral-800 text-neutral-500">
                             {isFolder ? 'FOLDER // 文件夹' : (formatDate(date) || 'DOC // 文档')}
-                          </span>
-                          <span className="font-mono text-[10px] text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors flex items-center gap-0.5">
-                            <span>{isFolder ? 'ENTER' : 'READ'}</span>
-                            <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
                           </span>
                         </div>
                         <h3 className="text-base font-bold text-black dark:text-white mb-2 leading-snug group-hover:underline underline-offset-4">
