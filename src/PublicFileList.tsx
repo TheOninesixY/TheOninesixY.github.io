@@ -135,7 +135,7 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
   }
 
   return (
-    <div className="h-screen md:h-screen bg-white dark:bg-black text-black dark:text-white flex overflow-hidden app-container selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+    <div className="h-screen md:h-screen bg-white dark:bg-black text-black dark:text-white flex overflow-hidden app-container public-app selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
       {/* Mobile Header */}
       <header className={cn(
         "mobile-header md:hidden",

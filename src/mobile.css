@@ -15,6 +15,21 @@
     min-height: 100vh;
   }
 
+  /* Public file list: self-contained scroll container on mobile */
+  .public-app {
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .public-app main {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
   /* Hide desktop sidebar header on mobile */
   aside > header:first-of-type {
     display: none;

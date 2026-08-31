@@ -223,12 +223,8 @@ export default function App() {
   useEffect(() => {
     async function loadPosts() {
       const path = currentPath();
-      if (path.startsWith('/public')) {
-        setIsPublicPath(true);
-        setLoading(false);
-        return;
-      }
 
+      // Always load posts so returning from /public shows the list
       const allPosts = await getAllPosts();
       setPosts(allPosts);
       const tree = await buildFolderTree(allPosts);
@@ -241,6 +237,12 @@ export default function App() {
         }
       });
       setExpandedFolders(defaultExpanded);
+
+      if (path.startsWith('/public')) {
+        setIsPublicPath(true);
+        setLoading(false);
+        return;
+      }
 
       const rawSlug = path.replace(/^\/+/, '').replace(/^[Dd]ocs\//, '').replace(/\/+$/, '');
       if (rawSlug) {
@@ -356,6 +358,9 @@ export default function App() {
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
     }
+    setSidebarOpen(false);
+    setSettingsOpen(false);
+    document.body.style.overflow = '';
     setIsPublicPath(true);
   };
 
@@ -482,6 +487,7 @@ export default function App() {
   if (isPublicPath) {
     return <PublicFileList onBack={() => {
       setIsPublicPath(false);
+      document.body.style.overflow = '';
       handleBack(true);
     }} />;
   }
