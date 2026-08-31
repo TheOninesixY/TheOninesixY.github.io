@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { File, Video, Image, Download, Folder, Monitor, Moon, Sun, ExternalLink, Search, X } from 'lucide-react';
+import { File, Video, Image, Download, Folder, ExternalLink, Search, X } from 'lucide-react';
 import { cn } from './utils/cn';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -17,6 +17,7 @@ interface PublicFileListProps {
 
 export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
   const [files, setFiles] = useState<PublicFile[]>([]);
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState<'system' | 'dark' | 'light'>('system');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -49,38 +50,6 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
-    }
-  };
-
-  const toggleTheme = () => {
-    const themes: ('system' | 'dark' | 'light')[] = ['system', 'dark', 'light'];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    const newTheme = themes[nextIndex];
-    setTheme(newTheme);
-    localStorage.setItem('blog-theme', newTheme);
-    applyTheme(newTheme);
-  };
-
-  const getThemeIcon = () => {
-    switch (theme) {
-      case 'dark':
-        return <Moon className="w-4 h-4" />;
-      case 'light':
-        return <Sun className="w-4 h-4" />;
-      default:
-        return <Monitor className="w-4 h-4" />;
-    }
-  };
-
-  const getThemeTitle = () => {
-    switch (theme) {
-      case 'dark':
-        return '深色';
-      case 'light':
-        return '浅色';
-      default:
-        return '系统';
     }
   };
 
@@ -281,32 +250,56 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
 
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto p-3">
-          <div className="px-2 py-1 mb-2 border-b border-neutral-100 dark:border-neutral-900 font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold">
-            // 资源导航
+          <div className="px-2 py-1 mb-2 border-b border-neutral-100 dark:border-neutral-900 font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold flex items-center justify-between">
+            <span>// 全部文件</span>
+            <span className="text-neutral-400 dark:text-neutral-600">[{filteredFiles.length}]</span>
           </div>
-          <div className="w-full text-left px-2.5 py-1.5 text-xs font-mono bg-black text-white dark:bg-white dark:text-black font-bold border-l-2 border-black dark:border-white">
-            公共文件列表 [{files.length}]
-          </div>
-        </div>
+          
+          <div className="space-y-0.5">
+            <button
+              onClick={() => setSelectedFile(null)}
+              className={cn(
+                "w-full text-left px-2.5 py-1.5 text-xs font-mono transition-colors duration-150 flex items-center gap-2 border-l-2",
+                selectedFile === null
+                  ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
+                  : "border-transparent text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white"
+              )}
+            >
+              <Folder className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">全部文件列表</span>
+            </button>
 
-        {/* Sidebar Bottom */}
-        <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
-          <button
-            onClick={handleBack}
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-            title="返回首页"
-          >
-            <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-            <span>返回首页</span>
-          </button>
-          <button
-            onClick={toggleTheme}
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono border border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-            title={getThemeTitle()}
-          >
-            {getThemeIcon()}
-            <span>{getThemeTitle()}</span>
-          </button>
+            {filteredFiles.map((file) => {
+              const isSelected = selectedFile === file.name;
+              return (
+                <button
+                  key={file.name}
+                  onClick={() => {
+                    setSelectedFile(file.name);
+                    window.open(file.path, '_blank', 'noopener,noreferrer');
+                  }}
+                  className={cn(
+                    "w-full text-left px-2.5 py-1.5 text-xs font-mono transition-colors duration-150 flex items-center justify-between gap-2 border-l-2 group",
+                    isSelected
+                      ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
+                      : "border-transparent text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white"
+                  )}
+                  title={`查看预览: ${file.name}`}
+                >
+                  <div className="flex items-center gap-2 min-w-0 truncate">
+                    <File className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">{file.name}</span>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] shrink-0 font-mono",
+                    isSelected ? "opacity-75" : "text-neutral-400 dark:text-neutral-600"
+                  )}>
+                    {formatFileSize(file.size)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </aside>
 
@@ -346,7 +339,13 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
               filteredFiles.map((file) => (
                 <div
                   key={file.name}
-                  className="border border-neutral-300 dark:border-neutral-800 hover:border-black dark:hover:border-white p-4 transition-colors duration-150 bg-white dark:bg-neutral-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                  id={`file-${file.name}`}
+                  className={cn(
+                    "border p-4 transition-colors duration-150 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group",
+                    selectedFile === file.name
+                      ? "border-black dark:border-white bg-neutral-50 dark:bg-neutral-900"
+                      : "border-neutral-300 dark:border-neutral-800 hover:border-black dark:hover:border-white bg-white dark:bg-neutral-950"
+                  )}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
                     <div className="p-2 border border-neutral-200 dark:border-neutral-800 group-hover:border-black dark:group-hover:border-white transition-colors">

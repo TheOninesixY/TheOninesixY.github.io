@@ -281,7 +281,7 @@ export default function App() {
     }
   };
 
-  const handleBack = (updateUrl = true) => {
+  const handleBack = (updateUrl: boolean = true) => {
     setView('list');
     setCurrentPost(null);
     setCurrentFolder(null);
@@ -293,6 +293,10 @@ export default function App() {
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
     }
+  };
+
+  const handleBackClick = () => {
+    handleBack(true);
   };
 
   const handleResetToList = () => {
@@ -554,16 +558,16 @@ export default function App() {
               transition={{ duration: 0.15 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
             >
-              <div className="pointer-events-auto w-full max-w-md bg-white text-black border border-neutral-200 shadow-none">
+              <div className="pointer-events-auto w-full max-w-md bg-white dark:bg-neutral-950 text-black dark:text-white border border-neutral-200 dark:border-neutral-800 shadow-none">
                 {/* Settings Header */}
-                <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200">
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200 dark:border-neutral-800">
                   <div className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-wider">
                     <Settings className="w-4 h-4" />
                     <span>设置</span>
                   </div>
                   <button
                     onClick={() => setSettingsOpen(false)}
-                    className="p-1.5 border border-neutral-200 hover:border-black transition-colors"
+                    className="p-1.5 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white transition-colors"
                     title="关闭"
                   >
                     <X className="w-4 h-4" />
@@ -574,7 +578,7 @@ export default function App() {
                 <div className="p-5">
                   {/* Theme Section */}
                   <div className="mb-5">
-                    <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 font-bold mb-2.5">
+                    <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold mb-2.5">
                       // 主题
                     </div>
                     <div className="grid grid-cols-3 gap-2">
@@ -593,8 +597,8 @@ export default function App() {
                           className={cn(
                             "flex flex-col items-center gap-1.5 px-3 py-3 border font-mono text-xs transition-colors",
                             theme === option.key
-                              ? "bg-black text-white border-black"
-                              : "border-neutral-300 hover:border-black"
+                              ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white"
+                              : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white text-neutral-700 dark:text-neutral-300"
                           )}
                         >
                           {option.icon}
@@ -620,7 +624,7 @@ export default function App() {
         <header className="h-14 flex items-center justify-between px-4 border-b border-neutral-200 dark:border-neutral-800">
           {view === 'post' ? (
             <button
-              onClick={handleBack}
+              onClick={handleBackClick}
               className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase text-black dark:text-white hover:opacity-60 transition-opacity"
             >
               <span className="material-symbols-outlined text-[16px]">arrow_back</span>
@@ -1080,7 +1084,7 @@ export default function App() {
                     {/* Post Bottom Footer */}
                     <div className="mt-12 pt-6 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between font-mono text-xs">
                       <button
-                        onClick={handleBack}
+                        onClick={handleBackClick}
                         className="border border-neutral-300 dark:border-neutral-700 px-3 py-2 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-[14px]">arrow_back</span>
