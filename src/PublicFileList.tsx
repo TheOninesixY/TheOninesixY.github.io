@@ -111,19 +111,23 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
     const fetchFiles = async () => {
       try {
         const isDev = import.meta.env.DEV;
-        const url = isDev ? '/api/public-files' : `${import.meta.env.BASE_URL}public-files.json`;
+        const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+          ? import.meta.env.BASE_URL
+          : `${import.meta.env.BASE_URL}/`;
+        const url = isDev ? '/api/public-files' : `${baseUrl}public-files.json`;
         
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error('Failed to fetch public files');
+          throw new Error(`Failed to fetch public files: ${response.status}`);
         }
-        const config = await response.json();
+        const data = await response.json();
+        const rawFiles = Array.isArray(data) ? data : data?.files || [];
         
-        const publicFiles: PublicFile[] = config.files.map((file: { name: string; type: string; size: number }) => {
-          const ext = file.name.split('.').pop() || '';
+        const publicFiles: PublicFile[] = rawFiles.map((file: { name: string; type: string; size: number }) => {
+          const ext = file.name?.split('.').pop() || '';
           return {
             name: file.name,
-            path: `${import.meta.env.BASE_URL}${file.name}`,
+            path: `${baseUrl}${file.name}`,
             size: file.size || 0,
             type: 'file' as const,
             extension: ext,
