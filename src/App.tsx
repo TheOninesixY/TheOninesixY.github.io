@@ -21,9 +21,25 @@ interface TocItem {
   level: number;
 }
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const appUrl = (path = '/') => `${basePath}${path}` || '/';
-const currentPath = () => window.location.pathname.slice(basePath.length) || '/';
+const getBasePath = () => {
+  const base = import.meta.env.BASE_URL || '/';
+  return base.endsWith('/') ? base.slice(0, -1) : base;
+};
+
+const appUrl = (path = '/') => {
+  const basePath = getBasePath();
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${basePath}${normalizedPath}` || '/';
+};
+
+const currentPath = () => {
+  const pathname = window.location.pathname;
+  const basePath = getBasePath();
+  if (basePath && pathname.startsWith(basePath)) {
+    return pathname.slice(basePath.length) || '/';
+  }
+  return pathname || '/';
+};
 
 export default function App() {
   const [isPublicPath, setIsPublicPath] = useState(false);
