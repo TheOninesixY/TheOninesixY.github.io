@@ -372,11 +372,19 @@ body {
   color: #ffffff !important;
 }
 
-/* Fix default swatch in settings so it always displays black/white */
+/* Fix default swatch and text in settings so they always display true black/white */
 .theme-swatch-default {
   background-color: #000000 !important;
 }
 
 .dark .theme-swatch-default {
   background-color: #ffffff !important;
+}
+
+.theme-text-default {
+  color: #000000 !important;
+}
+
+.dark .theme-text-default {
+  color: #ffffff !important;
 }
