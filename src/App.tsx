@@ -402,7 +402,10 @@ export default function App() {
   };
 
   if (isPublicPath) {
-    return <PublicFileList />;
+    return <PublicFileList onBack={() => {
+      setIsPublicPath(false);
+      handleBack(true);
+    }} />;
   }
 
   if (loading && posts.length === 0) {

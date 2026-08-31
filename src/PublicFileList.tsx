@@ -11,7 +11,11 @@ interface PublicFile {
   extension: string;
 }
 
-export default function PublicFileList() {
+interface PublicFileListProps {
+  onBack?: () => void;
+}
+
+export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
   const [files, setFiles] = useState<PublicFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState<'system' | 'dark' | 'light'>('system');
@@ -139,7 +143,11 @@ export default function PublicFileList() {
   }, []);
 
   const handleBack = () => {
-    window.location.href = import.meta.env.BASE_URL;
+    if (onBack) {
+      onBack();
+    } else {
+      window.location.href = import.meta.env.BASE_URL;
+    }
   };
 
   if (loading) {
