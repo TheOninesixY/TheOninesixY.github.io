@@ -1,17 +1,29 @@
 import matter from 'gray-matter';
+import { markdownFiles, folderConfigs, docsFolderName } from 'virtual:tindmark-docs';
 
+// 动态匹配所有静态资源（图片、脚本等）
 const articleFileUrls = {
-  ...import.meta.glob(['/docs/**/*', '!/docs/**/*.md', '!/docs/**/.folder.json'], {
-    eager: true,
-    query: '?url',
-    import: 'default',
-  }),
-  ...import.meta.glob(['/Docs/**/*', '!/Docs/**/*.md', '!/Docs/**/.folder.json'], {
+  ...import.meta.glob(['/**/*'], {
     eager: true,
     query: '?url',
     import: 'default',
   }),
 } as Record<string, string>;
+
+// 过滤掉 markdown、.folder.json 以及 .tindmark 内部文件
+const nonMarkdownArticleUrls: Record<string, string> = {};
+for (const [filePath, url] of Object.entries(articleFileUrls)) {
+  if (
+    !filePath.startsWith('/.tindmark/') &&
+    !filePath.startsWith('/node_modules/') &&
+    !filePath.endsWith('.md') &&
+    !filePath.endsWith('.folder.json') &&
+    !filePath.endsWith('.yml') &&
+    !filePath.endsWith('.yaml')
+  ) {
+    nonMarkdownArticleUrls[filePath] = url;
+  }
+}
 
 export interface PostMetadata {
   title: string;
@@ -42,19 +54,15 @@ interface FolderConfig {
 
 async function loadFolderConfig(folderPath: string): Promise<FolderConfig | null> {
   try {
-    const modules = {
-      ...import.meta.glob('/docs/**/.folder.json', { as: 'raw', eager: true }),
-      ...import.meta.glob('/Docs/**/.folder.json', { as: 'raw', eager: true }),
-    };
-    const content = modules[`/docs/${folderPath}/.folder.json`] || modules[`/Docs/${folderPath}/.folder.json`];
-    
-    if (!content) return null;
-    
-    const config = JSON.parse(content as string);
-    return {
-      title: config.title,
-      hidden: config.hidden ?? false,
-    };
+    const configPath = `${folderPath}/.folder.json`;
+    const config = folderConfigs[configPath];
+    if (config) {
+      return {
+        title: config.title,
+        hidden: config.hidden ?? false,
+      };
+    }
+    return null;
   } catch (error) {
     return null;
   }
@@ -70,8 +78,8 @@ function extractTitleFromContent(content: string): string | null {
   return null;
 }
 
-function extractFileNameWithoutPath(path: string): string {
-  const pathParts = path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '').split('/');
+function extractFileNameWithoutPath(relativePath: string): string {
+  const pathParts = relativePath.replace(/\.md$/, '').split('/');
   let fileName = pathParts[pathParts.length - 1];
   
   if (fileName === 'index' && pathParts.length > 1) {
@@ -98,8 +106,6 @@ function normalizePath(path: string): string {
 
 export function resolvePostUrl(url: string, postPath: string): string {
   if (url.startsWith('p:')) {
-    // p: 链接指向站内路径（如 p:/public 指向公共文件区）。
-    // 必须带上 BASE_URL 前缀（如 /TindMark/），否则在 GitHub Pages 子路径部署下会 404。
     const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
     return `${basePath}/${url.slice(2).replace(/^\/+/, '')}`;
   }
@@ -109,7 +115,8 @@ export function resolvePostUrl(url: string, postPath: string): string {
   }
 
   const [, filePath, suffix = ''] = url.match(/^([^?#]*)(.*)$/) || [];
-  const postDirectory = postPath.slice(0, postPath.lastIndexOf('/') + 1);
+  const fullPostPath = `/${docsFolderName}/${postPath}`;
+  const postDirectory = fullPostPath.slice(0, fullPostPath.lastIndexOf('/') + 1);
   const sourcePath = normalizePath(`${postDirectory}${filePath}`);
   let decodedSourcePath = sourcePath;
 
@@ -119,111 +126,89 @@ export function resolvePostUrl(url: string, postPath: string): string {
     // Keep the original URL when it contains an invalid escape sequence.
   }
 
-  const assetUrl = articleFileUrls[sourcePath] || articleFileUrls[decodedSourcePath];
+  const assetUrl = nonMarkdownArticleUrls[sourcePath] || nonMarkdownArticleUrls[decodedSourcePath];
   return assetUrl ? `${assetUrl}${suffix}` : url;
 }
 
-// In a real app, we might fetch this from an API.
-// Here we use Vite's import.meta.glob to find all markdown files in /docs or /Docs recursively.
 export async function getAllPosts(): Promise<PostMetadata[]> {
-  const modules = {
-    ...import.meta.glob('/docs/**/*.md', { as: 'raw', eager: true }),
-    ...import.meta.glob('/Docs/**/*.md', { as: 'raw', eager: true }),
-  };
-  
-  const posts = Object.entries(modules).map(([path, content]) => {
-    let slug = path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '');
+  const posts: PostMetadata[] = [];
+
+  for (const [relPath, content] of Object.entries(markdownFiles)) {
+    const { data, content: markdownContent } = matter(content as string);
+    if (data.hide === true) {
+      continue;
+    }
+
+    let slug = relPath.replace(/\.md$/, '');
     
     if (slug.endsWith('/index')) {
       slug = slug.slice(0, -6);
     }
-    
-    const { data, content: markdownContent } = matter(content as string);
     
     let title = data.title;
     if (!title) {
       title = extractTitleFromContent(markdownContent);
     }
     if (!title) {
-      title = extractFileNameWithoutPath(path);
+      title = extractFileNameWithoutPath(relPath);
     }
     
-    return {
+    posts.push({
       slug,
-      path,
+      path: relPath,
       title,
       date: data.date || '',
       excerpt: data.excerpt || '',
-    };
-  });
+    });
+  }
 
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const modules = {
-    ...import.meta.glob('/docs/**/*.md', { as: 'raw', eager: true }),
-    ...import.meta.glob('/Docs/**/*.md', { as: 'raw', eager: true }),
-  };
-  
   let cleanSlug = slug;
   try {
     cleanSlug = decodeURIComponent(slug);
   } catch (e) {
     cleanSlug = slug;
   }
-  cleanSlug = cleanSlug.replace(/^\/+/, '').replace(/^[Dd]ocs\//, '').replace(/\/+$/, '');
+  cleanSlug = cleanSlug.replace(/^\/+/, '').replace(/\/+$/, '');
 
-  const possiblePaths = [
-    `/docs/${cleanSlug}.md`,
-    `/docs/${cleanSlug}/index.md`,
-    `/Docs/${cleanSlug}.md`,
-    `/Docs/${cleanSlug}/index.md`,
-  ];
+  let content: string | null = null;
+  let matchedRelPath = '';
   
-  let content = null;
-  let matchedPath = '';
-  
-  for (const path of possiblePaths) {
-    if (modules[path]) {
-      content = modules[path];
-      matchedPath = path;
-      break;
+  const lowerClean = cleanSlug.toLowerCase();
+  for (const [relPath, modContent] of Object.entries(markdownFiles)) {
+    let pSlug = relPath.replace(/\.md$/, '');
+    if (pSlug.endsWith('/index')) {
+      pSlug = pSlug.slice(0, -6);
     }
-  }
-
-  // Fallback: match by cleaned slug
-  if (!content) {
-    const lowerClean = cleanSlug.toLowerCase();
-    for (const [path, modContent] of Object.entries(modules)) {
-      let pSlug = path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '');
-      if (pSlug.endsWith('/index')) {
-        pSlug = pSlug.slice(0, -6);
-      }
-      if (pSlug.toLowerCase() === lowerClean) {
-        content = modContent;
-        matchedPath = path;
-        cleanSlug = pSlug;
-        break;
-      }
+    if (pSlug.toLowerCase() === lowerClean) {
+      content = modContent;
+      matchedRelPath = relPath;
+      cleanSlug = pSlug;
+      break;
     }
   }
 
   if (!content) return null;
 
   const { data, content: markdownContent } = matter(content as string);
+  if (data.hide === true) {
+    return null;
+  }
 
   let title = data.title;
   if (!title) {
     title = extractTitleFromContent(markdownContent);
   }
   if (!title) {
-    title = extractFileNameWithoutPath(matchedPath);
+    title = extractFileNameWithoutPath(matchedRelPath);
   }
 
   return {
     slug: cleanSlug,
-    path: matchedPath,
+    path: matchedRelPath,
     title,
     date: data.date || '',
     excerpt: data.excerpt || '',
@@ -233,11 +218,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 export async function buildFolderTree(posts: PostMetadata[]): Promise<FolderItem[]> {
   const tree: FolderItem[] = [];
-  const folderMap = new Map<string, FolderItem>();
-  const folderConfigs = new Map<string, FolderConfig>();
+  const folderConfigsMap = new Map<string, FolderConfig>();
 
   for (const post of posts) {
-    const pathParts = post.path.replace(/^\/[Dd]ocs\//, '').replace(/\.md$/, '').split('/');
+    const pathParts = post.path.replace(/\.md$/, '').split('/');
     let currentLevel = tree;
     let currentPath = '';
 
@@ -257,12 +241,12 @@ export async function buildFolderTree(posts: PostMetadata[]): Promise<FolderItem
         let folder = currentLevel.find(item => item.type === 'folder' && item.name === part);
         
         if (!folder) {
-          if (!folderConfigs.has(currentPath)) {
+          if (!folderConfigsMap.has(currentPath)) {
             const config = await loadFolderConfig(currentPath);
-            folderConfigs.set(currentPath, config || {});
+            folderConfigsMap.set(currentPath, config || {});
           }
           
-          const config = folderConfigs.get(currentPath)!;
+          const config = folderConfigsMap.get(currentPath)!;
           
           folder = {
             name: part,

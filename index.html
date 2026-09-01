@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OninesixY的小站</title>
+    <title>TindMark</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +16,7 @@
         } else {
           document.documentElement.classList.remove('dark');
         }
-        const savedAccent = localStorage.getItem('theme-accent-color');
+        const savedAccent = localStorage.getItem('theme-accent-color') || window.__TINDMARK_DEFAULT_ACCENT__;
         if (savedAccent) {
           document.documentElement.style.setProperty('--accent-color', savedAccent);
           document.documentElement.style.setProperty('--border-color', savedAccent);
@@ -86,7 +86,7 @@
       <div class="loading-text">LOADING // TindMark</div>
     </div>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/.tindmark/src/main.tsx"></script>
   </body>
 </html>
 

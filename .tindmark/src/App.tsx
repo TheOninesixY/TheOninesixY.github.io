@@ -7,10 +7,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import PublicFileList from './PublicFileList';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree, resolvePostUrl } from './utils/markdown';
 import { loadThemeColors, applyCustomAccentColor, ThemeColorMap, DEFAULT_THEME_COLOR_KEY } from './utils/themeColor';
+import { loadSiteConfig, SiteConfig } from './utils/config';
 import Markdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings, Palette } from 'lucide-react';
+import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
@@ -62,22 +63,30 @@ export default function App() {
   const [customColors, setCustomColors] = useState<ThemeColorMap>({});
   const [activeColorKey, setActiveColorKey] = useState<string>(DEFAULT_THEME_COLOR_KEY);
   const [customHexInput, setCustomHexInput] = useState<string>('');
+  const [config, setConfig] = useState<SiteConfig>(() => loadSiteConfig());
 
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const siteConfig = loadSiteConfig();
+    setConfig(siteConfig);
     const loadedColors = loadThemeColors();
     setCustomColors(loadedColors);
-    const savedColorKey = localStorage.getItem('theme-accent-key') || DEFAULT_THEME_COLOR_KEY;
+
+    const configuredDefaultKey = siteConfig.DefaultColor?.trim() || DEFAULT_THEME_COLOR_KEY;
+    const savedColorKey = localStorage.getItem('theme-accent-key');
+    const activeKey = savedColorKey || configuredDefaultKey;
     const savedCustomHex = localStorage.getItem('theme-custom-hex') || '';
+
     if (savedCustomHex) {
       setCustomHexInput(savedCustomHex);
     }
-    setActiveColorKey(savedColorKey);
-    if (savedColorKey === 'custom' && savedCustomHex) {
+    setActiveColorKey(activeKey);
+
+    if (activeKey === 'custom' && savedCustomHex) {
       applyCustomAccentColor(savedCustomHex);
-    } else if (savedColorKey !== DEFAULT_THEME_COLOR_KEY && loadedColors[savedColorKey]) {
-      applyCustomAccentColor(loadedColors[savedColorKey]);
+    } else if (activeKey && activeKey !== DEFAULT_THEME_COLOR_KEY && loadedColors[activeKey]) {
+      applyCustomAccentColor(loadedColors[activeKey]);
     } else {
       applyCustomAccentColor(null);
     }
@@ -126,7 +135,7 @@ export default function App() {
           setToc(extractToc(post.content));
           setView('post');
           setCurrentFolder(null);
-          document.title = `${post.title} // OninesixY的小站`;
+          document.title = `${post.title} // ${config.Title || 'TindMark'}`;
           if (mainContentRef.current) {
             mainContentRef.current.scrollTo(0, 0);
           }
@@ -142,12 +151,12 @@ export default function App() {
       setView('list');
       setCurrentPost(null);
       setToc([]);
-      document.title = 'OninesixY的小站';
+      document.title = config.Title || 'TindMark';
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [config.Title]);
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
@@ -251,7 +260,7 @@ export default function App() {
           setCurrentPost(post);
           setToc(extractToc(post.content));
           setView('post');
-          document.title = `${post.title} // OninesixY的小站`;
+          document.title = `${post.title} // ${config.Title || 'TindMark'}`;
         } else {
           // Slug was provided but post not found, redirect to root
           if (window.location.pathname !== appUrl('/')) {
@@ -263,7 +272,7 @@ export default function App() {
       setLoading(false);
     }
     loadPosts();
-  }, []);
+  }, [config.Title]);
 
   const extractToc = (content: string): TocItem[] => {
     const regex = /^(#{2,3})\s+(.+)$/gm;
@@ -312,7 +321,7 @@ export default function App() {
     setCurrentPost(post);
     if (post) {
       setToc(extractToc(post.content));
-      document.title = `${post.title} // OninesixY的小站`;
+      document.title = `${post.title} // ${config.Title || 'TindMark'}`;
       if (updateUrl) {
         const targetPath = appUrl('/' + post.slug);
         if (window.location.pathname !== targetPath) {
@@ -336,7 +345,7 @@ export default function App() {
     setCurrentPost(null);
     setCurrentFolder(null);
     setToc([]);
-    document.title = 'OninesixY的小站';
+    document.title = config.Title || 'TindMark';
     if (updateUrl && window.location.pathname !== appUrl()) {
       window.history.pushState(null, '', appUrl());
     }
@@ -369,7 +378,7 @@ export default function App() {
     setView('list');
     setCurrentPost(null);
     setToc([]);
-    document.title = 'OninesixY的小站';
+    document.title = config.Title || 'TindMark';
     if (window.location.pathname !== appUrl()) {
       window.history.pushState(null, '', appUrl());
     }
@@ -574,7 +583,7 @@ export default function App() {
               <Menu className="w-4 h-4" />
             </button>
             <span className="mobile-header-title font-mono text-sm font-bold uppercase tracking-wider">
-              ONINESIXY的小站
+              {config.Title || 'TindMark'}
             </span>
             <button
               onClick={() => setSearchOpen(true)}
@@ -664,9 +673,8 @@ export default function App() {
 
                   {/* Accent Color Section (Dynamic from color.yaml & Custom Input) */}
                   <div>
-                    <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold mb-2.5 flex items-center justify-between">
+                    <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold mb-2.5">
                       <span>// 主题色</span>
-                      <Palette className="w-3.5 h-3.5" />
                     </div>
 
                     {/* Custom HEX Input */}
@@ -699,39 +707,56 @@ export default function App() {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-48 overflow-y-auto pr-1">
-                      <button
-                        onClick={() => handleColorChange(DEFAULT_THEME_COLOR_KEY, null)}
-                        className={cn(
-                          "flex items-center gap-2 px-2.5 py-2 border font-mono text-xs transition-colors text-left truncate",
-                          activeColorKey === DEFAULT_THEME_COLOR_KEY
-                            ? "border-black dark:border-white bg-neutral-100 dark:bg-neutral-900 font-bold"
-                            : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white"
-                        )}
-                      >
-                        <span className="w-3 h-3 rounded-none border border-neutral-400 dark:border-neutral-600 shrink-0 theme-swatch-default" />
-                        <span className="truncate theme-text-default">默认</span>
-                      </button>
-                      {Object.entries(customColors).map(([label, hex]) => (
+                    {Object.keys(customColors).length > 0 ? (
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-48 overflow-y-auto pr-1">
                         <button
-                          key={label}
-                          onClick={() => handleColorChange(label, hex)}
+                          onClick={() => handleColorChange(DEFAULT_THEME_COLOR_KEY, null)}
                           className={cn(
                             "flex items-center gap-2 px-2.5 py-2 border font-mono text-xs transition-colors text-left truncate",
-                            activeColorKey === label
+                            activeColorKey === DEFAULT_THEME_COLOR_KEY
                               ? "border-black dark:border-white bg-neutral-100 dark:bg-neutral-900 font-bold"
                               : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white"
                           )}
-                          title={`${label} (${hex})`}
                         >
-                          <span
-                            className="w-3 h-3 rounded-none border border-black/20 dark:border-white/20 shrink-0"
-                            style={{ backgroundColor: hex }}
-                          />
-                          <span className="truncate" style={{ color: hex }}>{label}</span>
+                          <span className="w-3 h-3 rounded-none border border-neutral-400 dark:border-neutral-600 shrink-0 theme-swatch-default" />
+                          <span className="truncate theme-text-default">默认</span>
                         </button>
-                      ))}
-                    </div>
+                        {Object.entries(customColors).map(([label, hex]) => (
+                          <button
+                            key={label}
+                            onClick={() => handleColorChange(label, hex)}
+                            className={cn(
+                              "flex items-center gap-2 px-2.5 py-2 border font-mono text-xs transition-colors text-left truncate",
+                              activeColorKey === label
+                                ? "border-black dark:border-white bg-neutral-100 dark:bg-neutral-900 font-bold"
+                                : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white"
+                            )}
+                            title={`${label} (${hex})`}
+                          >
+                            <span
+                              className="w-3 h-3 rounded-none border border-black/20 dark:border-white/20 shrink-0"
+                              style={{ backgroundColor: hex }}
+                            />
+                            <span className="truncate" style={{ color: hex }}>{label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          onClick={() => handleColorChange(DEFAULT_THEME_COLOR_KEY, null)}
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-1.5 border font-mono text-xs transition-colors",
+                            activeColorKey === DEFAULT_THEME_COLOR_KEY
+                              ? "border-black dark:border-white bg-neutral-100 dark:bg-neutral-900 font-bold"
+                              : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white"
+                          )}
+                        >
+                          <span className="w-3 h-3 rounded-none border border-neutral-400 dark:border-neutral-600 shrink-0 theme-swatch-default" />
+                          <span className="theme-text-default">重置为默认黑白</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Powered By Section */}
@@ -773,10 +798,11 @@ export default function App() {
             <div className="flex items-center justify-between w-full">
               <div 
                 onClick={handleResetToList} 
-                className="cursor-pointer font-mono font-black text-sm tracking-wider uppercase text-black dark:text-white flex items-center gap-1.5"
+                className="cursor-pointer font-mono font-black text-sm tracking-wider uppercase text-black dark:text-white flex items-center gap-1.5 truncate"
+                title={config.Subtitle || config.Description}
               >
-                <span>ONINESIXY的小站</span>
-                <span className="text-[10px] font-normal text-neutral-400 dark:text-neutral-600">//Docs</span>
+                <span className="truncate">{config.Title || 'TindMark'}</span>
+                <span className="text-[10px] font-normal text-neutral-400 dark:text-neutral-600 shrink-0">//Docs</span>
               </div>
               <button 
                 onClick={() => setSearchOpen(!searchOpen)}
@@ -1120,12 +1146,24 @@ export default function App() {
                         rehypePlugins={[rehypeRaw]}
                         urlTransform={(url) => defaultUrlTransform(resolvePostUrl(url, currentPost.path))}
                         components={{
+                          h1: ({ children, node, ...props }: any) => {
+                            const text = React.Children.toArray(children).map(c => typeof c === 'string' ? c : '').join('');
+                            const id = text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
+                            return (
+                              <h1 id={id} className="group flex items-center gap-2" {...props}>
+                                <span className="markdown-heading-accent">{children}</span>
+                                <a href={`#${id}`} className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-black dark:hover:text-white font-mono text-base no-underline ml-1">
+                                  #
+                                </a>
+                              </h1>
+                            );
+                          },
                           h2: ({ children, node, ...props }: any) => {
                             const text = React.Children.toArray(children).map(c => typeof c === 'string' ? c : '').join('');
                             const id = text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
                             return (
                               <h2 id={id} className="group flex items-center gap-2" {...props}>
-                                <span>{children}</span>
+                                <span className="markdown-heading-accent">{children}</span>
                                 <a href={`#${id}`} className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-black dark:hover:text-white font-mono text-sm no-underline ml-1">
                                   #
                                 </a>
@@ -1137,13 +1175,22 @@ export default function App() {
                             const id = text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-');
                             return (
                               <h3 id={id} className="group flex items-center gap-2" {...props}>
-                                <span>{children}</span>
+                                <span className="markdown-heading-accent">{children}</span>
                                 <a href={`#${id}`} className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-black dark:hover:text-white font-mono text-xs no-underline ml-1">
                                   #
                                 </a>
                               </h3>
                             );
                           },
+                          h4: ({ children, node, ...props }: any) => (
+                            <h4 {...props}><span className="markdown-heading-accent">{children}</span></h4>
+                          ),
+                          h5: ({ children, node, ...props }: any) => (
+                            <h5 {...props}><span className="markdown-heading-accent">{children}</span></h5>
+                          ),
+                          h6: ({ children, node, ...props }: any) => (
+                            <h6 {...props}><span className="markdown-heading-accent">{children}</span></h6>
+                          ),
                           code: ({ className, children, node, ...props }: any) => {
                             const isBlock = className?.includes('language-');
                             if (isBlock) {

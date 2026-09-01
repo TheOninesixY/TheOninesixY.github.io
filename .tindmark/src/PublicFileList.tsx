@@ -79,13 +79,26 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const isDev = import.meta.env.DEV;
         const baseUrl = import.meta.env.BASE_URL.endsWith('/')
           ? import.meta.env.BASE_URL
           : `${import.meta.env.BASE_URL}/`;
-        const url = isDev ? '/api/public-files' : `${baseUrl}public-files.json`;
         
-        const response = await fetch(url);
+        let response: Response | null = null;
+        // 优先请求 API 路由（开发/本地环境支持 base 路径），失败则回退到静态 public-files.json
+        try {
+          response = await fetch(`${baseUrl}api/public-files`);
+        } catch {}
+
+        if (!response || !response.ok) {
+          try {
+            response = await fetch('/api/public-files');
+          } catch {}
+        }
+
+        if (!response || !response.ok) {
+          response = await fetch(`${baseUrl}public-files.json`);
+        }
+
         if (!response.ok) {
           throw new Error(`Failed to fetch public files: ${response.status}`);
         }

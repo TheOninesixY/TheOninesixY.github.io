@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.tindmark/dist/
 .DS_Store
 *.log
 .env*

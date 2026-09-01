@@ -11,7 +11,7 @@ export function publicFilesPlugin(): Plugin {
     if (fs.existsSync(resolvedPath)) {
       return resolvedPath;
     }
-    // 大小写不敏感查找（例如 config.yml 写的 Public 但目录实际是 public）
+    // 大小写不敏感查找
     try {
       const items = fs.readdirSync(process.cwd());
       const matched = items.find(item => item.toLowerCase() === folderName.toLowerCase());
