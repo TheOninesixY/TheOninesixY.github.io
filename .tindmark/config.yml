@@ -5,3 +5,5 @@
 "DefaultColor": "MetroBlue"
 "DocsFolder": "Docs"
 "PublicFolder": "Public"
+"ThemeFolder": "Themes"
+"DefaultTheme": "Met"

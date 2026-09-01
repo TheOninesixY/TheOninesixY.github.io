@@ -1,0 +1,116 @@
+:root {
+  --r-tag: 3px;          /* 小标签 / 状态徽标 */
+  --r-input: 5px;        /* 输入框 / 下拉框 / 弹窗关闭小按钮 */
+  --r-btn: 8px;          /* 常规操作按钮 / 侧边栏条目高亮 */
+  --r-code: 4px;         /* Markdown 行内代码 */
+  --r-pre: 10px;         /* Markdown 代码块 / 引用块 / 图片 */
+  --r-card: 12px;        /* 首页统计卡片 / 数据面板 */
+  --r-modal: 15px;       /* 设置面板 / 搜索弹窗主体 */
+  --r-full: 9999px;      /* 胶囊按钮 / 滚动条滑块 */
+}
+
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+html,
+body,
+#root,
+.app-container,
+aside,
+main,
+header,
+nav,
+footer,
+aside > div,
+aside header,
+aside motion.div,
+aside .bg-neutral-50,
+aside .dark\:.bg-neutral-950,
+.mobile-header {
+  border-radius: 0 !important;
+}
+
+aside .overflow-y-auto button,
+aside .overflow-y-auto .cursor-pointer,
+.tree-item,
+div[class*="hover:bg-neutral-100"] {
+  border-radius: var(--r-btn) !important;
+}
+
+input[type="text"],
+input[type="search"],
+input,
+select,
+textarea {
+  border-radius: var(--r-input) !important;
+}
+
+button:not(.rounded-full):not(.mobile-floating-actions button),
+a[role="button"]:not(.rounded-full) {
+  border-radius: var(--r-btn) !important;
+}
+
+section button.px-5.py-3 {
+  border-radius: 8px !important;
+}
+
+.theme-swatch-default,
+span[style*="background-color"] {
+  border-radius: 3px !important;
+}
+
+main .border.p-5,
+main .border.p-4,
+main .border.p-6,
+main .bg-neutral-50,
+main .dark\:.bg-neutral-950,
+main .bg-neutral-100,
+main .dark\:.bg-neutral-900 {
+  border-radius: var(--r-card) !important;
+}
+
+section .inline-flex.border {
+  border-radius: var(--r-tag) !important;
+}
+
+.fixed.inset-0 .max-w-md {
+  border-radius: var(--r-modal) !important;
+  overflow: hidden !important;
+}
+
+.fixed.inset-0 .max-w-2xl,
+.fixed.inset-0 .max-w-xl {
+  border-radius: var(--r-modal) !important;
+  overflow: hidden !important;
+}
+
+.fixed.inset-0 button.p-1\.5,
+.fixed.inset-0 button.p-1 {
+  border-radius: var(--r-input) !important;
+}
+
+.markdown-body pre,
+.markdown-body div[class*="syntaxhighlighter"] {
+  border-radius: var(--r-pre) !important;
+  overflow: hidden !important;
+}
+
+.markdown-body code:not(pre code) {
+  border-radius: var(--r-code) !important;
+}
+
+.markdown-body blockquote {
+  border-radius: 0 var(--r-input) var(--r-input) 0 !important;
+}
+
+.markdown-body img {
+  border-radius: var(--r-pre) !important;
+}
+
+.markdown-body table {
+  border-radius: var(--r-input) !important;
+  overflow: hidden !important;
+}

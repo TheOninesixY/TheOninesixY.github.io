@@ -7,12 +7,15 @@ declare module 'virtual:tindmark-config' {
     Description: string;
     ColorPack: string;
     DefaultColor: string;
+    DefaultTheme?: string;
     DocsFolder: string;
     PublicFolder: string;
+    ThemeFolder?: string;
   }
 
   export const siteConfig: SiteConfig;
   export const themeColors: Record<string, string>;
+  export const customThemes: Record<string, string>;
   export default siteConfig;
 }
 

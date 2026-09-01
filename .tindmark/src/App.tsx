@@ -7,7 +7,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import PublicFileList from './PublicFileList';
 import HomeView from './HomeView';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree, resolvePostUrl } from './utils/markdown';
-import { loadThemeColors, applyCustomAccentColor, ThemeColorMap, DEFAULT_THEME_COLOR_KEY } from './utils/themeColor';
+import { loadThemeColors, loadCustomThemes, applyCustomAccentColor, applyCustomTheme, ThemeColorMap, DEFAULT_THEME_COLOR_KEY, DEFAULT_CUSTOM_THEME_KEY } from './utils/themeColor';
 import { loadSiteConfig, SiteConfig } from './utils/config';
 import Markdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -64,6 +64,8 @@ export default function App() {
   const [customColors, setCustomColors] = useState<ThemeColorMap>({});
   const [activeColorKey, setActiveColorKey] = useState<string>(DEFAULT_THEME_COLOR_KEY);
   const [customHexInput, setCustomHexInput] = useState<string>('');
+  const [customThemesList, setCustomThemesList] = useState<Record<string, string>>({});
+  const [activeThemeStyleKey, setActiveThemeStyleKey] = useState<string>(DEFAULT_CUSTOM_THEME_KEY);
   const [config, setConfig] = useState<SiteConfig>(() => loadSiteConfig());
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -74,6 +76,10 @@ export default function App() {
     const loadedColors = loadThemeColors();
     setCustomColors(loadedColors);
 
+    const loadedThemes = loadCustomThemes();
+    setCustomThemesList(loadedThemes);
+
+    // 先准备颜色相关信息（但暂不立即应用），以便在应用主题后强制覆盖任何主题样式
     const configuredDefaultKey = siteConfig.DefaultColor?.trim() || DEFAULT_THEME_COLOR_KEY;
     const savedColorKey = localStorage.getItem('theme-accent-key');
     const activeKey = savedColorKey || configuredDefaultKey;
@@ -84,6 +90,17 @@ export default function App() {
     }
     setActiveColorKey(activeKey);
 
+    const savedThemeStyle = localStorage.getItem('theme-custom-style-key');
+    const configuredDefaultTheme = siteConfig.DefaultTheme?.trim() || DEFAULT_CUSTOM_THEME_KEY;
+    const initialThemeStyle = (savedThemeStyle && savedThemeStyle.trim()) ? savedThemeStyle : configuredDefaultTheme;
+    setActiveThemeStyleKey(initialThemeStyle);
+    if (initialThemeStyle && initialThemeStyle !== DEFAULT_CUSTOM_THEME_KEY && loadedThemes[initialThemeStyle]) {
+      applyCustomTheme(initialThemeStyle);
+    } else {
+      applyCustomTheme(null);
+    }
+
+    // 主题应用后，重新应用 accent 色，确保 DefaultColor 覆盖主题可能的样式
     if (activeKey === 'custom' && savedCustomHex) {
       applyCustomAccentColor(savedCustomHex);
     } else if (activeKey && activeKey !== DEFAULT_THEME_COLOR_KEY && loadedColors[activeKey]) {
@@ -92,6 +109,12 @@ export default function App() {
       applyCustomAccentColor(null);
     }
   }, []);
+
+  const handleCustomThemeChange = (themeName: string) => {
+    setActiveThemeStyleKey(themeName);
+    localStorage.setItem('theme-custom-style-key', themeName);
+    applyCustomTheme(themeName);
+  };
 
   const handleColorChange = (key: string, hex: string | null) => {
     setActiveColorKey(key);
@@ -758,6 +781,43 @@ export default function App() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Custom Theme Style Section (ThemeFolder CSS) */}
+                  {Object.keys(customThemesList).length > 0 && (
+                    <div className="mb-5">
+                      <div className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold mb-2.5">
+                        <span>// 自定义主题样式</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <button
+                          onClick={() => handleCustomThemeChange(DEFAULT_CUSTOM_THEME_KEY)}
+                          className={cn(
+                            "flex items-center justify-center gap-1.5 px-3 py-2 border font-mono text-xs transition-colors truncate",
+                            activeThemeStyleKey === DEFAULT_CUSTOM_THEME_KEY
+                              ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold"
+                              : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white text-neutral-700 dark:text-neutral-300"
+                          )}
+                        >
+                          <span>TindMark</span>
+                        </button>
+                        {Object.keys(customThemesList).map((themeName) => (
+                          <button
+                            key={themeName}
+                            onClick={() => handleCustomThemeChange(themeName)}
+                            className={cn(
+                              "flex items-center justify-center gap-1.5 px-3 py-2 border font-mono text-xs transition-colors truncate",
+                              activeThemeStyleKey === themeName
+                                ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold"
+                                : "border-neutral-300 dark:border-neutral-700 hover:border-black dark:hover:border-white text-neutral-700 dark:text-neutral-300"
+                            )}
+                            title={themeName}
+                          >
+                            <span className="truncate">{themeName}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Accent Color Section (Dynamic from color.yaml & Custom Input) */}
                   <div>

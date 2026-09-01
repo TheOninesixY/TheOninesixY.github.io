@@ -9,8 +9,10 @@ export interface SiteConfig {
   Description: string;
   ColorPack: string;
   DefaultColor: string;
+  DefaultTheme?: string;
   DocsFolder: string;
   PublicFolder: string;
+  ThemeFolder?: string;
 }
 
 const DEFAULT_CONFIG: SiteConfig = {
@@ -19,8 +21,10 @@ const DEFAULT_CONFIG: SiteConfig = {
   Description: '',
   ColorPack: '',
   DefaultColor: '',
+  DefaultTheme: '',
   DocsFolder: 'Docs',
   PublicFolder: 'public',
+  ThemeFolder: 'Themes',
 };
 
 export function readSiteConfig(rootDir: string = process.cwd()): SiteConfig {
@@ -67,6 +71,33 @@ export function readColorPack(colorPackFileName?: string, rootDir: string = proc
     }
   }
   return {};
+}
+
+export function readThemes(themeFolderName?: string, rootDir: string = process.cwd()): Record<string, string> {
+  const folderName = themeFolderName?.trim() || 'Themes';
+  // Check in .tindmark/<ThemeFolder> first, then <rootDir>/<ThemeFolder>
+  let themeDir = path.resolve(rootDir, '.tindmark', folderName);
+  if (!fs.existsSync(themeDir)) {
+    themeDir = path.resolve(rootDir, folderName);
+  }
+
+  const themes: Record<string, string> = {};
+  if (fs.existsSync(themeDir)) {
+    try {
+      const entries = fs.readdirSync(themeDir, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.isFile() && entry.name.endsWith('.css')) {
+          const themeName = path.basename(entry.name, '.css');
+          const fullPath = path.join(themeDir, entry.name);
+          const cssContent = fs.readFileSync(fullPath, 'utf-8');
+          themes[themeName] = cssContent;
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to read themes (${folderName}):`, e);
+    }
+  }
+  return themes;
 }
 
 function scanDocsDirectory(rootDir: string, docsFolderName: string) {
@@ -130,9 +161,11 @@ export function tindmarkConfigPlugin(): Plugin {
       if (id === resolvedVirtualConfigId) {
         const config = readSiteConfig();
         const colors = readColorPack(config.ColorPack);
+        const themes = readThemes(config.ThemeFolder);
         return `
 export const siteConfig = ${JSON.stringify(config, null, 2)};
 export const themeColors = ${JSON.stringify(colors, null, 2)};
+export const customThemes = ${JSON.stringify(themes, null, 2)};
 export default siteConfig;
 `;
       }
@@ -150,7 +183,10 @@ export const docsFolderName = ${JSON.stringify(config.DocsFolder || 'Docs')};
       const config = readSiteConfig();
       const docsDir = path.resolve(process.cwd(), config.DocsFolder || 'Docs');
 
-      if (file.includes('.tindmark') && (file.endsWith('.yml') || file.endsWith('.yaml'))) {
+      if (
+        (file.includes('.tindmark') && (file.endsWith('.yml') || file.endsWith('.yaml') || file.endsWith('.css'))) ||
+        (config.ThemeFolder && file.includes(config.ThemeFolder) && file.endsWith('.css'))
+      ) {
         const mod1 = server.moduleGraph.getModuleById(resolvedVirtualConfigId);
         if (mod1) server.moduleGraph.invalidateModule(mod1);
         const mod2 = server.moduleGraph.getModuleById(resolvedVirtualDocsId);
