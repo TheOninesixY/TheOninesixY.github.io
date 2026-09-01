@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import PublicFileList from './PublicFileList';
+import HomeView from './HomeView';
 import { getAllPosts, getPostBySlug, Post, PostMetadata, FolderItem, buildFolderTree, resolvePostUrl } from './utils/markdown';
 import { loadThemeColors, applyCustomAccentColor, ThemeColorMap, DEFAULT_THEME_COLOR_KEY } from './utils/themeColor';
 import { loadSiteConfig, SiteConfig } from './utils/config';
@@ -50,7 +51,7 @@ export default function App() {
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
   const [currentFolder, setCurrentFolder] = useState<FolderItem | null>(null);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<'list' | 'post'>('list');
+  const [view, setView] = useState<'home' | 'list' | 'post'>('home');
   const [searchTerm, setSearchTerm] = useState('');
   const [toc, setToc] = useState<TocItem[]>([]);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -118,16 +119,53 @@ export default function App() {
     }
   };
 
+  const publicRoutePath = `/${(config.PublicFolder || 'public').replace(/^\/+|\/+$/g, '')}`;
+  const isPublicRoute = (path: string) => {
+    const normalized = path.replace(/\/+$/, '') || '/';
+    return normalized === publicRoutePath || normalized.startsWith(`${publicRoutePath}/`) || normalized === '/public' || normalized.startsWith('/public/');
+  };
+
+  const docsRoutePath = `/${(config.DocsFolder || 'Docs').replace(/^\/+|\/+$/g, '')}`;
+  const isDocsListRoute = (path: string) => {
+    const normalized = path.replace(/\/+$/, '') || '/';
+    return normalized.toLowerCase() === docsRoutePath.toLowerCase() || normalized.toLowerCase() === '/docs';
+  };
+
   useEffect(() => {
     const handlePopState = async () => {
       const path = currentPath();
-      if (path.startsWith('/public')) {
+      if (isPublicRoute(path)) {
         setIsPublicPath(true);
         return;
       }
       setIsPublicPath(false);
 
-      const rawSlug = path.replace(/^\/+/, '').replace(/^[Dd]ocs\//, '').replace(/\/+$/, '');
+      if (path === '/' || path === '') {
+        setView('home');
+        setCurrentPost(null);
+        setCurrentFolder(null);
+        setToc([]);
+        document.title = config.Title || 'TindMark';
+        if (mainContentRef.current) {
+          mainContentRef.current.scrollTo(0, 0);
+        }
+        return;
+      }
+
+      if (isDocsListRoute(path)) {
+        setView('list');
+        setCurrentPost(null);
+        setToc([]);
+        document.title = `${config.DocsFolder || 'Docs'} // ${config.Title || 'TindMark'}`;
+        if (mainContentRef.current) {
+          mainContentRef.current.scrollTo(0, 0);
+        }
+        return;
+      }
+
+      const docsFolderName = (config.DocsFolder || 'Docs').replace(/^\/+|\/+$/g, '');
+      const docsRegex = new RegExp(`^(${docsFolderName}|Docs)\\/`, 'i');
+      const rawSlug = path.replace(/^\/+/, '').replace(docsRegex, '').replace(/\/+$/, '');
       if (rawSlug) {
         const post = await getPostBySlug(rawSlug);
         if (post) {
@@ -148,7 +186,7 @@ export default function App() {
         }
       }
 
-      setView('list');
+      setView('home');
       setCurrentPost(null);
       setToc([]);
       document.title = config.Title || 'TindMark';
@@ -156,7 +194,7 @@ export default function App() {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [config.Title]);
+  }, [config.Title, config.DocsFolder]);
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
@@ -247,13 +285,34 @@ export default function App() {
       });
       setExpandedFolders(defaultExpanded);
 
-      if (path.startsWith('/public')) {
+      if (isPublicRoute(path)) {
         setIsPublicPath(true);
         setLoading(false);
         return;
       }
 
-      const rawSlug = path.replace(/^\/+/, '').replace(/^[Dd]ocs\//, '').replace(/\/+$/, '');
+      if (path === '/' || path === '') {
+        setView('home');
+        setCurrentPost(null);
+        setCurrentFolder(null);
+        setToc([]);
+        document.title = config.Title || 'TindMark';
+        setLoading(false);
+        return;
+      }
+
+      if (isDocsListRoute(path)) {
+        setView('list');
+        setCurrentPost(null);
+        setToc([]);
+        document.title = `${config.DocsFolder || 'Docs'} // ${config.Title || 'TindMark'}`;
+        setLoading(false);
+        return;
+      }
+
+      const docsFolderName = (config.DocsFolder || 'Docs').replace(/^\/+|\/+$/g, '');
+      const docsRegex = new RegExp(`^(${docsFolderName}|Docs)\\/`, 'i');
+      const rawSlug = path.replace(/^\/+/, '').replace(docsRegex, '').replace(/\/+$/, '');
       if (rawSlug) {
         const post = await getPostBySlug(rawSlug);
         if (post) {
@@ -272,7 +331,7 @@ export default function App() {
       setLoading(false);
     }
     loadPosts();
-  }, [config.Title]);
+  }, [config.Title, config.DocsFolder]);
 
   const extractToc = (content: string): TocItem[] => {
     const regex = /^(#{2,3})\s+(.+)$/gm;
@@ -340,30 +399,55 @@ export default function App() {
     }
   };
 
-  const handleBack = (updateUrl: boolean = true) => {
-    setView('list');
+  const handleHomeClick = (updateUrl: boolean = true) => {
+    setView('home');
     setCurrentPost(null);
     setCurrentFolder(null);
     setToc([]);
     document.title = config.Title || 'TindMark';
-    if (updateUrl && window.location.pathname !== appUrl()) {
-      window.history.pushState(null, '', appUrl());
+    if (updateUrl && window.location.pathname !== appUrl('/')) {
+      window.history.pushState(null, '', appUrl('/'));
+    }
+    if (window.innerWidth <= 768) {
+      closeSidebar();
     }
     if (mainContentRef.current) {
       mainContentRef.current.scrollTo(0, 0);
     }
   };
 
+  const handleDocsListClick = (updateUrl: boolean = true) => {
+    setView('list');
+    setCurrentPost(null);
+    setCurrentFolder(null);
+    setToc([]);
+    document.title = `${config.DocsFolder || 'Docs'} // ${config.Title || 'TindMark'}`;
+    const targetPath = appUrl(docsRoutePath);
+    if (updateUrl && window.location.pathname !== targetPath) {
+      window.history.pushState(null, '', targetPath);
+    }
+    if (window.innerWidth <= 768) {
+      closeSidebar();
+    }
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo(0, 0);
+    }
+  };
+
+  const handleBack = (updateUrl: boolean = true) => {
+    handleDocsListClick(updateUrl);
+  };
+
   const handleBackClick = () => {
-    handleBack(true);
+    handleDocsListClick(true);
   };
 
   const handleResetToList = () => {
-    handleBack(true);
+    handleDocsListClick(true);
   };
 
   const handlePublicClick = () => {
-    const targetPath = appUrl('/public');
+    const targetPath = appUrl(publicRoutePath);
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
     }
@@ -378,9 +462,10 @@ export default function App() {
     setView('list');
     setCurrentPost(null);
     setToc([]);
-    document.title = config.Title || 'TindMark';
-    if (window.location.pathname !== appUrl()) {
-      window.history.pushState(null, '', appUrl());
+    document.title = `${folder.title || folder.name} // ${config.Title || 'TindMark'}`;
+    const targetPath = appUrl(docsRoutePath);
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, '', targetPath);
     }
     if (window.innerWidth <= 768) {
       closeSidebar();
@@ -553,14 +638,14 @@ export default function App() {
         ) : view === 'post' ? (
           <>
             <div className="mobile-header-left">
-<button
-                  onClick={() => { handleBack(); closeSidebar(); }}
-                  className="mobile-back-btn"
-                  title="返回"
-                  aria-label="返回"
-                >
-                 <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-               </button>
+              <button
+                onClick={() => { handleBack(); closeSidebar(); }}
+                className="mobile-back-btn"
+                title="返回"
+                aria-label="返回"
+              >
+                <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+              </button>
             </div>
             <span className="mobile-header-title font-mono text-xs font-bold uppercase truncate max-w-[160px]">
               {currentPost?.title || 'DOCUMENT'}
@@ -582,7 +667,10 @@ export default function App() {
             >
               <Menu className="w-4 h-4" />
             </button>
-            <span className="mobile-header-title font-mono text-sm font-bold uppercase tracking-wider">
+            <span 
+              onClick={() => handleHomeClick(true)}
+              className="mobile-header-title font-mono text-sm font-bold uppercase tracking-wider cursor-pointer"
+            >
               {config.Title || 'TindMark'}
             </span>
             <button
@@ -792,17 +880,16 @@ export default function App() {
               className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase text-black dark:text-white hover:opacity-60 transition-opacity"
             >
               <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-              <span>返回主列表</span>
+              <span>返回文档列表</span>
             </button>
           ) : (
             <div className="flex items-center justify-between w-full">
               <div 
-                onClick={handleResetToList} 
+                onClick={() => handleHomeClick(true)} 
                 className="cursor-pointer font-mono font-black text-sm tracking-wider uppercase text-black dark:text-white flex items-center gap-1.5 truncate"
-                title={config.Subtitle || config.Description}
+                title="返回首页"
               >
                 <span className="truncate">{config.Title || 'TindMark'}</span>
-                <span className="text-[10px] font-normal text-neutral-400 dark:text-neutral-600 shrink-0">//Docs</span>
               </div>
               <button 
                 onClick={() => setSearchOpen(!searchOpen)}
@@ -856,11 +943,11 @@ export default function App() {
 
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto p-3">
-          {view === 'list' ? (
+          {view === 'home' || view === 'list' ? (
             <div className="space-y-1">
               <div className="flex items-center justify-between px-2 py-1 mb-1 border-b border-neutral-100 dark:border-neutral-900">
                 <span className="font-mono text-[11px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-bold">
-                  // 目录导航
+                  // 导航目录
                 </span>
                 {currentFolder && (
                   <button
@@ -872,10 +959,24 @@ export default function App() {
                 )}
               </div>
               <div
+                onClick={() => handleHomeClick(true)}
+                className={cn(
+                  "w-full text-left px-2.5 py-1.5 text-xs font-mono cursor-pointer transition-colors duration-150 flex items-center justify-between border-l-2 mb-1",
+                  view === 'home'
+                    ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
+                    : "border-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[16px] shrink-0">home</span>
+                  <span>首页</span>
+                </div>
+              </div>
+              <div
                 onClick={handleResetToList}
                 className={cn(
                   "w-full text-left px-2.5 py-1.5 text-xs font-mono cursor-pointer transition-colors duration-150 flex items-center justify-between border-l-2 mb-1",
-                  currentFolder === null
+                  view === 'list' && currentFolder === null
                     ? "border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold"
                     : "border-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                 )}
@@ -886,7 +987,7 @@ export default function App() {
                 </div>
                 <span className={cn(
                   "text-[10px] font-mono",
-                  currentFolder === null ? "opacity-75" : "text-neutral-400 dark:text-neutral-600"
+                  view === 'list' && currentFolder === null ? "opacity-75" : "text-neutral-400 dark:text-neutral-600"
                 )}>
                   [{posts.length}]
                 </span>
@@ -948,7 +1049,7 @@ export default function App() {
       </aside>
 
       {/* Mobile floating action buttons */}
-      <div className={`mobile-floating-actions ${sidebarOpen && view === 'list' ? 'show' : ''}`}>
+      <div className={`mobile-floating-actions ${sidebarOpen && (view === 'list' || view === 'home') ? 'show' : ''}`}>
         <button onClick={handlePublicClick} title="公共文件" aria-label="公共文件" className="rounded-full">
           <FolderOpen className="w-4 h-4" />
         </button>
@@ -1029,6 +1130,23 @@ export default function App() {
                   未找到与 "{searchQuery}" 相关的文档
                 </div>
               )}
+            </motion.div>
+          ) : view === 'home' ? (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <HomeView
+                config={config}
+                posts={posts}
+                onNavigateDocs={() => handleDocsListClick(true)}
+                onNavigatePost={(slug) => handlePostClick(slug, true)}
+                onNavigatePublic={handlePublicClick}
+                onOpenSettings={() => setSettingsOpen(true)}
+              />
             </motion.div>
           ) : view === 'list' ? (
             <motion.div
