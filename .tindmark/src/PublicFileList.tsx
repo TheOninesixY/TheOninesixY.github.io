@@ -63,17 +63,17 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
 
   const getFileIcon = (file: PublicFile) => {
     if (file.type === 'folder') {
-      return <Folder className="w-5 h-5 text-black dark:text-white shrink-0" />;
+      return <Folder className="w-5 h-5 text-black dark:text-white group-hover:text-[var(--accent-color,#000)] dark:group-hover:text-[var(--accent-color,#fff)] shrink-0 transition-colors" />;
     }
     
     const ext = file.extension.toLowerCase();
     if (ext.includes('video') || ext.includes('mp4') || ext.includes('webm') || ext.includes('mov')) {
-      return <Video className="w-5 h-5 text-black dark:text-white shrink-0" />;
+      return <Video className="w-5 h-5 text-black dark:text-white group-hover:text-[var(--accent-color,#000)] dark:group-hover:text-[var(--accent-color,#fff)] shrink-0 transition-colors" />;
     }
     if (ext.includes('image') || ext.includes('jpg') || ext.includes('jpeg') || ext.includes('png') || ext.includes('svg') || ext.includes('gif')) {
-      return <Image className="w-5 h-5 text-black dark:text-white shrink-0" />;
+      return <Image className="w-5 h-5 text-black dark:text-white group-hover:text-[var(--accent-color,#000)] dark:group-hover:text-[var(--accent-color,#fff)] shrink-0 transition-colors" />;
     }
-    return <File className="w-5 h-5 text-black dark:text-white shrink-0" />;
+    return <File className="w-5 h-5 text-black dark:text-white group-hover:text-[var(--accent-color,#000)] dark:group-hover:text-[var(--accent-color,#fff)] shrink-0 transition-colors" />;
   };
 
   useEffect(() => {
@@ -361,7 +361,7 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
                   )}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="p-2 border border-neutral-200 dark:border-neutral-800 group-hover:border-black dark:group-hover:border-white transition-colors">
+                    <div className="p-2 border border-neutral-200 dark:border-neutral-800 group-hover:border-[var(--accent-color,#000)] dark:group-hover:border-[var(--accent-color,#fff)] transition-colors public-file-icon">
                       {getFileIcon(file)}
                     </div>
                     

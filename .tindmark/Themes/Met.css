@@ -2,6 +2,8 @@
   --r-tag: 3px;          /* 小标签 / 状态徽标 */
   --r-input: 5px;        /* 输入框 / 下拉框 / 弹窗关闭小按钮 */
   --r-btn: 8px;          /* 常规操作按钮 / 侧边栏条目高亮 */
+  --r-file-icon: 5px;    /* 公共文件区文件图标边框 */
+  --r-file-btn: 6px;     /* 公共文件区操作按钮（查看/下载） */
   --r-code: 4px;         /* Markdown 行内代码 */
   --r-pre: 10px;         /* Markdown 代码块 / 引用块 / 图片 */
   --r-card: 12px;        /* 首页统计卡片 / 数据面板 */
@@ -53,6 +55,10 @@ a[role="button"]:not(.rounded-full) {
   border-radius: var(--r-btn) !important;
 }
 
+main .space-y-3 a {
+  border-radius: var(--r-file-btn) !important;
+}
+
 section button.px-5.py-3 {
   border-radius: 8px !important;
 }
@@ -74,6 +80,10 @@ main .dark\:.bg-neutral-900 {
 
 section .inline-flex.border {
   border-radius: var(--r-tag) !important;
+}
+
+.public-file-icon {
+  border-radius: var(--r-file-icon) !important;
 }
 
 .fixed.inset-0 .max-w-md {
