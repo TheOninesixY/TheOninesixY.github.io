@@ -24,6 +24,42 @@ export default function HomeView({
   const docsFolderName = (config.DocsFolder || 'Docs').replace(/^\/+|\/+$/g, '');
   const recentPosts = posts.slice(0, 6);
 
+  // 将数字转换为大写英文单词
+  const numberToWords = (num: number): string => {
+    if (num < 0) return `MINUS ${numberToWords(Math.abs(num))}`;
+    if (num === 0) return 'ZERO';
+
+    const ones = [
+      '', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE',
+      'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN',
+      'SEVENTEEN', 'EIGHTEEN', 'NINETEEN'
+    ];
+    const tens = ['', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY'];
+
+    const helper = (n: number): string => {
+      if (n >= 1000000000) {
+        return `${helper(Math.floor(n / 1000000000))} BILLION${n % 1000000000 ? ' ' + helper(n % 1000000000) : ''}`;
+      }
+      if (n >= 1000000) {
+        return `${helper(Math.floor(n / 1000000))} MILLION${n % 1000000 ? ' ' + helper(n % 1000000) : ''}`;
+      }
+      if (n >= 1000) {
+        return `${helper(Math.floor(n / 1000))} THOUSAND${n % 1000 ? ' ' + helper(n % 1000) : ''}`;
+      }
+      if (n >= 100) {
+        return `${helper(Math.floor(n / 100))} HUNDRED${n % 100 ? ' ' + helper(n % 100) : ''}`;
+      }
+      if (n >= 20) {
+        const ten = tens[Math.floor(n / 10)];
+        const rest = n % 10;
+        return rest ? `${ten}-${ones[rest]}` : ten;
+      }
+      return ones[n];
+    };
+
+    return helper(num);
+  };
+
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
@@ -91,7 +127,7 @@ export default function HomeView({
             <Layers className="w-4 h-4 group-hover:text-black dark:group-hover:text-white transition-colors" />
           </div>
           <div className="text-3xl font-black text-black dark:text-white">
-            {posts.length}
+            {numberToWords(posts.length)}
           </div>
           <p className="text-[11px] text-neutral-500 mt-2">
             位于 /{docsFolderName} 目录下
