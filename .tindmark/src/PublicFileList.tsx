@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { File, Video, Image, Download, Folder, ExternalLink, Search, X } from 'lucide-react';
+import { File, Video, Image, Download, Folder, ExternalLink, Search, X, ArrowLeft } from 'lucide-react';
 import { cn } from './utils/cn';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -179,7 +179,7 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
           <>
             <div className="mobile-header-left">
               <button onClick={handleBack} className="mobile-back-btn" title="返回" aria-label="返回">
-                <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+                <ArrowLeft className="w-[18px] h-[18px]" />
               </button>
             </div>
             <span className="mobile-header-title font-mono text-xs font-bold uppercase tracking-wider">
@@ -210,7 +210,7 @@ export default function PublicFileList({ onBack }: PublicFileListProps = {}) {
             onClick={handleBack}
             className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase text-black dark:text-white hover:opacity-60 transition-opacity"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <ArrowLeft className="w-4 h-4" />
             <span>返回文档首页</span>
           </button>
           <button

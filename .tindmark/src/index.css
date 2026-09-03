@@ -49,29 +49,6 @@
   border-radius: 0 !important;
 }
 
-/* Material Symbols Outlined (Google Font Icons) */
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'liga';
-  user-select: none;
-  vertical-align: middle;
-}
-
 html {
   scroll-behavior: smooth;
   transition: background-color 0.15s ease, color 0.15s ease;

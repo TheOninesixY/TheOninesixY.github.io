@@ -12,7 +12,7 @@ import { loadSiteConfig, SiteConfig } from './utils/config';
 import Markdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings } from 'lucide-react';
+import { Search, Folder, FileText, Copy, Check, Monitor, Moon, Sun, Menu, X, FolderOpen, Hash, Settings, ChevronRight, ArrowLeft, ArrowRight, ArrowUp, Home } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion, AnimatePresence } from 'motion/react';
@@ -553,12 +553,12 @@ export default function App() {
                   onClick={(e) => toggleFolderExpand(item.path, e)}
                   className="p-0.5 hover:opacity-75 focus:outline-none flex items-center justify-center"
                 >
-                  <span className={cn(
-                    "material-symbols-outlined text-[16px] transition-transform duration-150 shrink-0",
-                    isExpanded && "rotate-90"
-                  )}>
-                    chevron_right
-                  </span>
+                  <ChevronRight
+                    className={cn(
+                      "w-4 h-4 transition-transform duration-150 shrink-0",
+                      isExpanded && "rotate-90"
+                    )}
+                  />
                 </button>
                 <Folder className="w-3.5 h-3.5 shrink-0" />
                 <span className="truncate">{displayName}</span>
@@ -667,7 +667,7 @@ export default function App() {
                 title="返回"
                 aria-label="返回"
               >
-                <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+                <ArrowLeft className="w-[18px] h-[18px]" />
               </button>
             </div>
             <span className="mobile-header-title font-mono text-xs font-bold uppercase truncate max-w-[160px]">
@@ -939,7 +939,7 @@ export default function App() {
               onClick={handleBackClick}
               className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase text-black dark:text-white hover:opacity-60 transition-opacity"
             >
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+              <ArrowLeft className="w-4 h-4" />
               <span>返回文档列表</span>
             </button>
           ) : (
@@ -1028,7 +1028,7 @@ export default function App() {
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[16px] shrink-0">home</span>
+                  <Home className="w-3.5 h-3.5 shrink-0" />
                   <span>首页</span>
                 </div>
               </div>
@@ -1169,7 +1169,7 @@ export default function App() {
                         </span>
                         <span className="font-mono text-[10px] text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors flex items-center gap-0.5">
                           <span>// READ</span>
-                          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                          <ArrowRight className="w-3 h-3" />
                         </span>
                       </div>
                       <h3 className="text-base font-bold text-black dark:text-white mb-2 leading-snug">
@@ -1239,7 +1239,7 @@ export default function App() {
                       onClick={() => setCurrentFolder(null)}
                       className="font-mono text-xs border border-neutral-300 dark:border-neutral-700 px-2.5 py-1 hover:border-black dark:hover:border-white transition-colors flex items-center gap-1"
                     >
-                      <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                      <ArrowLeft className="w-3.5 h-3.5" />
                       <span>返回根目录</span>
                     </button>
                   )}
@@ -1285,7 +1285,7 @@ export default function App() {
                       
                       <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-neutral-900 flex items-center justify-between font-mono text-[10px] text-neutral-400">
                         <span>{isFolder ? `[ ${countFolderItems(item as FolderItem)} ITEMS ]` : `[ ${targetSlug} ]`}</span>
-                        <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </article>
                   );
@@ -1451,14 +1451,14 @@ export default function App() {
                         onClick={handleBackClick}
                         className="border border-neutral-300 dark:border-neutral-700 px-3 py-2 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
                       >
-                        <span className="material-symbols-outlined text-[14px]">arrow_back</span>
+                        <ArrowLeft className="w-3.5 h-3.5" />
                         <span>返回文档列表</span>
                       </button>
                       <button
                         onClick={scrollToTop}
                         className="border border-neutral-300 dark:border-neutral-700 px-3 py-2 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors flex items-center gap-1.5"
                       >
-                        <span className="material-symbols-outlined text-[14px]">arrow_upward</span>
+                        <ArrowUp className="w-3.5 h-3.5" />
                         <span>回到顶部</span>
                       </button>
                     </div>
