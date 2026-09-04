@@ -13,6 +13,7 @@ export interface SiteConfig {
   DocsFolder: string;
   PublicFolder: string;
   ThemeFolder?: string;
+  WebsiteURL?: string;
 }
 
 const DEFAULT_CONFIG: SiteConfig = {
@@ -25,6 +26,7 @@ const DEFAULT_CONFIG: SiteConfig = {
   DocsFolder: 'Docs',
   PublicFolder: 'public',
   ThemeFolder: 'Themes',
+  WebsiteURL: '',
 };
 
 export function readSiteConfig(rootDir: string = process.cwd()): SiteConfig {
@@ -206,9 +208,13 @@ export const docsFolderName = ${JSON.stringify(config.DocsFolder || 'Docs')};
       const colors = readColorPack(config.ColorPack);
       const defaultColorKey = config.DefaultColor?.trim() || '';
       const defaultHex = defaultColorKey ? (colors[defaultColorKey] || '') : '';
+      const websiteUrl = config.WebsiteURL?.trim() || '';
       
       let transformed = html.replace(/<title>.*?<\/title>/i, `<title>${config.Title || 'TindMark'}</title>`);
-      const injection = `<script>window.__TINDMARK_DEFAULT_ACCENT__ = ${JSON.stringify(defaultHex)};</script>`;
+      const injection = `<script>
+      window.__TINDMARK_DEFAULT_ACCENT__ = ${JSON.stringify(defaultHex)};
+      window.__TINDMARK_WEBSITE_URL__ = ${JSON.stringify(websiteUrl)};
+    </script>`;
       transformed = transformed.replace('<head>', `<head>\n    ${injection}`);
       return transformed;
     },

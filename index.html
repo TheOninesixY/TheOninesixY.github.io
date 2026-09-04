@@ -7,6 +7,29 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <script>
       (function() {
+        const targetUrl = window.__TINDMARK_WEBSITE_URL__;
+        if (targetUrl) {
+          try {
+            const current = window.location;
+            const target = new URL(targetUrl, current.href);
+            const isDifferentHost = target.host && target.host.toLowerCase() !== current.host.toLowerCase();
+            const isLocalhost = current.hostname === 'localhost' || current.hostname === '127.0.0.1';
+            if (isDifferentHost && !isLocalhost) {
+              const targetBasePath = target.pathname.replace(/\/+$/, '');
+              const currentPath = current.pathname.startsWith('/') ? current.pathname : '/' + current.pathname;
+              const newPathname = (targetBasePath && targetBasePath !== '/')
+                ? `${targetBasePath}${currentPath}`.replace(/\/+/g, '/')
+                : currentPath;
+              const newUrl = `${target.protocol}//${target.host}${newPathname}${current.search}${current.hash}`;
+              if (window.location.href !== newUrl) {
+                window.location.replace(newUrl);
+                return;
+              }
+            }
+          } catch (e) {
+            console.error('WebsiteURL redirect error:', e);
+          }
+        }
         const saved = localStorage.getItem('blog-theme');
         if (saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
