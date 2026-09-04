@@ -152,10 +152,32 @@ body {
   color: #525252 !important;
 }
 
-.markdown-body .code-block-wrapper button,
-[style*="--accent-color"] .markdown-body .code-block-wrapper button,
-.dark[style*="--accent-color"] .markdown-body .code-block-wrapper button {
+.markdown-body .code-block-wrapper button.code-copy-btn {
   color: #d4d4d4 !important;
+  border-color: #404040 !important;
+  background-color: transparent !important;
+}
+
+/* 默认黑白主题下的 hover 效果：白色背景 + 黑色文字 */
+.markdown-body .code-block-wrapper button.code-copy-btn:hover {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.markdown-body .code-block-wrapper button.code-copy-btn:hover svg {
+  color: #000000 !important;
+}
+
+/* 使用自定义主题色时的 hover 效果：使用主题色作为背景与边框，暗色模式下文字使用白色，亮色模式下对比保证 */
+[style*="--accent-color"] .markdown-body .code-block-wrapper button.code-copy-btn:hover {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+  color: #ffffff !important;
+}
+
+[style*="--accent-color"] .markdown-body .code-block-wrapper button.code-copy-btn:hover svg {
+  color: #ffffff !important;
 }
 
 .markdown-body .code-block-wrapper pre,

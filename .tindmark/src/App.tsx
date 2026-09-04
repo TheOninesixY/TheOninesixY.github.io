@@ -867,7 +867,7 @@ export default function App() {
                           )}
                         >
                           <span className="w-3 h-3 rounded-none border border-neutral-400 dark:border-neutral-600 shrink-0 theme-swatch-default" />
-                          <span className="truncate theme-text-default">默认</span>
+                          <span className="truncate theme-text-default">TindMark</span>
                         </button>
                         {Object.entries(customColors).map(([label, hex]) => (
                           <button
@@ -1391,11 +1391,11 @@ export default function App() {
                                     </span>
                                     <button
                                       onClick={() => copyToClipboard(codeText, codeKey)}
-                                      className="flex items-center gap-1 text-[11px] font-mono border border-neutral-700 hover:border-white hover:bg-white hover:text-black px-2 py-0.5 text-neutral-300 transition-colors"
+                                      className="code-copy-btn flex items-center gap-1 text-[11px] font-mono border border-neutral-700 px-2 py-0.5 text-neutral-300 transition-colors"
                                     >
                                       {copiedKey === codeKey ? (
                                         <>
-                                          <Check className="w-3 h-3 text-white" />
+                                          <Check className="w-3 h-3" />
                                           <span>COPIED</span>
                                         </>
                                       ) : (
