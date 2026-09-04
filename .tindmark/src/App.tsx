@@ -1383,10 +1383,10 @@ export default function App() {
                               const lineCount = lines.length;
                               
                               return (
-                                <div key={codeKey} className="my-6 border border-neutral-800 bg-neutral-950 font-mono">
+                                <div key={codeKey} className="code-block-wrapper my-6 border border-neutral-800 bg-neutral-950 font-mono text-white">
                                   {/* Code Header */}
                                   <div className="flex items-center justify-between bg-neutral-900 px-3 py-2 border-b border-neutral-800">
-                                    <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider font-bold">
+                                    <span className="code-block-lang text-[11px] font-mono text-neutral-400 uppercase tracking-wider font-bold">
                                       // {lang}
                                     </span>
                                     <button
@@ -1409,7 +1409,7 @@ export default function App() {
                                   {/* Code Content */}
                                   <div className="flex overflow-x-auto">
                                     {/* Line numbers */}
-                                    <div className="select-none bg-neutral-900/70 px-3 py-3 text-neutral-600 text-xs font-mono text-right border-r border-neutral-800 shrink-0">
+                                    <div className="code-block-line-numbers select-none bg-neutral-900/70 px-3 py-3 text-neutral-600 text-xs font-mono text-right border-r border-neutral-800 shrink-0">
                                       {Array.from({ length: lineCount }, (_, i) => (
                                         <div key={i} className="leading-6">{i + 1}</div>
                                       ))}

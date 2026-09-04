@@ -122,23 +122,69 @@ body {
   font-size: 15px;
 }
 
-[style*="--accent-color"] .markdown-body,
+/* 亮色模式下使用主题色时，文章正文保持黑色，但排除代码块内部 */
+[style*="--accent-color"] .markdown-body:not(.code-block-wrapper *),
 [style*="--accent-color"] .markdown-body p,
 [style*="--accent-color"] .markdown-body li,
 [style*="--accent-color"] .markdown-body td,
 [style*="--accent-color"] .markdown-body blockquote,
-[style*="--accent-color"] .markdown-body span:not(.markdown-heading-accent),
-[style*="--accent-color"] .markdown-body div {
+[style*="--accent-color"] .markdown-body span:not(.markdown-heading-accent):not(.code-block-wrapper *),
+[style*="--accent-color"] .markdown-body div:not(.code-block-wrapper):not(.code-block-wrapper *) {
   color: #000000;
 }
 
-.dark[style*="--accent-color"] .markdown-body,
+/* 保证无论亮色还是暗色模式，代码块容器内的文字、标题、行号、按钮保持设计样式 */
+.markdown-body .code-block-wrapper,
+.markdown-body .code-block-wrapper span.code-block-lang,
+[style*="--accent-color"] .markdown-body .code-block-wrapper,
+[style*="--accent-color"] .markdown-body .code-block-wrapper span.code-block-lang,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper span.code-block-lang {
+  color: #a3a3a3 !important;
+}
+
+.markdown-body .code-block-wrapper .code-block-line-numbers,
+.markdown-body .code-block-wrapper .code-block-line-numbers div,
+[style*="--accent-color"] .markdown-body .code-block-wrapper .code-block-line-numbers,
+[style*="--accent-color"] .markdown-body .code-block-wrapper .code-block-line-numbers div,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper .code-block-line-numbers,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper .code-block-line-numbers div {
+  color: #525252 !important;
+}
+
+.markdown-body .code-block-wrapper button,
+[style*="--accent-color"] .markdown-body .code-block-wrapper button,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper button {
+  color: #d4d4d4 !important;
+}
+
+.markdown-body .code-block-wrapper pre,
+.markdown-body .code-block-wrapper code,
+[style*="--accent-color"] .markdown-body .code-block-wrapper pre,
+[style*="--accent-color"] .markdown-body .code-block-wrapper code,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper pre,
+.dark[style*="--accent-color"] .markdown-body .code-block-wrapper code {
+  color: #ffffff;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.markdown-body .code-block-wrapper pre code,
+.markdown-body .code-block-wrapper code span,
+.markdown-body .code-block-wrapper pre span {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.dark[style*="--accent-color"] .markdown-body:not(.code-block-wrapper *),
 .dark[style*="--accent-color"] .markdown-body p,
 .dark[style*="--accent-color"] .markdown-body li,
 .dark[style*="--accent-color"] .markdown-body td,
 .dark[style*="--accent-color"] .markdown-body blockquote,
-.dark[style*="--accent-color"] .markdown-body span:not(.markdown-heading-accent),
-.dark[style*="--accent-color"] .markdown-body div {
+.dark[style*="--accent-color"] .markdown-body span:not(.markdown-heading-accent):not(.code-block-wrapper *),
+.dark[style*="--accent-color"] .markdown-body div:not(.code-block-wrapper):not(.code-block-wrapper *) {
   color: #ffffff;
 }
 
